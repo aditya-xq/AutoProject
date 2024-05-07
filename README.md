@@ -1,6 +1,6 @@
 # 🚀 AutoProject
 
-**AutoProject** is a simple application blending AI-generated tasks with streamlined productivity. This project seamlessly integrates LLMs and Linear to empower your team with automatically created Project Requirements Documents (PRDs) and task lists, eliminating manual drudgery. Enjoy the super-efficient workflow as your AI-generated task list converts directly into issues on Linear, freeing up your creativity for the big stuff!
+**AutoProject** is a simple application blending AI-generated tasks with streamlined productivity. This project seamlessly integrates LLMs and Linear to empower you to automatically created Project Requirements Documents (PRDs) and task lists. Enjoy the super-efficient workflow as your AI-generated task list converts directly into issues on Linear, freeing up your creativity for the big stuff!
 
 ## 🌟 Features
 - **Generative PRD Creation**: Feed your project requirements to Google Gemini AI, and get a detailed PRD tailored for your workflow.
@@ -68,5 +68,3 @@ Feel free to fork, clone, and submit a PR! Suggestions, bug reports, and feature
 This project is licensed under the [MIT License](LICENSE).
 
 ---
-
-### Ready to let the AI take over some of your mundane planning? Join us in this workflow revolution!
