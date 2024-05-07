@@ -14,7 +14,7 @@
 - **Linear SDK**: To connect with Linear API.
 
 ### **Frontend**
-- **SvelteKit**: For a swift, smooth, and modern frontend experience.
+- **SvelteKit**: With Svelte 5 For a swift, smooth, and modern frontend experience.
 - **Tailwind CSS**: Because good looks matter.
 
 ## 🚀 Getting Started
