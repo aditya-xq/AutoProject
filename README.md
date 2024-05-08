@@ -1,6 +1,6 @@
 # 🚀 AutoProject
 
-Your DIY tool to automate project management with AI and streamlined workflows.
+Your DIY tool to automate project management with AI powered workflows.
 
 ## 🌟 Features
 - **Generative PRD Creation**: Feed your project requirements to Google Gemini AI, and get a detailed PRD tailored for your workflow.
