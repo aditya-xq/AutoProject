@@ -1,6 +1,6 @@
 # 🚀 AutoProject
 
-**AutoProject** is a simple application blending AI-generated tasks with streamlined productivity. This project seamlessly integrates LLMs and Linear to empower you to automatically created Project Requirements Documents (PRDs) and task lists. Enjoy the super-efficient workflow as your AI-generated task list converts directly into issues on Linear, freeing up your creativity for the big stuff!
+Your DIY tool to automate project management with AI and streamlined workflows.
 
 ## 🌟 Features
 - **Generative PRD Creation**: Feed your project requirements to Google Gemini AI, and get a detailed PRD tailored for your workflow.
@@ -21,7 +21,7 @@
 ### Prerequisites
 - **Node.js**: Make sure you have the latest version of Node installed.
 - **Linear Account**: Create an account on [Linear](https://linear.app/) and generate your API key.
-- **Gemini API Key**: Apply for API access.
+- **Gemini API Key**: Get the API key from [https://ai.google.dev/](https://ai.google.dev/).
 
 ### Installation
 1. Clone the repository:
@@ -32,26 +32,29 @@
     ```bash
     cd AutoProject
     ```
-3. Install dependencies using Bun:
+3. Install dependencies using Bun for both frontend and backend:
     ```bash
+    cd frontend
     bun install
-    cd auto-project-ui
+    cd ..
+    cd backend
     bun install
     ```
-4. Create a `.env` file and add your API keys:
+4. Create a `.env` file inside the backend folder and add your API keys:
     ```plaintext
     GEMINI_API_KEY=<Your-Gemini-API-Key>
     LINEAR_API_KEY=<Your-Linear-API-Key>
     ```
 
 ### Running the Project
-1. Start the server:
+1. Start the backend server:
     ```bash
+    cd backend
     bun server.ts
     ```
 2. Start the SvelteKit frontend:
     ```bash
-    cd auto-project-ui
+    cd frontend
     bun --bun run dev
     ```
 3. Visit `http://localhost:5173` and let the magic unfold!
