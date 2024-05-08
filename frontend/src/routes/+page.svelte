@@ -99,13 +99,13 @@
             bind:value={requirements} rows="2" placeholder="E.g. Build a webapp with xyz features using some techstack etc." aria-label="Enter Project Requirements"></textarea>
         <!-- Clear Content Button -->
         <div class="w-full flex justify-end space-x-4">
-            <button id="generate-prd" onclick={generatePRD} disabled={generatePrdDisabled} class="bg-purple-700 hover:bg-purple-800 text-white py-3 px-5 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-400 disabled:opacity-50 disabled:cursor-not-allowed"
+            <button id="generate-prd" onclick={generatePRD} disabled={generatePrdDisabled} class="bg-purple-700 hover:bg-purple-800 text-white py-3 px-5 rounded-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-400 disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label="Generate Project Requirements Document">
                 Generate PRD
             </button>
             <button
                 onclick={clearContent}
-                class="bg-red-700 hover:bg-red-800 text-white py-2 px-4 rounded-lg shadow-lg focus:outline-none"
+                class="bg-red-700 hover:bg-red-800 text-white py-2 px-4 rounded-2xl shadow-lg focus:outline-none"
                 aria-label="Clear Content">
                 Clear All Content
             </button>
@@ -118,7 +118,7 @@
             <label for="prd-display" class="block text-xl text-green-400">Generated PRD</label>
             <textarea id="prd-display" class="cursor-default w-full p-6 bg-gray-900 border border-green-500 rounded-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400"
                 bind:value={prd} rows="14" placeholder="Generated PRD will appear here..." readonly aria-label="Generated Project Requirements Document"></textarea>
-            <button id="generate-tasks" onclick={() => generateTasks(prd)} disabled={generateTasksDisabled} class="bg-green-700 hover:bg-green-800 text-white py-3 px-5 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
+            <button id="generate-tasks" onclick={() => generateTasks(prd)} disabled={generateTasksDisabled} class="bg-green-700 hover:bg-green-800 text-white py-3 px-5 rounded-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label="Generate Task Array">
                 Generate Tasks
             </button>
@@ -129,7 +129,7 @@
             <label for="task-array" class="block text-xl text-yellow-400">Generated Tasks</label>
             <textarea id="task-array" class="cursor-default w-full p-6 bg-gray-900 border border-yellow-500 rounded-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
                 bind:value={taskArray} rows="14" placeholder="Generated Task Array will appear here..." readonly aria-label="Generated Task Array"></textarea>
-            <button id="create-tasks" onclick={() => createTasks(taskArray)} disabled={createTasksDisabled} class="bg-yellow-700 hover:bg-yellow-800 text-white py-3 px-5 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 disabled:opacity-50 disabled:cursor-not-allowed"
+            <button id="create-tasks" onclick={() => createTasks(taskArray)} disabled={createTasksDisabled} class="bg-yellow-700 hover:bg-yellow-800 text-white py-3 px-5 rounded-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label="Auto-Create Issues in Linear">
                 Auto-Create as issues on Linear
             </button>
