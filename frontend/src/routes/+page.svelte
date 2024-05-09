@@ -86,14 +86,10 @@
     Tasks successfully created as issues on Linear!
 </div>
 
-<div class="bg-gradient-to-br from-gray-900 to-black text-gray-100 min-h-screen flex flex-col items-center p-8 space-y-8">
-    <!-- Heading -->
-    <h1 class="text-3xl font-bold text-purple-400">🚀 AutoProject</h1>
-
+<div class="bg-gradient-to-br from-black to-gray-900 text-gray-100 min-h-screen flex flex-col items-center p-8 ml-60 space-y-8">
     <!-- Grid Layout Section -->
-    
     <!-- Requirements Box -->
-    <div class="flex flex-col w-full max-w-4xl space-y-4">
+    <div class="flex flex-col w-full max-w-5xl space-y-4">
         <label for="requirements" class="block text-xl text-purple-400">Enter Requirement</label>
         <textarea id="requirements" class="w-full p-6 bg-gray-900 border border-purple-500 rounded-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
             bind:value={requirements} rows="2" placeholder="E.g. Build a webapp with xyz features using some techstack etc." aria-label="Enter Project Requirements"></textarea>
@@ -112,7 +108,7 @@
         </div>
     </div>
 
-    <div class="w-full max-w-5xl grid grid-cols-2 gap-10 p-4 rounded-lg">
+    <div class="w-full max-w-6xl grid grid-cols-2 gap-10 p-4 rounded-lg">
         <!-- PRD Box -->
         <div class="flex flex-col space-y-4">
             <label for="prd-display" class="block text-xl text-green-400">Generated PRD</label>
