@@ -5,11 +5,9 @@
     let loading = $state(false);
     let successVisible = $state(false);
 
-    const backend = 'http://localhost:8080';
-
     async function generatePRD() {
         loading = true;
-        const response = await fetch(`${backend}/generate-prd`, {
+        const response = await fetch(`/api/generate-prd`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ requirements })
@@ -21,7 +19,7 @@
 
     async function generateTasks(prd: string) {
         loading = true;
-        const response = await fetch(`${backend}/generate-tasks`, {
+        const response = await fetch(`/api/generate-tasks`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ prd })
@@ -33,7 +31,7 @@
 
     async function createTasks(taskArray: string) {
         loading = true;
-        const response = await fetch(`${backend}/create-tasks`, {
+        const response = await fetch(`/api/create-tasks`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ tasks: JSON.parse(taskArray) })
@@ -86,7 +84,7 @@
     Tasks successfully created as issues on Linear!
 </div>
 
-<div class="bg-gradient-to-br from-black to-gray-900 text-gray-100 min-h-screen flex flex-col items-center p-8 ml-60 space-y-8">
+<div class="bg-gradient-to-br from-black to-gray-900 text-gray-100 min-h-screen flex flex-col p-8 ml-60 pl-20 space-y-8">
     <!-- Grid Layout Section -->
     <!-- Requirements Box -->
     <div class="flex flex-col w-full max-w-5xl space-y-4">
@@ -108,7 +106,7 @@
         </div>
     </div>
 
-    <div class="w-full max-w-6xl grid grid-cols-2 gap-10 p-4 rounded-lg">
+    <div class="w-full max-w-5xl grid grid-cols-2 gap-10 p-4 rounded-lg">
         <!-- PRD Box -->
         <div class="flex flex-col space-y-4">
             <label for="prd-display" class="block text-xl text-green-400">Generated PRD</label>

@@ -23,5 +23,9 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@google/generative-ai": "^0.11.1",
+    "@linear/sdk": "^21.1.0"
+  }
 }

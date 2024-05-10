@@ -9,7 +9,7 @@ Your DIY tool to automate project management with AI powered workflows.
 
 ## 🛠️ Tech Stack
 ### **Backend**
-- **Node.js**: With Express to handle HTTP requests.
+- **Sveltekit**: With Sveltekit api routes to handle HTTP requests.
 - **Gemini AI**: For that sweet, sweet AI magic.
 - **Linear SDK**: To connect with Linear API.
 
@@ -19,7 +19,7 @@ Your DIY tool to automate project management with AI powered workflows.
 
 ## 🚀 Getting Started
 ### Prerequisites
-- **Node.js**: Make sure you have the latest version of Node installed.
+- **Bun**: Make sure you have the latest version of Bun installed.
 - **Linear Account**: Create an account on [Linear](https://linear.app/) and generate your API key.
 - **Gemini API Key**: Get the API key from [https://ai.google.dev/](https://ai.google.dev/).
 
@@ -32,29 +32,21 @@ Your DIY tool to automate project management with AI powered workflows.
     ```bash
     cd AutoProject
     ```
-3. Install dependencies using Bun for both frontend and backend:
+3. Install dependencies using Bun:
     ```bash
-    cd frontend
-    bun install
-    cd ..
-    cd backend
+    cd autoproject
     bun install
     ```
-4. Create a `.env` file inside the backend folder and add your API keys:
+4. Create a `.env` file inside the autoproject folder and add your API keys:
     ```plaintext
-    GEMINI_API_KEY=<Your-Gemini-API-Key>
-    LINEAR_API_KEY=<Your-Linear-API-Key>
+    VITE_GEMINI_API_KEY=<Your-Gemini-API-Key>
+    VITE_LINEAR_API_KEY=<Your-Linear-API-Key>
     ```
 
 ### Running the Project
-1. Start the backend server:
+Start the SvelteKit Webapp:
     ```bash
-    cd backend
-    bun server.ts
-    ```
-2. Start the SvelteKit frontend:
-    ```bash
-    cd frontend
+    cd autoproject
     bun --bun run dev
     ```
 3. Visit `http://localhost:5173` and let the magic unfold!

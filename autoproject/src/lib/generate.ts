@@ -1,4 +1,4 @@
-import { TodoItem, validateAndParseJsonArray } from "./util";
+import { type TodoItem, validateAndParseJsonArray } from "./util";
 
 export async function generatePrdContent(model: any, prompt: string): Promise<string> {
     console.log("Generating PRD...");

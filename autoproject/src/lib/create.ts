@@ -1,4 +1,4 @@
-import { TodoItem } from "./util";
+import { type TodoItem } from "./util";
 
 async function createTask(linearClient: any, task: TodoItem) {
     const { id: teamId } = (await linearClient.teams()).nodes[0];
