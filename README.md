@@ -1,11 +1,11 @@
 # 🚀 AutoProject
 
-Your DIY tool to automate project management with AI powered workflows.
+Your BYOK tool to automate project management with AI powered workflows.
 
 ## 🌟 Features
-- **Generative PRD Creation**: Feed your project requirements to Google Gemini AI, and get a detailed PRD tailored for your workflow.
-- **AI-Powered Task Generation**: Let the AI convert your PRD into a smart, structured task array.
-- **Linear Integration**: Push the generated task array directly to Linear as issues with a single click!
+- **Generative PRD Creation**: Feed your basic project requirements, and get a detailed PRD tailored for your workflow.
+- **AI-Powered Task Generation**: Let the AI convert your PRD into a smart, structured tasks.
+- **Linear Integration**: Push the generated tasks as issues directly to Linear with a single click!
 
 ## 🛠️ Tech Stack
 ### **Backend**
