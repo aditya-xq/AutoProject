@@ -1,17 +1,17 @@
-<div class="bg-gradient-to-br from-black to-gray-900 text-gray-100 min-h-screen flex flex-col p-8 ml-60 pl-20 space-y-8">
+<div class="bg-gradient-to-br from-black to-gray-900 text-gray-100 min-h-screen flex flex-col px-60 py-6 space-y-8">
     <!-- Title Section -->
-    <h1 class="text-3xl font-bold text-purple-400">🚀 Welcome to AutoProject</h1>
-    <p class="text-lg max-w-3xl">
-        Your ultimate DIY tool to automate project management with AI-powered workflows. Craft your projects with the precision of a rocket engineer and the ease of autopilot.
+    <h1 class="text-2xl font-bold text-purple-400">🚀 Welcome to AutoProject</h1>
+    <p class="max-w-3xl">
+        Your ultimate BYOK tool to automate project management with AI-powered workflows. Craft your project user stories with the precision of a rocket engineer and the ease of autopilot.
     </p>
 
     <!-- Features Section -->
     <div class="space-y-4 max-w-5xl">
         <h2 class="text-xl font-semibold text-green-400">🌟 Key Features</h2>
-        <ul class="list-disc pl-6 space-y-2">
-            <li><strong>Generative PRD Creation:</strong> Feed your project requirements and receive a tailor-made PRD that aligns perfectly with your workflow.</li>
-            <li><strong>AI-Powered Task Generation:</strong> The AI effortlessly transforms your PRD into a smart, structured task array.</li>
-            <li><strong>Linear Integration:</strong> Push the generated tasks straight to Linear with one click. Instant project magic!</li>
+        <ul class="list-disc pl-6 space-y-1">
+            <li><strong>Generative PRD Creation:</strong> Feed your requirements and receive a tailor-made PRD that aligns perfectly with your workflow.</li>
+            <li><strong>AI-Powered Userstory Generation:</strong> The AI effortlessly transforms your PRD into a smart, structured userstories in your configured format.</li>
+            <li><strong>Tool Integration:</strong> Push the generated userstories as a new project straight to your chosen tool (Linear/Asana/Jira/Plane) with one click. Instant project magic!</li>
         </ul>
     </div>
 
@@ -21,10 +21,10 @@
         <p>
             Start your journey with AutoProject and let AI automate your project workflows:
         </p>
-        <ul class="list-decimal pl-6 space-y-2">
-            <li><strong>Generate PRD:</strong> Describe your project's requirements and click the "Generate PRD" button.</li>
-            <li><strong>Generate Tasks:</strong> Review the PRD and hit "Generate Tasks" to let the AI build your structured task array.</li>
-            <li><strong>Push to Linear:</strong> Finalize your tasks and sync them with Linear for seamless integration.</li>
+        <ul class="list-decimal pl-6 space-y-1">
+            <li><strong>Generate PRD:</strong> Describe your requirements and click the "Generate PRD" button.</li>
+            <li><strong>Generate Userstories:</strong> Review the PRD and hit "Generate Userstories" to let the AI do the heavy lifting.</li>
+            <li><strong>Push to Tool:</strong> Finalize your tasks and sync them with your PM tool for seamless integration.</li>
         </ul>
     </div>
 

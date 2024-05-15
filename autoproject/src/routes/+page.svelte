@@ -1,66 +1,80 @@
-<script lang="ts">    
-    let requirements = $state('');
-    let prd = $state('');
-    let taskArray = $state('');
+<script lang="ts">
+    import { notificationStore, settings, appState } from "$lib/store";
     let loading = $state(false);
-    let successVisible = $state(false);
 
+    // Generic function to handle API requests
+    async function makeApiRequest(endpoint: any, payload: any) {
+        loading = true;
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await response.json();
+            if (data.error) {
+                throw new Error(data.error || "Unknown error occurred");
+            }
+            return data;
+        } catch (error: any) {
+            notificationStore.addNotification(error, 'error');
+            return null; // Return null to indicate failure
+        } finally {
+            loading = false;
+        }
+    }
+
+    // Function to generate PRD based on requirements
     async function generatePRD() {
-        loading = true;
-        const response = await fetch(`/api/generate-prd`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ requirements })
+        const response = await makeApiRequest(`/api/generate`, {
+            requirements: $appState.requirements, settings: $settings
         });
-        const data = await response.json();
-        prd = data.prd;
-        loading = false;
+        if (response && response.data) {
+            $appState.prd = response.data.prd;
+            $appState.projectDetails = response.data.projectDetails;
+            notificationStore.addNotification('PRD generated successfully', 'success');
+        }
     }
 
-    async function generateTasks(prd: string) {
-        loading = true;
-        const response = await fetch(`/api/generate-tasks`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prd })
+    // Function to generate user stories based on PRD
+    async function generateUserStories() {
+        const response = await makeApiRequest(`/api/generate`, {
+            prd: $appState.prd, settings: $settings
         });
-        const data = await response.json();
-        taskArray = JSON.stringify(data.tasks, null, 4);
-        loading = false;
+        if (response && response.data) {
+            $appState.userStories = response.data;
+            notificationStore.addNotification('Userstories generated successfully', 'success');
+        }
     }
 
-    async function createTasks(taskArray: string) {
-        loading = true;
-        const response = await fetch(`/api/create-tasks`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tasks: JSON.parse(taskArray) })
+    async function createStories() {
+        const response = await makeApiRequest(`/api/create`, {
+            tool: $settings.tool,
+            projectDetails: $appState.projectDetails,
+            userStories: $appState.userStories
         });
-        const data = await response.json();
-        console.log(data.message);
-        loading = false;
-        successVisible = true;
-        setTimeout(() => {
-            successVisible = false;
-        }, 3000);
+        if (response && response.data.status === 200) {
+            notificationStore.addNotification(`Userstories created successfully on ${$settings.tool}`, 'success');
+        }
     }
 
     function clearContent() {
-        requirements = '';
-        prd = '';
-        taskArray = '';
+        $appState.requirements = '';
+        $appState.prd = '';
+        $appState.userStories = [];
+        notificationStore.addNotification('All content cleared', 'success');
     }
 
     // Show/hide the loading overlay
     let loadingOverlayVisible = $derived(loading);
 
-    let generatePrdDisabled = $derived(!requirements.trim());
+    let generatePrdDisabled = $derived(!$appState.requirements.trim());
 
     // Enable/disable generate task button based on the generated PRD
-    let generateTasksDisabled = $derived(!prd.trim());
+    let generateTasksDisabled = $derived(!$appState.prd.trim());
 
     // Enable/disable auto-create tasks button based on the generated task array
-    let createTasksDisabled = $derived(!taskArray.trim());
+    let createIssuesDisabled = $derived($appState.userStories.length <= 0);
 </script>
 
 <!-- Loading Overlay -->
@@ -79,55 +93,66 @@
     <p id="loading-text" class="text-4xl text-gray-100">Processing...</p>
 </div>
 
-<!-- Success Message -->
-<div id="success-message" class:hidden={!successVisible} class="fixed top-8 right-8 bg-green-600 text-white py-3 px-5 rounded-lg">
-    Tasks successfully created as issues on Linear!
-</div>
-
-<div class="bg-gradient-to-br from-black to-gray-900 text-gray-100 min-h-screen flex flex-col p-8 ml-60 pl-20 space-y-8">
+<div class="bg-gradient-to-br from-black to-gray-900 text-gray-100 min-h-screen flex flex-col px-60 py-8 space-y-8">
+    <!-- Note to setup settings before getting started -->
+    <div class="bg-gray-800 text-gray-300 p-4 rounded-lg max-w-5xl shadow-md">
+        <span>🚨 Please ensure your settings are configured properly before you begin. Go to your <a href="/settings" class="text-purple-400 hover:text-purple-300 transition-colors">settings page</a> to verify.</span>
+        <br>
+        <span>🚨 AutoProject can generate the starter PRD, user stories and tasks for a brand new project. It may not work well with other contexts.</span>
+    </div>
     <!-- Grid Layout Section -->
     <!-- Requirements Box -->
     <div class="flex flex-col w-full max-w-5xl space-y-4">
-        <label for="requirements" class="block text-xl text-purple-400">Enter Requirement</label>
-        <textarea id="requirements" class="w-full p-6 bg-gray-900 border border-purple-500 rounded-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
-            bind:value={requirements} rows="2" placeholder="E.g. Build a webapp with xyz features using some techstack etc." aria-label="Enter Project Requirements"></textarea>
+        <label for="requirements" class="block font-semibold text-xl text-purple-400">Enter Requirement</label>
+        <textarea id="requirements" class="w-full p-4 bg-gray-900 border border-purple-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+            bind:value={$appState.requirements} rows="1" placeholder="E.g. Build a webapp with xyz features using some techstack etc." aria-label="Enter Project Requirements"></textarea>
         <!-- Clear Content Button -->
-        <div class="w-full flex justify-end space-x-4">
-            <button id="generate-prd" onclick={generatePRD} disabled={generatePrdDisabled} class="bg-purple-700 hover:bg-purple-800 text-white py-3 px-5 rounded-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-400 disabled:opacity-50 disabled:cursor-not-allowed"
+        <div class="w-full flex justify-center space-x-4">
+            <button id="generate-prd" onclick={generatePRD} disabled={generatePrdDisabled} class="bg-purple-700 hover:bg-purple-800 text-white py-3 px-5 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-400 disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label="Generate Project Requirements Document">
                 Generate PRD
             </button>
             <button
                 onclick={clearContent}
-                class="bg-red-700 hover:bg-red-800 text-white py-2 px-4 rounded-2xl shadow-lg focus:outline-none"
+                class="bg-red-700 hover:bg-red-800 text-white py-2 px-4 rounded-lg shadow-lg focus:outline-none"
                 aria-label="Clear Content">
                 Clear All Content
             </button>
         </div>
     </div>
 
-    <div class="w-full max-w-5xl grid grid-cols-2 gap-10 p-4 rounded-lg">
+    <div class={`w-full max-w-5xl grid ${$appState.userStories.length > 0 ? 'grid-cols-2' : 'grid-cols-1'} gap-8 p-4 rounded-lg`}>
         <!-- PRD Box -->
-        <div class="flex flex-col space-y-4">
-            <label for="prd-display" class="block text-xl text-green-400">Generated PRD</label>
-            <textarea id="prd-display" class="cursor-default w-full p-6 bg-gray-900 border border-green-500 rounded-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-                bind:value={prd} rows="14" placeholder="Generated PRD will appear here..." readonly aria-label="Generated Project Requirements Document"></textarea>
-            <button id="generate-tasks" onclick={() => generateTasks(prd)} disabled={generateTasksDisabled} class="bg-green-700 hover:bg-green-800 text-white py-3 px-5 rounded-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
+        <div class={`flex flex-col space-y-4 ${$appState.userStories.length > 0 ? 'p-2' : 'px-32'}`}>
+            <label for="prd-display" class="block font-semibold text-xl text-green-400">Generated PRD</label>
+            <textarea id="prd-display" class="cursor-default w-full p-6 bg-inherit border border-green-500 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                bind:value={$appState.prd} rows="14" placeholder="Generated PRD will appear here..." readonly aria-label="Generated Project Requirements Document"></textarea>
+            <button id="generate-tasks" onclick={generateUserStories} disabled={generateTasksDisabled} class="bg-green-700 hover:bg-green-800 text-white py-3 px-5 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label="Generate Task Array">
-                Generate Tasks
+                Generate User Stories
             </button>
         </div>
 
-        <!-- Task Array Box -->
-        <div class="flex flex-col space-y-4">
-            <label for="task-array" class="block text-xl text-yellow-400">Generated Tasks</label>
-            <textarea id="task-array" class="cursor-default w-full p-6 bg-gray-900 border border-yellow-500 rounded-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                bind:value={taskArray} rows="14" placeholder="Generated Task Array will appear here..." readonly aria-label="Generated Task Array"></textarea>
-            <button id="create-tasks" onclick={() => createTasks(taskArray)} disabled={createTasksDisabled} class="bg-yellow-700 hover:bg-yellow-800 text-white py-3 px-5 rounded-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 disabled:opacity-50 disabled:cursor-not-allowed"
-                aria-label="Auto-Create Issues in Linear">
-                Auto-Create as issues on Linear
-            </button>
-        </div>
+        <!-- Userstories Box -->
+        {#if $appState.userStories.length > 0}
+            <div class="flex flex-col space-y-4 p-2">
+                <label for="user-stories" class="block text-xl font-semibold pl-2 text-yellow-500">Generated User Stories {`(${$appState.userStories.length})`}</label>
+                <div id="user-stories" class="w-full h-96 overflow-auto">
+                    {#each $appState.userStories as userStory}
+                        <details class="space-y-2 p-2 rounded-lg border-t border-gray-600">
+                            <summary class="cursor-pointer text-white p-2 rounded-lg hover:bg-gray-700">{userStory.title}</summary>
+                            <div class="px-2">
+                                <p class="mb-4 text-sm">{userStory.description}</p>
+                            </div>
+                        </details>
+                    {/each}
+                </div>
+                <button id="create-tasks" onclick={createStories} disabled={createIssuesDisabled} class="bg-yellow-600 hover:bg-yellow-700 text-white py-3 px-5 rounded-lg shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        aria-label="Auto-Create Issues">
+                    {`Auto-Create a new project on ${$settings.tool}`}
+                </button>
+            </div>
+        {/if}
     </div>
 </div>
 

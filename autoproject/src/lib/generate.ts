@@ -1,42 +1,56 @@
-import { type TodoItem, validateAndParseJsonArray } from "./util";
+import type { GenerativeModel } from "@google/generative-ai";
+import { validateAndParseToUserStoriesArray, validateAndParseToPrdResponseObject } from "./utils/helper";
+import { USER_STORY_PROMPT, PRD_PROMPT } from "./utils/prompts";
+import type { Settings } from "./store";
+import { SYSTEM_PROMPT } from "./utils/constants";
 
-export async function generatePrdContent(model: any, prompt: string): Promise<string> {
-    console.log("Generating PRD...");
+export async function handleGeminiProInference(model: GenerativeModel, content: string, promptType: string, settings: any): Promise<any> {
+    const promptSuffix = promptType === 'UserStory' ? USER_STORY_PROMPT(settings.userStoryType) : PRD_PROMPT(settings.prdType);
+    const prompt = `${content} ${promptSuffix}`;
     try {
-        const prdResult = await model.generateContent(prompt);
-        const prd = await prdResult.response.text();
-        console.log("PRD generated successfully.");
-        return prd;
-    } catch (error) {
-        console.error("Error during PRD generation:", error);
-        throw error;
+        const contentResult = await model.generateContent(prompt);
+        const responseString = await contentResult.response.text();
+        const result = promptType === 'UserStory' ? validateAndParseToUserStoriesArray(responseString) : validateAndParseToPrdResponseObject(responseString);
+        return {
+            message: "Operation successful",
+            status: 200,
+            data: result
+        };
+    } catch (error: any) {
+        return {
+            error: `Operation failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+            status: 500
+        };
     }
 }
 
-export async function generateTaskArray(model: any, prompt: string): Promise<TodoItem[] | null> {
-    console.info("Generating task array...");
+export async function handleAIInference(endpoint: string, headers: HeadersInit, model: string, content: string, promptType: string, settings: Settings) {
+    const prompt = promptType === 'UserStory' ? `${content} ${USER_STORY_PROMPT(settings.userStoryType)}` : `${content} ${PRD_PROMPT(settings.prdType)}`;
     try {
-        // Generate the task array content
-        const taskArrayStringResult = await model.generateContent(prompt);
-        // Read the response content as text
-        const taskArrayString = await taskArrayStringResult.response.text();
-        
-        // Parse and validate the JSON array
-        const taskArray = validateAndParseJsonArray(taskArrayString);
-
-        // Check for empty or invalid results
-        if (!Array.isArray(taskArray)) {
-            console.warn("Parsed data is not an array or is invalid.");
-            return null;
-        }
-
-        // Task array successfully generated
-        console.info("Task array generated and parsed successfully.");
-        return taskArray;
-    } catch (error) {
-        // Log any errors that occur during processing
-        console.error("Error occurred while generating the task array:", error);
-        return null;
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({
+                model,
+                messages: [
+                    { role: "system", content: SYSTEM_PROMPT },
+                    { role: "user", content: prompt }
+                ],
+                temperature: 0.7,
+                stream: false
+            })
+        });
+        const jsonData = await response.json();
+        const result = promptType === 'UserStory' ? validateAndParseToUserStoriesArray(jsonData.choices[0].message.content) : validateAndParseToPrdResponseObject(jsonData.choices[0].message.content);
+        return {
+            message: "Operation successful",
+            status: 200,
+            data: result
+        };
+    } catch (error: any) {
+        return {
+            error: `Operation failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+            status: 500
+        };
     }
 }
-
