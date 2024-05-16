@@ -126,7 +126,7 @@
             <label for="prd-display" class="block font-semibold text-lg md:text-xl text-green-500">Generated PRD</label>
             <textarea id="prd-display" class="cursor-default w-full flex-grow p-4 bg-gray-950 border border-green-500 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400"
                 bind:value={$appState.prd} rows={12} placeholder="Generated PRD will appear here..." readonly aria-label="Generated Project Requirements Document"></textarea>
-            <button id="generate-tasks" onclick={generateUserStories} disabled={generateTasksDisabled} class="bg-green-700 hover:bg-green-800 text-white py-3 px-5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            <button id="generate-tasks" onclick={generateUserStories} disabled={generateTasksDisabled} class="bg-green-700 hover:bg-green-800 text-white py-3 px-5 rounded-lg disabled:cursor-not-allowed transition-all duration-200"
                 aria-label="Generate Task Array">
                 Generate User Stories
             </button>
