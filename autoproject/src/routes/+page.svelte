@@ -53,7 +53,7 @@
             projectDetails: $appState.projectDetails,
             userStories: $appState.userStories
         });
-        if (response && response.data.status === 200) {
+        if (response) {
             notificationStore.addNotification(`Userstories created successfully on ${$settings.tool}`, 'success');
         }
     }
@@ -93,61 +93,60 @@
     <p id="loading-text" class="text-4xl text-gray-100">Processing...</p>
 </div>
 
-<div class="bg-gradient-to-br from-black to-gray-900 text-gray-100 min-h-screen flex flex-col px-60 py-8 space-y-8">
+<div class="bg-gray-950 text-gray-100 min-h-screen flex flex-col px-4 sm:px-8 md:px-16 lg:px-32 xl:px-60 py-8 space-y-6">
     <!-- Note to setup settings before getting started -->
-    <div class="bg-gray-800 text-gray-300 p-4 rounded-lg max-w-5xl shadow-md">
-        <span>🚨 Please ensure your settings are configured properly before you begin. Go to your <a href="/settings" class="text-purple-400 hover:text-purple-300 transition-colors">settings page</a> to verify.</span>
+    <div class="bg-gray-900 text-gray-300 p-4 rounded-lg max-w-5xl mx-auto shadow-md">
+        <span>🚨 Go to your <a href="/settings" class="text-violet-400 transition-colors">settings page</a> to configure options.</span>
         <br>
-        <span>🚨 AutoProject can generate the starter PRD, user stories and tasks for a brand new project. It may not work well with other contexts.</span>
+        <span>🚨 AutoProject can generate starter PRDs and user stories but remember that it's prone to errors.</span>
     </div>
-    <!-- Grid Layout Section -->
+
     <!-- Requirements Box -->
-    <div class="flex flex-col w-full max-w-5xl space-y-4">
-        <label for="requirements" class="block font-semibold text-xl text-purple-400">Enter Requirement</label>
-        <textarea id="requirements" class="w-full p-4 bg-gray-900 border border-purple-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
-            bind:value={$appState.requirements} rows="1" placeholder="E.g. Build a webapp with xyz features using some techstack etc." aria-label="Enter Project Requirements"></textarea>
-        <!-- Clear Content Button -->
-        <div class="w-full flex justify-center space-x-4">
-            <button id="generate-prd" onclick={generatePRD} disabled={generatePrdDisabled} class="bg-purple-700 hover:bg-purple-800 text-white py-3 px-5 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-400 disabled:opacity-50 disabled:cursor-not-allowed"
+    <div class="flex flex-col w-full max-w-6xl mx-auto space-y-4 max-sm:px-4">
+        <label for="requirements" class="block font-semibold text-lg md:text-2xl text-purple-400">Enter Requirement</label>
+        <textarea id="requirements" class="w-full p-4 bg-gray-950 border border-purple-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+            bind:value={$appState.requirements} rows="1" placeholder="E.g. A webapp for xyz usecase..." aria-label="Enter Project Requirements"></textarea>
+
+        <!-- Buttons -->
+        <div class="w-full flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+            <button id="generate-prd" onclick={generatePRD} disabled={generatePrdDisabled} class="bg-purple-600 hover:bg-purple-700 text-white py-3 px-5 rounded-lg disabled:cursor-not-allowed transition-all duration-200"
                 aria-label="Generate Project Requirements Document">
                 Generate PRD
             </button>
-            <button
-                onclick={clearContent}
-                class="bg-red-700 hover:bg-red-800 text-white py-2 px-4 rounded-lg shadow-lg focus:outline-none"
+            <button onclick={clearContent} class="bg-red-500 hover:bg-red-600 text-white py-3 px-5 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 disabled:cursor-not-allowed transition-all duration-200"
                 aria-label="Clear Content">
                 Clear All Content
             </button>
         </div>
     </div>
 
-    <div class={`w-full max-w-5xl grid ${$appState.userStories.length > 0 ? 'grid-cols-2' : 'grid-cols-1'} gap-8 p-4 rounded-lg`}>
+    <div class={`w-full max-w-6xl mx-auto grid ${$appState.userStories.length > 0 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'} gap-4 p-4 rounded-lg`}>
         <!-- PRD Box -->
-        <div class={`flex flex-col space-y-4 ${$appState.userStories.length > 0 ? 'p-2' : 'px-32'}`}>
-            <label for="prd-display" class="block font-semibold text-xl text-green-400">Generated PRD</label>
-            <textarea id="prd-display" class="cursor-default w-full p-6 bg-inherit border border-green-500 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-                bind:value={$appState.prd} rows="14" placeholder="Generated PRD will appear here..." readonly aria-label="Generated Project Requirements Document"></textarea>
-            <button id="generate-tasks" onclick={generateUserStories} disabled={generateTasksDisabled} class="bg-green-700 hover:bg-green-800 text-white py-3 px-5 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
+        <div class={`flex flex-col space-y-4 ${$appState.userStories.length > 0 ? 'p-2' : 'px-4 md:px-32'}`}>
+            <label for="prd-display" class="block font-semibold text-lg md:text-xl text-green-500">Generated PRD</label>
+            <textarea id="prd-display" class="cursor-default w-full flex-grow p-4 bg-gray-950 border border-green-500 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                bind:value={$appState.prd} rows={12} placeholder="Generated PRD will appear here..." readonly aria-label="Generated Project Requirements Document"></textarea>
+            <button id="generate-tasks" onclick={generateUserStories} disabled={generateTasksDisabled} class="bg-green-700 hover:bg-green-800 text-white py-3 px-5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                 aria-label="Generate Task Array">
                 Generate User Stories
             </button>
         </div>
 
-        <!-- Userstories Box -->
+        <!-- User Stories Box -->
         {#if $appState.userStories.length > 0}
             <div class="flex flex-col space-y-4 p-2">
-                <label for="user-stories" class="block text-xl font-semibold pl-2 text-yellow-500">Generated User Stories {`(${$appState.userStories.length})`}</label>
-                <div id="user-stories" class="w-full h-96 overflow-auto">
+                <label for="user-stories" class="block text-lg md:text-xl font-semibold text-yellow-500">Generated User Stories {`(${$appState.userStories.length})`}</label>
+                <div id="user-stories" class="w-full h-64 md:h-96 overflow-auto rounded-lg p-2">
                     {#each $appState.userStories as userStory}
                         <details class="space-y-2 p-2 rounded-lg border-t border-gray-600">
-                            <summary class="cursor-pointer text-white p-2 rounded-lg hover:bg-gray-700">{userStory.title}</summary>
+                            <summary class="cursor-pointer text-white p-2 rounded-lg hover:bg-gray-700 transition-all duration-200">{userStory.title}</summary>
                             <div class="px-2">
                                 <p class="mb-4 text-sm">{userStory.description}</p>
                             </div>
                         </details>
                     {/each}
                 </div>
-                <button id="create-tasks" onclick={createStories} disabled={createIssuesDisabled} class="bg-yellow-600 hover:bg-yellow-700 text-white py-3 px-5 rounded-lg shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                <button id="create-tasks" onclick={createStories} disabled={createIssuesDisabled} class="bg-yellow-600 hover:bg-yellow-700 text-white py-3 px-5 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                         aria-label="Auto-Create Issues">
                     {`Auto-Create a new project on ${$settings.tool}`}
                 </button>
