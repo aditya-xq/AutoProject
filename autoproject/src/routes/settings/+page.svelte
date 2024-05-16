@@ -25,7 +25,7 @@
             <h2 class="text-xl font-medium mb-4">Project Management Tool</h2>
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                 {#each tools as type}
-                <button class="p-3 rounded-lg border cursor-pointer hover:border-gray-500 {($settings.tool === type ? 'bg-gray-800 border-gray-500' : 'bg-gray-700 border-gray-600')} transition-colors duration-200"
+                <button class="p-3 rounded-lg border cursor-pointer hover:border-gray-500 {($settings.tool === type ? 'bg-gray-950 border-gray-500' : 'bg-gray-800 border-gray-600')} transition-colors duration-200"
                      onclick={() => $settings.tool = type}>
                     <div class="flex items-center justify-center space-x-2">
                         {#if $settings.tool === type}
@@ -45,7 +45,7 @@
             <h2 class="text-xl font-medium mb-4">PRD Type</h2>
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {#each prdTypeOptions as type}
-                <button class="p-3 rounded-lg border cursor-pointer hover:border-gray-500 {($settings.prdType === type ? 'bg-gray-800 border-gray-500' : 'bg-gray-700 border-gray-600')} transition-colors duration-200"
+                <button class="p-3 rounded-lg border cursor-pointer hover:border-gray-500 {($settings.prdType === type ? 'bg-gray-950 border-gray-500' : 'bg-gray-800 border-gray-600')} transition-colors duration-200"
                      onclick={() => $settings.prdType = type}>
                     <div class="flex items-center justify-center space-x-2">
                         {#if $settings.prdType === type}
@@ -65,7 +65,7 @@
             <h2 class="text-xl font-medium mb-4">User Story Type</h2>
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {#each userStoryTypeOptions as type}
-                <button class="p-3 rounded-lg border cursor-pointer hover:border-gray-500 {($settings.userStoryType === type ? 'bg-gray-800 border-gray-500' : 'bg-gray-700 border-gray-600')} transition-colors duration-200"
+                <button class="p-3 rounded-lg border cursor-pointer hover:border-gray-500 {($settings.userStoryType === type ? 'bg-gray-950 border-gray-500' : 'bg-gray-800 border-gray-600')} transition-colors duration-200"
                      onclick={() => $settings.userStoryType = type}>
                     <div class="flex items-center justify-center space-x-2">
                         {#if $settings.userStoryType === type}
@@ -85,7 +85,7 @@
             <h2 class="text-xl font-medium mb-4">AI Inference Type</h2>
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {#each aiInferenceOptions as type}
-                <button class="p-3 rounded-lg border cursor-pointer hover:border-gray-500 {($settings.aiInferenceType === type ? 'bg-gray-800 border-gray-500' : 'bg-gray-700 border-gray-600')} transition-colors duration-200"
+                <button class="p-3 rounded-lg border cursor-pointer hover:border-gray-500 {($settings.aiInferenceType === type ? 'bg-gray-950 border-gray-500' : 'bg-gray-800 border-gray-600')} transition-colors duration-200"
                     onclick={() => { $settings.aiInferenceType = type; $settings.aiModel = modelMap[aiModelOptions[type][0]] }}>
                     <div class="flex items-center justify-center space-x-2">
                         {#if $settings.aiInferenceType === type}
@@ -106,7 +106,7 @@
                 <h2 class="text-xl font-medium mb-4">{`AI Model (${$settings.aiInferenceType})`}</h2>
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
                     {#each aiModelOptions[`${$settings.aiInferenceType}`] as type}
-                    <button class="p-3 rounded-lg border cursor-pointer hover:border-gray-500 {($settings.aiModel === modelMap[type] ? 'bg-gray-800 border-gray-500' : 'bg-gray-700 border-gray-600')} transition-colors duration-200"
+                    <button class="p-3 rounded-lg border cursor-pointer hover:border-gray-500 {($settings.aiModel === modelMap[type] ? 'bg-gray-950 border-gray-500' : 'bg-gray-800 border-gray-600')} transition-colors duration-200"
                         onclick={() => $settings.aiModel = modelMap[type]}>
                         <div class="flex items-center justify-center space-x-2">
                             {#if $settings.aiModel === modelMap[type]}

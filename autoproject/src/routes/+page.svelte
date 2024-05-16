@@ -136,7 +136,7 @@
         {#if $appState.userStories.length > 0}
             <div class="flex flex-col space-y-4 p-2">
                 <label for="user-stories" class="block text-lg md:text-xl font-semibold text-yellow-500">Generated User Stories {`(${$appState.userStories.length})`}</label>
-                <div id="user-stories" class="w-full h-64 md:h-96 overflow-auto rounded-lg p-2">
+                <div id="user-stories" class="w-full h-96 overflow-auto rounded-lg p-2">
                     {#each $appState.userStories as userStory}
                         <details class="space-y-2 p-2 rounded-lg border-t border-gray-600">
                             <summary class="cursor-pointer text-white p-2 rounded-lg hover:bg-gray-700 transition-all duration-200">{userStory.title}</summary>
