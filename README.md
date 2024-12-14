@@ -47,10 +47,11 @@ Your BYOK tool to automate project management with AI powered workflows.
     ```
 
 ### Running the Project
-Start the SvelteKit Webapp:
+Start the optimized SvelteKit webapp:
     ```bash
     cd autoproject
-    bun --bun run dev
+    bun run build
+    bun run preview
     ```
 3. Visit `http://localhost:5173` and let the magic unfold!
 
