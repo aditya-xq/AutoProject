@@ -1,21 +1,21 @@
 # 🚀 AutoProject
 
-Your BYOK tool to automate project management with AI powered workflows.
+Your BYOK tool to automate project management with AI-powered workflows.
 
 ## 🌟 Features
-- **Generative PRD Creation**: Feed your basic requirements, and get a detailed PRD tailored for your workflow.
-- **AI-Powered Task Generation**: Let the AI convert your PRD into a smart, structured userstories based on your desired format.
-- **Tool Integration**: Push the generated userstories into a brand new project to your preferred PM tool with a single click!
+- **Generative PRD Creation**: Feed your basic requirements and get a detailed PRD tailored for your workflow.
+- **AI-Powered Task Generation**: Let the AI convert your PRD into smart, structured user stories based on your desired format.
+- **Tool Integration**: Push the generated user stories into a brand new project to your preferred PM tool with a single click!
 
 ## 🛠️ Tech Stack
 ### **Backend**
-- **Sveltekit**: With Sveltekit api routes to handle HTTP requests.
-- **Gemini, Groq, or LM Studio**: Configurable as per preference, for that sweet, sweet AI magic.
+- **SvelteKit**: With Sveltekit API routes to handle HTTP requests.
+- **Gemini, Groq, or LM Studio**: Configurable as per preference for that sweet, sweet AI magic.
 - **Linear SDK**: To connect with Linear API.
 
 ### **Frontend**
 - **SvelteKit**: With Svelte 5 For a swift, smooth, and modern frontend experience.
-- **Tailwind CSS**: Because good looks matter.
+- **Tailwind CSS v4**: Because good looks matter.
 
 ## 🚀 Getting Started
 ### Prerequisites
@@ -47,11 +47,11 @@ Your BYOK tool to automate project management with AI powered workflows.
     ```
 
 ### Running the Project
-Start the optimized SvelteKit webapp:
+Start the optimized SvelteKit web app:
     ```bash
-    cd autoproject
-    bun run build
-    bun run preview
+    cd autoproject 
+    bun run build 
+    bun run preview 
     ```
 3. Visit `http://localhost:5173` and let the magic unfold!
 
@@ -59,12 +59,10 @@ Start the optimized SvelteKit webapp:
 1. **Generate PRD**: Describe your requirements and click the **Generate PRD** button.
 2. **Generate Userstories**: Review the PRD and click **Generate Userstories**.
 3. **Push to PM Tool**: Click **Auto-Create** to push the stories into a brand new project to your preferred PM tool.
-4. Configure the PRD and userstory formats and the AI inference type on settings tab before getting started.
+4. Configure the PRD and user story formats and the AI inference type on the settings tab before getting started.
 
 ## 🙌 Contributing
 Feel free to fork, clone, and submit a PR! Suggestions, bug reports, and feature requests are always welcome.
 
 ## 📄 License
 This project is licensed under the [MIT License](LICENSE).
-
----
