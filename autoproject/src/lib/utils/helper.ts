@@ -1,5 +1,5 @@
 import { createValidationError, errors } from "./errors";
-import type { GeneratePrdResponse, UserStory } from "./interface";
+import type { GeneratePrdResponse, ProjectDetails, UserStory } from "./interface";
 
 function escapeJsonString(jsonString: string): string {
     const escapeMap = {
@@ -73,14 +73,20 @@ export function validatePrdDetails(details: GeneratePrdResponse): void {
     }
 }
 
-export function validateAndParseToUserStoriesArray(jsonString: string): UserStory[] {
+export function validateAndParseToUserStoriesArray(jsonString: string): ProjectDetails {
     try {
-        const stories = extractJson<UserStory[]>(jsonString);
-        if (!Array.isArray(stories)) {
+        const details = extractJson<ProjectDetails>(jsonString);
+        if (!Array.isArray(details.userStories)) {
             throw createValidationError(errors.userStoriesIsNotArray);
         }
-        stories.forEach((story, index) => validateUserStory(story, index));
-        return stories;
+        if (details.name?.trim() === '') {
+            throw createValidationError(errors.projectNameIsEmpty);
+        }
+        if (details.description?.trim() === '') {
+            throw createValidationError(errors.projectDescriptionIsEmpty);
+        }
+        details.userStories.forEach((story, index) => validateUserStory(story, index));
+        return details;
     } catch (error: any) {
         throw createValidationError(`${error.message || 'Unknown error'}`);
     }

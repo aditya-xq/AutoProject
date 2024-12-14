@@ -1,4 +1,3 @@
-import type { ProjectCreateInput } from "@linear/sdk/dist/_generated_documents"
 import type { PRDType, UserStoryType, AIInferenceType, ProjectManagementTool, PromptType } from "./types"
 
 export interface UserStory {
@@ -9,6 +8,7 @@ export interface UserStory {
 export interface ProjectDetails {
     name: string
     description: string
+    userStories: UserStory[]
 }
 
 export interface GeneratePrdResponse {
@@ -43,7 +43,6 @@ export interface AppState {
     promptType: PromptType
     requirements: string
     prd: string
-    userStories: UserStory[]
-    projectDetails: ProjectCreateInput
+    projectDetails: ProjectDetails
     settings: Settings
 }

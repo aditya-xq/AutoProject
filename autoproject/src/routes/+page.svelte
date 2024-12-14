@@ -35,7 +35,7 @@
 
         if (response.ok) {
             appState.isLoading = false;
-            appState.userStories = result.data;
+            appState.projectDetails = result.data;
             notificationStore.addNotification('User stories generated successfully', 'success');
             return;
         }
@@ -46,8 +46,28 @@
         }
     }
 
-    function handleProjectCreation() {
-        notificationStore.addNotification('Project creation not implemented yet', 'error');
+    async function handleProjectCreation() {
+        appState.isLoading = true;
+        const response = await fetch('/api/project', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                projectDetails: appState.projectDetails,
+                prd: appState.prd,
+                tool: appState.settings.tool,
+            })
+        });
+        const result = await response.json();
+        if (response.ok) {
+            appState.isLoading = false;
+            notificationStore.addNotification('Project created successfully', 'success');
+            return;
+        }
+        if (!response.ok || result.status < 200 || result.status >= 300) {
+            appState.isLoading = false;
+            notificationStore.addNotification(result.data || 'Failed to create project. Please try again', 'error');
+            return;
+        }
     }
 </script>
 
@@ -61,10 +81,10 @@
     <div class="flex flex-col w-full max-w-6xl space-y-4 max-sm:px-4">
         <label for="requirements" class="block font-semibold text-lg md:text-2xl text-purple-400">Requirement</label>
         <ChatUX generatePrdDisabled={generatePrdDisabled}/>
-        <div class={`w-full max-w-6xl mx-auto grid transition-all duration-500 ${appState.userStories.length > 0 ? 'grid-cols-5' : 'grid-cols-1'} gap-4 rounded-lg`}>
+        <div class={`w-full max-w-6xl mx-auto grid transition-all duration-500 ${appState.projectDetails.userStories.length > 0 ? 'grid-cols-5' : 'grid-cols-1'} gap-4 rounded-lg`}>
             <!-- PRD Box -->
             {#if appState.prd}
-                <div class={`flex flex-col space-y-4 ${appState.userStories.length > 0 ? 'col-span-3' : ''}`}>
+                <div class={`flex flex-col space-y-4 ${appState.projectDetails.userStories.length > 0 ? 'col-span-3' : ''}`}>
                     <div class="flex items-center gap-4">
                         <label for="prd-display" class="block grow font-semibold text-lg md:text-xl text-green-500">PRD</label>
                         <button
@@ -98,10 +118,10 @@
             {/if}
         
             <!-- User Stories Box -->
-            {#if appState.userStories.length > 0}
+            {#if appState.projectDetails.userStories.length > 0}
                 <div class="flex flex-col space-y-4 px-2 col-span-2">
                     <div class="flex items-center gap-4">
-                        <label for="user-stories" class="block grow text-lg md:text-xl font-semibold text-yellow-500">User Stories {`(${appState.userStories.length})`}</label>
+                        <label for="user-stories" class="block grow text-lg md:text-xl font-semibold text-yellow-500">User Stories {`(${appState.projectDetails.userStories.length})`}</label>
                         <!-- a button to push to the PM tool -->
                         <button
                             onclick={handleProjectCreation}
@@ -114,7 +134,7 @@
                         </button>
                     </div>
                     <div id="user-stories" class="w-full overflow-auto rounded-lg p-2">
-                        {#each appState.userStories as userStory}
+                        {#each appState.projectDetails.userStories as userStory}
                             <details class="space-y-2 p-2 rounded-lg border-t border-gray-600">
                                 <summary class="cursor-pointer text-white p-2 rounded-lg hover:bg-gray-700 transition-all duration-200">{userStory.title}</summary>
                                 <div class="px-2">

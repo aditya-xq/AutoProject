@@ -3,7 +3,7 @@
     import { tools, prdTypeOptions, userStoryTypeOptions, aiInferenceOptions, modelMap, aiModelOptions } from '$lib/utils/config';
 </script>
 
-<div class="bg-gray-950 text-gray-100 min-h-screen flex flex-col px-6 md:px-16 lg:px-32 py-12 space-y-8">
+<div class="text-gray-100 min-h-screen flex flex-col px-6 md:px-16 lg:px-32 py-12 space-y-8">
     <h1 class="text-2xl font-semibold mb-4">⚙️ Settings</h1>
     <div class="space-y-8 w-full md:w-4/5">
         <!-- Project Management Tool -->

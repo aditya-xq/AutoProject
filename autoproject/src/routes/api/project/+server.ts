@@ -1,5 +1,5 @@
-import { createResponse } from '$lib';
-import { createLinearProject } from '$lib/integrations/linear';
+import { createResponse, createValidationError } from '$lib';
+import { createLinearProject, getAllLinearProjects } from '$lib/integrations/linear';
 import type { RequestHandler } from '@sveltejs/kit';
 // import { createJiraProject } from '$lib/integrations/jira';
 // import { createAsanaProject } from '$lib/integrations/asana';
@@ -8,13 +8,13 @@ import type { RequestHandler } from '@sveltejs/kit';
 
 export const POST: RequestHandler = async ({ request }) => {
     try {
-        const { projectDetails, userStories, tool } = await request.json();
+        const { projectDetails, prd, tool } = await request.json();
 
         let response;
         
         switch (tool) {
             case 'Linear':
-                // response = await createLinearProject(projectDetails, userStories);
+                response = await createLinearProject(projectDetails, prd);
                 break;
             // case 'Jira':
             //     response = await createJiraProject(projectDetails, userStories);
@@ -29,11 +29,39 @@ export const POST: RequestHandler = async ({ request }) => {
             //     response = await createTaskTabProject(projectDetails, userStories);
             //     break;
             default:
-                return createResponse('Invalid tool selected', 400);
+                throw createValidationError('Invalid tool selected', 400);
             }
             return createResponse(response, 200);
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-        return createResponse(`Server error: ${errorMessage}`, 500);
+    } catch (error: any) {
+        return createResponse(error.message || 'Internal server error', error.code || 500);
+    }
+}
+
+export const GET: RequestHandler = async ({ url }) => {
+    try {
+        const tool = url.searchParams.get('tool');
+        let response;
+        switch (tool) {
+            case 'Linear':
+                response = await getAllLinearProjects();
+                break;
+            // case 'Jira':
+            //     response = await getAllJiraProjects();
+            //     break;
+            // case 'Asana':
+            //     response = await getAllAsanaProjects();
+            //     break;
+            // case 'Plane':
+            //     response = await getAllPlaneProjects();
+            //     break;
+            // case 'TaskTab':
+            //     response = await getAllTaskTabProjects();
+            //     break;
+            default:
+                throw createValidationError('Invalid tool selected', 400);
+            }
+        return createResponse(response, 200);
+    } catch (error: any) {
+        return createResponse(error.message || 'Internal server error', error.code || 500);
     }
 }

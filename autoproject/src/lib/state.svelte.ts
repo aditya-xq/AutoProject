@@ -5,10 +5,10 @@ export const appState: AppState = $state({
     promptType: 'prd',
 	requirements: '',
     prd: '',
-    userStories: [],
     projectDetails: {
         name: '',
         description: '',
+        userStories: [],
         teamIds: []
     },
     settings: {
@@ -22,6 +22,6 @@ export const appState: AppState = $state({
 
 export const resetState = () => {
     appState.prd = '';
-    appState.userStories = [];
+    appState.projectDetails.userStories = [];
     appState.requirements = '';
 }
