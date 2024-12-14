@@ -19,3 +19,9 @@ export const appState: AppState = $state({
         aiModel: 'Meta-Llama-3-8B-Instruct-GGUF',
     }
 });
+
+export const resetState = () => {
+    appState.prd = '';
+    appState.userStories = [];
+    appState.requirements = '';
+}

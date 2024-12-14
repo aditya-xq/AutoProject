@@ -1,6 +1,6 @@
 <script lang="ts">
     import { PRD_PROMPT } from '$lib';
-    import { appState } from '$lib/state.svelte';
+    import { appState, resetState } from '$lib/state.svelte';
     import { notificationStore } from '$lib/store';
     import { starterPrompts } from '$lib/utils/config';
     import { useChat } from '@ai-sdk/svelte';
@@ -43,10 +43,7 @@
     }
 
     function clearContent() {
-        appState.requirements = '';
-        appState.promptType = 'prd';
-        appState.prd = '';
-        appState.userStories = [];
+        resetState();
         setMessages([]);
         input.set('');
         stop();
