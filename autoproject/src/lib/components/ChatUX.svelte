@@ -4,21 +4,14 @@
     import { notificationStore } from '$lib/store';
     import { starterPrompts } from '$lib/utils/config';
     import { useChat } from '@ai-sdk/svelte';
-    import { marked } from 'marked';
 
     export let generatePrdDisabled = false;
 
-    const { input, handleSubmit, messages, setMessages, stop } = useChat({
+    const { input, handleSubmit, messages, setMessages, stop, error } = useChat({
         api: '/api/chat',
         body: {
             settings: appState.settings,
         }
-    });
-
-    // Configure marked for secure rendering
-    marked.setOptions({
-        breaks: true,
-        gfm: true
     });
 
     let promptSuffix = '';
@@ -30,6 +23,11 @@
         if (lastMessage.role === 'assistant' && appState.promptType === 'prd') {
             appState.prd = lastMessage.content;
         }
+    }
+
+    $: if ($error) {
+        notificationStore.addNotification($error.message || 'Error occurred during inference', 'error');
+        appState.isLoading = false;
     }
 
     function handleSubmitHandler() {
