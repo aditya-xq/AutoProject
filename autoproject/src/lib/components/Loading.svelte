@@ -6,7 +6,7 @@
 <div
     id="loading-overlay"
     class:hidden={!appState.isLoading}
-    class="fixed inset-0 bg-black bg-opacity-70 flex flex-col items-center justify-center space-y-6 animate-fadeIn z-50"
+    class="fixed inset-0 bg-black/50 flex flex-col items-center justify-center space-y-6 animate-fadeIn z-50"
     role="status"
     aria-live="polite"
     aria-labelledby="loading-text"

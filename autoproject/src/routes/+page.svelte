@@ -51,14 +51,14 @@
     }
 </script>
 
-<div class="bg-gray-950 text-gray-100 min-h-screen flex flex-col px-4 sm:px-8 md:px-16 lg:px-32 xl:px-60 py-8 space-y-6">
+<div class="bg-gray-950 text-gray-100 min-h-screen flex flex-col px-4 sm:px-8 md:px-16 lg:px-32 xl:px-32 py-8 space-y-6">
     <!-- Note to setup settings before getting started -->
-    <div class="bg-gray-900 text-gray-300 p-4 rounded-lg max-w-4xl mx-auto">
+    <div class="bg-gray-900 text-gray-300 p-4 rounded-lg max-w-4xl">
         <span>🚨 Don't forget to configure your <a href="/settings" class="text-violet-400 transition-colors">settings page</a> before getting started. AutoProject can generate starter PRDs and user stories but remember that it is prone to errors.</span>
     </div>
 
     <!-- Requirements Box -->
-    <div class="flex flex-col w-full max-w-6xl mx-auto space-y-4 max-sm:px-4">
+    <div class="flex flex-col w-full max-w-6xl space-y-4 max-sm:px-4">
         <label for="requirements" class="block font-semibold text-lg md:text-2xl text-purple-400">Requirement</label>
         <ChatUX generatePrdDisabled={generatePrdDisabled}/>
         <div class={`w-full max-w-6xl mx-auto grid transition-all duration-500 ${appState.userStories.length > 0 ? 'grid-cols-5' : 'grid-cols-1'} gap-4 rounded-lg`}>
@@ -66,7 +66,7 @@
             {#if appState.prd}
                 <div class={`flex flex-col space-y-4 ${appState.userStories.length > 0 ? 'col-span-3' : ''}`}>
                     <div class="flex items-center gap-4">
-                        <label for="prd-display" class="block flex-grow font-semibold text-lg md:text-xl text-green-500">PRD</label>
+                        <label for="prd-display" class="block grow font-semibold text-lg md:text-xl text-green-500">PRD</label>
                         <button
                             onclick={() => copyToClipboard(appState.prd)}
                             class="flex mt-1 items-center gap-2 px-3 py-1 text-sm bg-gray-800 hover:bg-gray-700 text-white rounded-md transition-colors duration-200"
@@ -90,7 +90,7 @@
                     </div>
                     <div 
                         id="prd-display" 
-                        class="prose prose-invert max-w-none w-full max-h-50 flex-grow p-6 bg-gray-950 border border-green-500 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                        class="prose prose-invert max-w-none w-full grow p-6 bg-gray-950 border border-green-500 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400"
                     >
                         {@html marked(removeMarkdownCodeBlocks(appState.prd))}
                     </div>
@@ -101,7 +101,7 @@
             {#if appState.userStories.length > 0}
                 <div class="flex flex-col space-y-4 px-2 col-span-2">
                     <div class="flex items-center gap-4">
-                        <label for="user-stories" class="block flex-grow text-lg md:text-xl font-semibold text-yellow-500">User Stories {`(${appState.userStories.length})`}</label>
+                        <label for="user-stories" class="block grow text-lg md:text-xl font-semibold text-yellow-500">User Stories {`(${appState.userStories.length})`}</label>
                         <!-- a button to push to the PM tool -->
                         <button
                             onclick={handleProjectCreation}
@@ -118,7 +118,7 @@
                             <details class="space-y-2 p-2 rounded-lg border-t border-gray-600">
                                 <summary class="cursor-pointer text-white p-2 rounded-lg hover:bg-gray-700 transition-all duration-200">{userStory.title}</summary>
                                 <div class="px-2">
-                                    <p class="mb-4 text-sm">{@html marked(userStory.description)}</p>
+                                    <p class="mb-4 text-sm">{@html marked(removeMarkdownCodeBlocks(userStory.description))}</p>
                                 </div>
                             </details>
                         {/each}

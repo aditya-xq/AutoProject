@@ -1,4 +1,4 @@
-<div class="bg-gradient-to-br from-black to-gray-950 text-gray-100 min-h-screen flex flex-col p-8 md:px-16 lg:px-60 space-y-8">
+<div class="bg-linear-to-br from-black to-gray-950 text-gray-100 min-h-screen flex flex-col p-8 md:px-16 lg:px-32 space-y-8">
     <!-- Title Section -->
     <h1 class="text-xl md:text-2xl font-bold text-purple-400">🚀 Welcome to AutoProject</h1>
     <p class="max-w-xl md:max-w-3xl">
@@ -42,7 +42,7 @@
         <p>
             Help us make AutoProject even better! If you have suggestions, questions, or just want to share your excitement, reach out to us on Twitter.
         </p>
-        <div><a href="https://twitter.com/intent/tweet?screen_name=xq_is_here&text=Hey%20there%20AutoProject%20team%2C%20I%20wanted%20to%20share%20my%20thoughts%20on%20your%20tool..." target="_blank" class="bg-pink-600 hover:bg-pink-700 text-white text-xs py-2 px-4 rounded-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-pink-400">
+        <div><a href="https://twitter.com/intent/tweet?screen_name=xq_is_here&text=Hey%20there%20AutoProject%20team%2C%20I%20wanted%20to%20share%20my%20thoughts%20on%20your%20tool..." target="_blank" class="bg-pink-600 hover:bg-pink-700 text-white text-xs py-2 px-4 rounded-2xl shadow-lg focus:outline-hidden focus:ring-2 focus:ring-pink-400">
             Tweet to @xq_is_here
         </a></div>
     </div>

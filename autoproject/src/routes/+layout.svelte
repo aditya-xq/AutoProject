@@ -31,7 +31,7 @@
         <h1 class="text-2xl font-bold text-purple-400">AutoProject</h1>
     </a>
     <!-- Mobile Menu Button -->
-    <button class="fixed top-3 right-4 z-50 p-2 text-gray-100 rounded-lg focus:outline-none md:hidden" onclick={toggleMenu}>
+    <button class="fixed top-3 right-4 z-50 p-2 text-gray-100 rounded-lg focus:outline-hidden md:hidden" onclick={toggleMenu}>
         {#if menuOpen}
             ✖️
         {:else}
@@ -42,7 +42,7 @@
 
 <!-- Full-Screen Overlay Menu for Mobile -->
 <div class={`fixed z-200 inset-0 bg-gradient-to-b from-gray-900 to-black text-gray-100 flex flex-col items-center justify-center transition-transform duration-300 transform ${menuOpen ? 'translate-x-0' : 'translate-x-full'} md:hidden`}>
-    <div class="flex-grow w-full flex flex-col items-center space-y-8 mt-40">
+    <div class="grow w-full flex flex-col items-center space-y-8 mt-40">
         <!-- Links with conditional class for active route -->
         <a href="/" class={`hover:bg-gray-800 rounded-md py-4 px-8 text-center text-2xl ${isActive('/') ? 'bg-purple-700' : ''}`} onclick={toggleMenu}>Home</a>
         <a href="/about" class={`hover:bg-gray-800 rounded-md py-4 px-8 text-center text-2xl ${isActive('/about') ? 'bg-purple-700' : ''}`} onclick={toggleMenu}>About</a>
@@ -58,7 +58,7 @@
         <span class="text-xl">🚀</span>
         <h1 class="text-xl font-bold text-purple-400">AutoProject</h1>
     </a>
-    <div class="flex-grow w-full flex flex-col mt-8 space-y-4">
+    <div class="grow w-full flex flex-col mt-8 space-y-4">
         <!-- Links with conditional class for active route -->
         <a href="/" class={`hover:bg-gray-800 rounded-md py-2 px-4 text-center ${isActive('/') ? 'bg-purple-700' : ''}`}>Home</a>
         <a href="/about" class={`hover:bg-gray-800 rounded-md py-2 px-4 text-center ${isActive('/about') ? 'bg-purple-700' : ''}`}>About</a>
@@ -69,7 +69,7 @@
 
 <Loading/>
 
-<main class="max-md:pt-16 bg-gradient-to-b from-black to-gray-900 md:pl-54">
+<main class="max-md:pt-16 bg-linear-to-b from-black to-gray-900 md:pl-54">
     <slot/>
 </main>
 

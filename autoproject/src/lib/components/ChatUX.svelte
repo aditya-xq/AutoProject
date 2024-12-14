@@ -60,7 +60,7 @@
     <input
         id="requirements" 
         autocomplete="off"
-        class="my-2 flex-grow p-4 bg-gray-950 border border-purple-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+        class="my-2 grow p-4 bg-gray-950 border border-purple-400 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-purple-400"
         bind:value={appState.requirements}
         placeholder="E.g. A webapp for xyz usecase..."
         aria-label="Enter Project Requirements"
@@ -71,14 +71,14 @@
         aria-label="Generate PRD"
         disabled={generatePrdDisabled}
         on:click={handleSubmitHandler}
-        class="my-2 mx-2 px-4 py-2 rounded-md text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="my-2 mx-2 px-4 py-2 rounded-md text-sm font-medium text-white bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 focus:outline-hidden focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-xs transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
     >
         Generate PRD
     </button>
 
     <button
         on:click={clearContent}
-        class="my-2 px-4 py-2 rounded-md text-sm font-medium text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-sm transition-all duration-200"
+        class="my-2 px-4 py-2 rounded-md text-sm font-medium text-white bg-linear-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 focus:outline-hidden focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-xs transition-all duration-200"
         aria-label="Clear Content"
     >
         Clear All
@@ -101,7 +101,7 @@
     </div>
 {/if}
 
-<style lang="postcss">
+<style>
     :global(.prose) {
         line-height: 1.5;
     }
