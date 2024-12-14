@@ -47,13 +47,13 @@ Your BYOK tool to automate project management with AI-powered workflows.
     ```
 
 ### Running the Project
-Start the optimized SvelteKit web app:
+1. Start the optimized SvelteKit web app:
     ```bash
-    cd autoproject 
-    bun run build 
-    bun run preview 
+    cd autoproject
+    bun run build
+    bun run preview
     ```
-3. Visit `http://localhost:5173` and let the magic unfold!
+2. Visit `http://localhost:5173` and let the magic unfold!
 
 ## 📜 Usage Guide
 1. **Generate PRD**: Describe your requirements and click the **Generate PRD** button.
