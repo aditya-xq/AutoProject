@@ -1,88 +1,113 @@
+import { createValidationError, errors } from "./errors";
 import type { GeneratePrdResponse, UserStory } from "./interface";
 
 function escapeJsonString(jsonString: string): string {
-    return jsonString.replace(/\\/g, '\\\\')
-                     .replace(/"/g, '\\"')
-                     .replace(/\n/g, '\\n')
-                     .replace(/\r/g, '\\r')
-                     .replace(/\t/g, '\\t');
+    const escapeMap = {
+        '\\': '\\\\',
+        '"': '\\"',
+        '\n': '\\n',
+        '\r': '\\r',
+        '\t': '\\t'
+    };
+    return jsonString.replace(/[\\"\n\r\t]/g, char => escapeMap[char as keyof typeof escapeMap]);
 }
 
-function extractJson<T>(markdown: string): T | null {
-    // Regular expression to find JSON code fence in Markdown
+function extractJson<T>(markdown: string): T {
     const jsonFencePattern = /```json\s+([\s\S]+?)\s+```/;
-
-    // Find the JSON code fence in the input string
     const match = markdown.match(jsonFencePattern);
 
-    if (match) {
-        const jsonStr = match[1]; // The JSON object or array is captured in the first group
+    if (!match) {
+        throw createValidationError(errors.jsonCodeFenceNotFound);
+    }
+
+    const jsonStr = match[1].trim();
+    try {
+        return JSON.parse(jsonStr) as T;
+    } catch (e) {
+        // Try to fix common JSON formatting issues
+        const correctedJsonStr = fixJsonFormatting(jsonStr);
         try {
-            const jsonObj = JSON.parse(jsonStr) as T;
-            return jsonObj;
+            return JSON.parse(correctedJsonStr) as T;
         } catch (e) {
-            const unterminatedPattern = /"([^"]*?)$/gm;
-            const match = jsonStr.match(unterminatedPattern);
-            if (match) {
-                let correctedJsonString = jsonStr;
-                match.forEach(unterminatedString => {
-                    const escapedString = escapeJsonString(unterminatedString);
-                    correctedJsonString = correctedJsonString.replace(unterminatedString, escapedString + '"');
-                });
-                try {
-                    const jsonObj = JSON.parse(correctedJsonString);
-                    return jsonObj;
-                } catch (e) {
-                    // Handle JSON parsing error with more context
-                    console.error('Failed to parse JSON:', e, 'Input:', jsonStr);
-                    throw new Error(`Failed to parse JSON`);
-                }
-            }
+            throw createValidationError(`${errors.jsonParsingFailed}: ${e instanceof Error ? e.message : errors.unknownError}`);
         }
     }
-    return null;
 }
 
+function fixJsonFormatting(jsonStr: string): string {
+    // Fix unterminated strings
+    const unterminatedPattern = /"([^"]*?)$/gm;
+    const matches = jsonStr.match(unterminatedPattern);
+    
+    if (matches) {
+        let correctedJson = jsonStr;
+        matches.forEach(unterminated => {
+            correctedJson = correctedJson.replace(
+                unterminated, 
+                `${escapeJsonString(unterminated)}"`
+            );
+        });
+        return correctedJson;
+    }
+    return jsonStr;
+}
 
-// Validation Functions
 export function validateUserStory(userStory: UserStory, index: number): void {
-    if (!userStory.title || typeof userStory.title !== 'string' || !userStory.description || typeof userStory.description !== 'string') {
-        throw new Error(`Invalid Task at index ${index}: Title or description is missing or incorrect type.`);
+    if (!userStory.title?.trim()) {
+        throw createValidationError(`User story at index ${index} has an empty or invalid title`);
+    }
+    if (!userStory.description?.trim()) {
+        throw createValidationError(`User story at index ${index} has an empty or invalid description`);
     }
 }
 
 export function validatePrdDetails(details: GeneratePrdResponse): void {
-    if (!details.prd || typeof details.prd !== 'string') {
-        throw new Error("Invalid 'prd': Must be a non-empty string.");
+    if (!details.prd?.trim()) {
+        throw createValidationError(errors.prdContentIsEmpty);
     }
-    if (!details.projectDetails.name || typeof details.projectDetails.name !== 'string' || !details.projectDetails.description || typeof details.projectDetails.description !== 'string') {
-        throw new Error("Invalid 'projectDetails': Name or description is missing or incorrect type.");
+    if (!details.projectDetails?.name?.trim()) {
+        throw createValidationError(errors.projectNameIsEmpty);
+    }
+    if (!details.projectDetails?.description?.trim()) {
+        throw createValidationError(errors.projectDescriptionIsEmpty);
     }
 }
 
-// JSON Structure Validators
 export function validateAndParseToUserStoriesArray(jsonString: string): UserStory[] {
-    const stories = extractJson<UserStory[]>(jsonString);
-    if (!stories) {
-        throw new Error('Failed to parse JSON to UserStory array. Please try again.');
+    try {
+        const stories = extractJson<UserStory[]>(jsonString);
+        if (!Array.isArray(stories)) {
+            throw createValidationError(errors.userStoriesIsNotArray);
+        }
+        stories.forEach((story, index) => validateUserStory(story, index));
+        return stories;
+    } catch (error: any) {
+        throw createValidationError(`${error.message || 'Unknown error'}`);
     }
-    stories.forEach((story, index) => validateUserStory(story, index));
-    return stories;
 }
 
 export function validateAndParseToPrdResponseObject(jsonString: string): GeneratePrdResponse {
-    const response = extractJson<GeneratePrdResponse>(jsonString);
-    if (!response) {
-        throw new Error('Failed to parse JSON to GeneratePrdResponse. Please try again');
+    try {
+        const response = extractJson<GeneratePrdResponse>(jsonString);
+        validatePrdDetails(response);
+        return response;
+    } catch (error: any) {
+        throw createValidationError(`${error.message || 'Unknown error'}`);
     }
-    validatePrdDetails(response);
-    return response;
 }
 
-// Response Creation Simplified
 export function createResponse(data: any, status: number): Response {
-    return new Response(JSON.stringify(data), {
-        status,
-        headers: { 'Content-Type': 'application/json' }
-    });
+    const headers = {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache'
+    };
+
+    return new Response(
+        JSON.stringify({
+            success: status >= 200 && status < 300,
+            data,
+            timestamp: new Date().toISOString()
+        }),
+        { status, headers }
+    );
 }

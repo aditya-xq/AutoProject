@@ -3,7 +3,7 @@ import { createOpenAI } from '@ai-sdk/openai';
 import { createGroq } from '@ai-sdk/groq';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import type { RequestHandler } from '@sveltejs/kit';
-import { createResponse } from '$lib';
+import { createGenerationError } from '$lib';
 import { SECRET_GEMINI_API_KEY, SECRET_GROQ_API_KEY } from '$env/static/private';
 
 const lmstudio = createOpenAI({
@@ -43,5 +43,5 @@ export const POST = (async ({ request }) => {
     });
     return result.toDataStreamResponse();
   }
-  return createResponse('Error during inference', 400);
+  throw createGenerationError('Error during inference.');
 }) satisfies RequestHandler;

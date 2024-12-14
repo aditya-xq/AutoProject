@@ -25,7 +25,7 @@ export const tools: ProjectManagementTool[] = ['Linear', 'Asana', 'Jira', 'Plane
 export const aiModelOptions: Record<string, string[]> = {
     'Groq' : ['Llama3.3-70b', 'Mixtral-8x7b'],
     'LM Studio' : ['Phi3-4k', 'Llama3-8b'],
-    'Gemini' : ['Gemini-1.5-Flash']
+    'Gemini' : ['Gemini-1.5-Flash', 'Gemini-2-Flash'],
 };
 export const modelMap: any = {
     'Llama3.3-70b' : 'llama-3.3-70b-versatile',
@@ -33,4 +33,5 @@ export const modelMap: any = {
     'Phi3-4k' : 'Phi-3-mini-4k-instruct-GGUF',
     'Llama3-8b' : 'Meta-Llama-3-8B-Instruct-GGUF',
     'Gemini-1.5-Flash' : 'gemini-1.5-flash',
+    'Gemini-2-Flash' : 'gemini-2.0-flash-exp',
 };

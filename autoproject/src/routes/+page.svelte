@@ -15,35 +15,34 @@
         }
     }
 
+    function removeMarkdownCodeBlocks(content: string): string {
+        return content.replace(/```markdown\n/g, '').replace(/```markdown/g, '');
+    }
+
     async function handleUserStoryGeneration() {
         appState.isLoading = true;
-        appState.userStories = [];
-        try {
-            const response = await fetch('/api/generate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    prd: appState.prd,
-                    settings: appState.settings,
-                    promptType: 'userStory',
-                })
-            });
-            
-            const result = await response.json();
-            
-            if (result.status === 200) {
-                appState.userStories = result.data;
-                notificationStore.addNotification('User stories generated successfully', 'success');
-            } else {
-                notificationStore.addNotification(result.error || 'Failed to generate user stories', 'error');
-            }
-        } catch (error) {
-            notificationStore.addNotification('Failed to generate user stories', 'error');
-            throw error;
-        } finally {
+        const response = await fetch('/api/generate', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                prd: appState.prd,
+                settings: appState.settings,
+                promptType: 'userStory',
+            })
+        });
+        
+        const result = await response.json();
+
+        if (response.ok) {
             appState.isLoading = false;
+            appState.userStories = result.data;
+            notificationStore.addNotification('User stories generated successfully', 'success');
+            return;
+        }
+        if (!response.ok || result.status < 200 || result.status >= 300) {
+            appState.isLoading = false;
+            notificationStore.addNotification(result.data || 'Failed to generate user stories. Please try again', 'error');
+            return;
         }
     }
 
@@ -93,7 +92,7 @@
                         id="prd-display" 
                         class="prose prose-invert max-w-none w-full max-h-50 flex-grow p-6 bg-gray-950 border border-green-500 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400"
                     >
-                        {@html marked(appState.prd)}
+                        {@html marked(removeMarkdownCodeBlocks(appState.prd))}
                     </div>
                 </div>
             {/if}

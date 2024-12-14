@@ -6,3 +6,4 @@ export * from './utils/helper';
 export * from './utils/types';
 export * from './utils/interface';
 export * from './utils/constants';
+export * from './utils/errors';
