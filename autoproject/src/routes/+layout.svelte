@@ -48,7 +48,7 @@
         <a href="/about" class={`hover:bg-gray-800 rounded-md py-4 px-8 text-center text-2xl ${isActive('/about') ? 'bg-purple-700' : ''}`} onclick={toggleMenu}>About</a>
         <a href="/projects" class={`hover:bg-gray-800 rounded-md py-4 px-8 text-center text-2xl ${isActive('/projects') ? 'bg-purple-700' : ''}`} onclick={toggleMenu}>Projects</a>
         <a href="/settings" class={`hover:bg-gray-800 rounded-md py-4 px-8 text-center text-2xl ${isActive('/settings') ? 'bg-purple-700' : ''}`} onclick={toggleMenu}>Settings</a>
-        <a href="/keys" class={`hover:bg-gray-800 rounded-md py-4 px-8 text-center text-2xl ${isActive('/keys') ? 'bg-purple-700' : ''}`} onclick={toggleMenu}>Keys</a>
+        <!-- <a href="/keys" class={`hover:bg-gray-800 rounded-md py-4 px-8 text-center text-2xl ${isActive('/keys') ? 'bg-purple-700' : ''}`} onclick={toggleMenu}>Keys</a> -->
     </div>
 </div>
 
@@ -65,7 +65,7 @@
         <a href="/about" class={`hover:bg-gray-800 rounded-md py-2 px-4 text-center ${isActive('/about') ? 'bg-purple-700' : ''}`}>About</a>
         <a href="/projects" class={`hover:bg-gray-800 rounded-md py-2 px-4 text-center ${isActive('/projects') ? 'bg-purple-700' : ''}`}>Projects</a>
         <a href="/settings" class={`hover:bg-gray-800 rounded-md py-2 px-4 text-center ${isActive('/settings') ? 'bg-purple-700' : ''}`}>Settings</a>
-        <a href="/keys" class={`hover:bg-gray-800 rounded-md py-2 px-4 text-center ${isActive('/keys') ? 'bg-purple-700' : ''}`}>Keys</a>
+        <!-- <a href="/keys" class={`hover:bg-gray-800 rounded-md py-2 px-4 text-center ${isActive('/keys') ? 'bg-purple-700' : ''}`}>Keys</a> -->
     </div>
 </nav>
 
