@@ -10,7 +10,7 @@ Your BYOK tool to automate project management with AI powered workflows.
 ## 🛠️ Tech Stack
 ### **Backend**
 - **Sveltekit**: With Sveltekit api routes to handle HTTP requests.
-- **Gemini Pro, Groq, or LM Studio**: Configurable as per preference, for that sweet, sweet AI magic.
+- **Gemini, Groq, or LM Studio**: Configurable as per preference, for that sweet, sweet AI magic.
 - **Linear SDK**: To connect with Linear API.
 
 ### **Frontend**
@@ -41,9 +41,9 @@ Your BYOK tool to automate project management with AI powered workflows.
     ```
 4. Create a `.env` file inside the autoproject folder and add your API keys:
     ```plaintext
-    VITE_GEMINI_API_KEY=<Your-Gemini-API-Key>
-    VITE_LINEAR_API_KEY=<Your-Linear-API-Key>
-    VITE_GROQ_API_KEY=<Your-Groq-API-Key>
+    SECRET_GEMINI_API_KEY=<Your-Gemini-API-Key>
+    SECRET_LINEAR_API_KEY=<Your-Linear-API-Key>
+    SECRET_GROQ_API_KEY=<Your-Groq-API-Key>
     ```
 
 ### Running the Project
