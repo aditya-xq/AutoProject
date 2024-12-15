@@ -23,9 +23,192 @@
         </p>
         <ul class="list-decimal pl-6 space-y-1">
             <li><strong>Generate PRD:</strong> Describe your requirements and click the "Generate PRD" button.</li>
-            <li><strong>Generate Userstories:</strong> Review the PRD and hit "Generate Userstories" to let the AI do the heavy lifting.</li>
+            <li><strong>Generate User Stories:</strong> Review the PRD and hit "Generate Userstories" to let the AI do the heavy lifting.</li>
             <li><strong>Push to Tool:</strong> Finalize your tasks and sync them with your PM tool for seamless integration.</li>
         </ul>
+    </div>
+
+    <!-- Quick Settings Presets -->
+    <div class="space-y-6 max-w-xl md:max-w-5xl">
+        <h2 class="text-lg md:text-xl font-semibold text-pink-400 flex items-center gap-2">
+            <span>⚡</span>
+            <span>Quick Settings Presets</span>
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Rapid POC -->
+            <div class="bg-black p-6 rounded-xl border border-gray-800 hover:border-white transition-all duration-300">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-2xl">🚀</span>
+                    <h3 class="text-lg font-medium text-white">Rapid POC</h3>
+                </div>
+                <ul class="space-y-3">
+                    <li class="flex justify-between items-center">
+                        <span class="text-gray-400 text-sm">Platform</span>
+                        <span class="text-white">Groq</span>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span class="text-gray-400 text-sm">Model</span>
+                        <span class="text-white">Llama 3.3 70b</span>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span class="text-gray-400 text-sm">PRD Type</span>
+                        <span class="text-white">Minimal</span>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span class="text-gray-400 text-sm">User Story</span>
+                        <span class="text-white">Minimal</span>
+                    </li>
+                </ul>
+                <div class="h-[1px] bg-gray-800 my-4"></div>
+                <p class="text-sm text-gray-400">
+                    Zero to MVP in record time. Perfect for quick validation.
+                </p>
+            </div>
+
+            <!-- Enterprise Project -->
+            <div class="bg-black p-6 rounded-xl border border-gray-800 hover:border-white transition-all duration-300">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-2xl">🏢</span>
+                    <h3 class="text-lg font-medium text-white">Enterprise</h3>
+                </div>
+                <ul class="space-y-3">
+                    <li class="flex justify-between items-center">
+                        <span class="text-gray-400 text-sm">Platform</span>
+                        <span class="text-white">Gemini</span>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span class="text-gray-400 text-sm">Model</span>
+                        <span class="text-white">Gemini 2 Flash</span>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span class="text-gray-400 text-sm">PRD Type</span>
+                        <span class="text-white">Feature Based</span>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span class="text-gray-400 text-sm">User Story</span>
+                        <span class="text-white">Technical</span>
+                    </li>
+                </ul>
+                <div class="h-[1px] bg-gray-800 my-4"></div>
+                <p class="text-sm text-gray-400">
+                    Built for complex projects requiring technical depth.
+                </p>
+            </div>
+
+            <!-- User-Centric -->
+            <div class="bg-black p-6 rounded-xl border border-gray-800 hover:border-white transition-all duration-300">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-2xl">👥</span>
+                    <h3 class="text-lg font-medium text-white">User-Centric</h3>
+                </div>
+                <ul class="space-y-3">
+                    <li class="flex justify-between items-center">
+                        <span class="text-gray-400 text-sm">Platform</span>
+                        <span class="text-white">LM Studio</span>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span class="text-gray-400 text-sm">Model</span>
+                        <span class="text-white">Llama 3.1 8b</span>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span class="text-gray-400 text-sm">PRD Type</span>
+                        <span class="text-white">Narrative</span>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span class="text-gray-400 text-sm">User Story</span>
+                        <span class="text-white">User-Focused</span>
+                    </li>
+                </ul>
+                <div class="h-[1px] bg-gray-800 my-4"></div>
+                <p class="text-sm text-gray-400">
+                    Optimized for user experience flows.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Model & Settings Guide -->
+    <div class="space-y-8 max-w-xl md:max-w-5xl">
+        <h2 class="text-lg md:text-xl font-semibold text-orange-400 flex items-center gap-2">
+            <span>🎯</span>
+            <span>Model & Settings Guide</span>
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- AI Platforms Card -->
+            <div class="bg-black p-6 rounded-xl border border-gray-800 hover:border-white transition-all duration-300">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-2xl">🤖</span>
+                    <h3 class="text-lg font-medium text-white">AI Platforms</h3>
+                </div>
+                <div class="space-y-4">
+                    <div class="space-y-2">
+                        <h4 class="text-purple-400">Groq</h4>
+                        <p class="text-sm text-gray-300">Llama 3.3 70b, Gemma 2 9b, Mixtral 8x7b</p>
+                        <p class="text-xs text-gray-400">Best for: Enterprise-grade inference</p>
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="text-purple-400">LM Studio</h4>
+                        <p class="text-sm text-gray-300">Llama 3.1 8b, Qwen 2.5 14b</p>
+                        <p class="text-xs text-gray-400">Best for: Local development</p>
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="text-purple-400">Gemini</h4>
+                        <p class="text-sm text-gray-300">Gemini 2 Flash, Gemini 1.5 Flash</p>
+                        <p class="text-xs text-gray-400">Best for: Complex reasoning</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRD Types Card -->
+            <div class="bg-black p-6 rounded-xl border border-gray-800 hover:border-white transition-all duration-300">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-2xl">📝</span>
+                    <h3 class="text-lg font-medium text-white">PRD Types</h3>
+                </div>
+                <div class="space-y-4">
+                    <div class="space-y-2">
+                        <h4 class="text-green-400">Feature Based</h4>
+                        <p class="text-xs text-gray-400">Best for: Detailed enterprise projects</p>
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="text-green-400">Focused</h4>
+                        <p class="text-xs text-gray-400">Best for: Mid-sized projects</p>
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="text-green-400">Minimal</h4>
+                        <p class="text-xs text-gray-400">Best for: Quick MVPs</p>
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="text-green-400">Narrative</h4>
+                        <p class="text-xs text-gray-400">Best for: User-centric experiences</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Story Types Card -->
+            <div class="bg-black p-6 rounded-xl border border-gray-800 hover:border-white transition-all duration-300">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-2xl">📚</span>
+                    <h3 class="text-lg font-medium text-white">Story Types</h3>
+                </div>
+                <div class="space-y-4">
+                    <div class="space-y-2">
+                        <h4 class="text-blue-400">Technical</h4>
+                        <p class="text-xs text-gray-400">Best for: System architecture</p>
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="text-blue-400">User-Focused</h4>
+                        <p class="text-xs text-gray-400">Best for: UX-driven features</p>
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="text-blue-400">Minimal</h4>
+                        <p class="text-xs text-gray-400">Best for: Core functionality</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Fun Outro -->

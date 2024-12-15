@@ -51,6 +51,6 @@ export const POST = (async ({ request }) => {
     }
     throw createGenerationError(errors.invalidAiInferenceType);
   } catch (error: any) {
-    return createResponse(error.message || errors.unknownError, error.code || 500);
+    throw createGenerationError(error.message || errors.unknownError);
   }
 }) satisfies RequestHandler;

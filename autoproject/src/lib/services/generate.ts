@@ -1,18 +1,14 @@
 import type { GenerativeModel } from "@google/generative-ai";
-import { validateAndParseToUserStoriesArray, validateAndParseToPrdResponseObject } from "../utils/helper";
-import { USER_STORY_PROMPT, PRD_PROMPT } from "../utils/prompts";
-import { SYSTEM_PROMPT } from "../utils/constants";
-import { createGenerationError, errors, type Settings } from "$lib";
+import { createGenerationError, errors, validateAndParseToProjectDetails, type Settings } from "$lib";
+import { PROJECT_SCHEMA_FOR_LMSTUDIO, SYSTEM_PROMPT } from "$lib/utils/config";
+import { USER_STORY_PROMPT } from "./prompts";
 
 export async function handleGeminiInference(
     model: GenerativeModel, 
     content: string, 
-    promptType: string, 
     settings: Settings
 ) {
-    const promptSuffix = promptType === 'userStory' 
-        ? USER_STORY_PROMPT(settings.userStoryType) 
-        : PRD_PROMPT(settings.prdType);
+    const promptSuffix = USER_STORY_PROMPT(settings.userStoryType);
     
     const contentResult = await model.generateContent(content + ' ' + promptSuffix);
     
@@ -21,23 +17,18 @@ export async function handleGeminiInference(
     }
 
     const responseString = contentResult.response.text();
-    return promptType === 'userStory' 
-        ? validateAndParseToUserStoriesArray(responseString)
-        : validateAndParseToPrdResponseObject(responseString);
+    return validateAndParseToProjectDetails(responseString);
 }
 
-export async function handleAIInference(
+export async function handleGroqInference(
     endpoint: string, 
     headers: HeadersInit, 
     model: string, 
     content: string, 
-    promptType: string, 
-    settings: Settings
+    settings: Settings,
+    isJsonMode: boolean
 ) {
-    const prompt = promptType === 'userStory' 
-        ? `${content} ${USER_STORY_PROMPT(settings.userStoryType)}`
-        : `${content} ${PRD_PROMPT(settings.prdType)}`;
-
+    const prompt = `${content} ${USER_STORY_PROMPT(settings.userStoryType)}`;
     const response = await fetch(endpoint, {
         method: 'POST',
         headers,
@@ -47,8 +38,47 @@ export async function handleAIInference(
                 { role: "system", content: SYSTEM_PROMPT },
                 { role: "user", content: prompt }
             ],
-            temperature: 0.7,
-            stream: false
+            response_format: isJsonMode && { type: "json_object"},
+            temperature: 0.8,
+            stream: false,
+            
+        })
+    });
+
+    if (!response.ok) {
+        throw createGenerationError(`${response.status}: ${errors.aiServiceResponseError}`);
+    }
+
+    const jsonData = await response.json();
+    
+    if (!jsonData.choices?.[0]?.message?.content) {
+        throw createGenerationError(errors.aiServiceResponseError);
+    }
+
+    return validateAndParseToProjectDetails(jsonData.choices[0].message.content);
+}
+
+export async function handleAIInference(
+    endpoint: string, 
+    headers: HeadersInit, 
+    model: string, 
+    content: string, 
+    settings: Settings,
+    isJsonMode: boolean,
+) {
+    const prompt = `${content} ${USER_STORY_PROMPT(settings.userStoryType)}`;
+    const response = await fetch(endpoint, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+            model,
+            messages: [
+                { role: "system", content: SYSTEM_PROMPT },
+                { role: "user", content: prompt }
+            ],
+            response_format: isJsonMode && PROJECT_SCHEMA_FOR_LMSTUDIO,
+            temperature: 0.8,
+            stream: false,
         })
     });
 
@@ -62,7 +92,5 @@ export async function handleAIInference(
         throw createGenerationError(errors.aiServiceResponseError);
     }
 
-    return promptType === 'userStory'
-        ? validateAndParseToUserStoriesArray(jsonData.choices[0].message.content)
-        : validateAndParseToPrdResponseObject(jsonData.choices[0].message.content);
+    return validateAndParseToProjectDetails(jsonData.choices[0].message.content);
 }

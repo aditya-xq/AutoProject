@@ -1,3 +1,4 @@
+import { modelMap } from "./utils/config";
 import type { AppState } from "./utils/interface";
 
 export const appState: AppState = $state({
@@ -14,9 +15,9 @@ export const appState: AppState = $state({
     settings: {
         tool: 'Linear',
         prdType: 'Feature Based', 
-        userStoryType: 'Role-Feature-Reason', 
-        aiInferenceType: 'LM Studio',
-        aiModel: 'Meta-Llama-3-8B-Instruct-GGUF',
+        userStoryType: 'Technical', 
+        aiInferenceType: 'Gemini',
+        aiModel: modelMap['Gemini 2 Flash'],
     }
 });
 

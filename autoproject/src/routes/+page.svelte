@@ -27,7 +27,7 @@
             body: JSON.stringify({
                 prd: appState.prd,
                 settings: appState.settings,
-                promptType: 'userStory',
+                isJsonMode: true,
             })
         });
         

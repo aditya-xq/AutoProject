@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { PRD_PROMPT } from '$lib';
     import { appState, resetState } from '$lib/state.svelte';
     import { notificationStore } from '$lib/store';
     import { starterPrompts } from '$lib/utils/config';
+    import { PRD_PROMPTS } from '$lib/services/prompts';
     import { useChat } from '@ai-sdk/svelte';
 
     export let generatePrdDisabled = false;
@@ -26,15 +26,15 @@
     }
 
     $: if ($error) {
-        notificationStore.addNotification($error.message || 'Error occurred during inference', 'error');
+        notificationStore.addNotification('Error occurred during inference. Please check if your inference server is running properly', 'error');
         appState.isLoading = false;
     }
 
     function handleSubmitHandler() {
         appState.isLoading = true;
         appState.promptType = 'prd';
-        promptSuffix = PRD_PROMPT(appState.settings.prdType);
-        prompt = `${appState.requirements}. ${promptSuffix}`;
+        promptSuffix = PRD_PROMPTS[appState.settings.prdType];
+        prompt = `Requirement: ${appState.requirements}. ${promptSuffix}`;
         setMessages([]);
         input.set(prompt);
         handleSubmit();
