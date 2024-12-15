@@ -1,6 +1,6 @@
 # 🚀 AutoProject
 
-Your ultimate BYOK tool to automate project management with AI-powered workflows. Craft your project user stories with the precision of a rocket engineer and the ease of autopilot.
+Your ultimate BYOK tool to automate product and project management with AI-powered workflows.
 
 ## 🌟 Key Features
 - **Generative PRD Creation**: Feed your requirements and receive a tailor-made PRD that aligns perfectly with your workflow.
