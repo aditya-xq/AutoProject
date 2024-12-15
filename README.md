@@ -4,7 +4,7 @@ Your ultimate BYOK tool to automate product and project management with AI-power
 
 ## 🌟 Key Features
 - **Generative PRD Creation**: Feed your requirements and receive a tailor-made PRD that aligns perfectly with your workflow.
-- **AI-Powered Userstory Generation**: The AI effortlessly transforms your PRD into smart, structured userstories in your configured format.
+- **AI-Powered User Story Generation**: The AI effortlessly transforms your PRD into smart, structured user stories in your configured format.
 - **Tool Integration**: Push the generated user stories as a new project straight to your chosen tool (Linear/Asana/Jira/Plane) with one click.
 
 ## 🛠️ Tech Stack
