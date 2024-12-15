@@ -53,7 +53,7 @@ Your ultimate BYOK tool to automate product and project management with AI-power
     bun run build
     bun run preview
     ```
-2. Visit `http://localhost:5173` and let the magic unfold!
+2. Visit `http://localhost:4173` and let the magic unfold!
 
 ## 📜 Usage Guide
 1. **Generate PRD**: Describe your requirements and click the **Generate PRD** button.
