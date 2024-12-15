@@ -5,7 +5,7 @@ Your ultimate BYOK tool to automate project management with AI-powered workflows
 ## 🌟 Key Features
 - **Generative PRD Creation**: Feed your requirements and receive a tailor-made PRD that aligns perfectly with your workflow.
 - **AI-Powered Userstory Generation**: The AI effortlessly transforms your PRD into smart, structured userstories in your configured format.
-- **Tool Integration**: Push the generated userstories as a new project straight to your chosen tool (Linear/Asana/Jira/Plane) with one click.
+- **Tool Integration**: Push the generated user stories as a new project straight to your chosen tool (Linear/Asana/Jira/Plane) with one click.
 
 ## 🛠️ Tech Stack
 ### **Backend**
@@ -60,47 +60,6 @@ Your ultimate BYOK tool to automate project management with AI-powered workflows
 2. **Generate users stories**: Review the PRD and click **Generate user stories**.
 3. **Push to PM Tool**: Push the stories into a brand new project to your preferred PM tool.
 4. Configure the PRD and user story formats and the AI inference type on the settings tab before getting started.
-
-### Quick Settings Presets
-
-#### 🚀 Rapid POC
-- Platform: Groq
-- Model: Llama 3.3 70b
-- PRD Type: Minimal
-- User Story: Minimal
-Perfect for: Quick validation and MVP development
-
-#### 🏢 Enterprise
-- Platform: Gemini
-- Model: Gemini 2 Flash
-- PRD Type: Feature Based
-- User Story: Technical
-Perfect for: Complex projects requiring technical depth
-
-#### 👥 User-Centric
-- Platform: LM Studio
-- Model: Llama 3.1 8b
-- PRD Type: Narrative
-- User Story: User-Focused
-Perfect for: User experience focused development
-
-## 🎯 Model & Settings Guide
-
-### AI Platforms
-- **Groq**: Llama 3.3 70b, Gemma 2 9b, Mixtral 8x7b
-- **LM Studio**: Llama 3.1 8b, Qwen 2.5 14b
-- **Gemini**: Gemini 2 Flash, Gemini 1.5 Flash
-
-### PRD Types
-- **Feature Based**: For detailed enterprise projects
-- **Focused**: For mid-sized projects
-- **Minimal**: For quick MVPs
-- **Narrative**: For user-centric experiences
-
-### User Story Types
-- **Technical**: For system architecture
-- **User-Focused**: For UX-driven features
-- **Minimal**: For core functionality
 
 ## 🙌 Contributing
 Feel free to fork, clone, and submit a PR! Suggestions, bug reports, and feature requests are always welcome.
