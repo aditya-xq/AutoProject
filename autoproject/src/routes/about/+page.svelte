@@ -1,4 +1,4 @@
-<div class="bg-linear-to-br from-black to-gray-950 text-gray-100 min-h-screen flex flex-col p-8 md:px-16 lg:px-32 space-y-8">
+<div class="container mx-auto max-w-5xl text-gray-100 px-4 py-6 space-y-8">
     <!-- Title Section -->
     <h1 class="text-xl md:text-2xl font-bold text-purple-400">🚀 Welcome to AutoProject</h1>
     <p class="max-w-xl md:max-w-3xl">

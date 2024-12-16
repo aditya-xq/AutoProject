@@ -54,50 +54,52 @@
     }
 </script>
 
-<div class="flex">
-    <input
-        id="requirements" 
-        autocomplete="off"
-        class="my-2 grow p-4 bg-gray-950 border border-purple-400 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-purple-400"
-        bind:value={appState.requirements}
-        placeholder="E.g. A webapp for xyz usecase..."
-        aria-label="Enter Project Requirements"
-        on:keydown={(e) => e.key === 'Enter' && handleSubmitHandler()}
-    />
-    <button
-        id="generate-prd"
-        aria-label="Generate PRD"
-        disabled={generatePrdDisabled}
-        on:click={handleSubmitHandler}
-        class="my-2 mx-2 px-4 py-2 rounded-md text-sm font-medium text-white bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 focus:outline-hidden focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-xs transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-    >
-        Generate PRD
-    </button>
+<div class="flex flex-col space-y-4">
+    <div class="flex gap-3">
+        <input
+            id="requirements" 
+            autocomplete="off"
+            class="grow text-white p-4 bg-gray-800/50 backdrop-blur-sm border border-purple-500/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-lg transition-all duration-200"
+            bind:value={appState.requirements}
+            placeholder="E.g. A webapp for xyz usecase..."
+            aria-label="Enter Project Requirements"
+            on:keydown={(e) => e.key === 'Enter' && handleSubmitHandler()}
+        />
+        <button
+            id="generate-prd"
+            aria-label="Generate PRD"
+            disabled={generatePrdDisabled}
+            on:click={handleSubmitHandler}
+            class="px-6 rounded-xl text-sm font-medium text-white bg-purple-600 hover:bg-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-purple-600"
+        >
+            Generate PRD
+        </button>
 
-    <button
-        on:click={clearContent}
-        class="my-2 px-4 py-2 rounded-md text-sm font-medium text-white bg-linear-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 focus:outline-hidden focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-xs transition-all duration-200"
-        aria-label="Clear Content"
-    >
-        Clear All
-    </button>
-
-</div>
-<!-- Starter Prompts -->
-{#if !appState.prd}
-    <div class="space-y-2">
-        <p class="text-sm text-gray-400">Explore ideas:</p>
-        <div class="grid grid-cols-5 gap-4">
-            {#each starterPrompts as { label, requirements }}
-                <button
-                    on:click={() => handleStarterClick(requirements)}
-                    class="p-3 rounded-lg border cursor-pointer transition-colors duration-200 border-gray-600 hover:border-gray-400">
-                    {label}
-                </button>
-            {/each}
-        </div>
+        <button
+            on:click={clearContent}
+            class="px-6 rounded-xl text-sm font-medium text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-lg transition-all duration-200"
+            aria-label="Clear Content"
+        >
+            Clear All
+        </button>
     </div>
-{/if}
+
+    <!-- Starter Prompts with updated styling -->
+    {#if !appState.prd}
+        <div class="space-y-4">
+            <p class="text-sm text-gray-400 font-medium">Explore ideas:</p>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {#each starterPrompts as { label, requirements }}
+                    <button
+                        on:click={() => handleStarterClick(requirements)}
+                        class="p-4 rounded-xl border border-purple-500/20 bg-gray-800/50 backdrop-blur-sm hover:bg-gray-700/50 cursor-pointer transition-all duration-200 shadow-lg hover:shadow-purple-500/20 text-gray-300 hover:text-white">
+                        {label}
+                    </button>
+                {/each}
+            </div>
+        </div>
+    {/if}
+</div>
 
 <style>
     :global(.prose) {

@@ -12,8 +12,8 @@
     };
 </script>
 
-<div class="text-gray-100 min-h-screen flex flex-col px-6 md:px-16 lg:px-32 py-12 space-y-8">
-    <h1 class="text-2xl font-semibold mb-4">📁 Projects</h1>
+<div class="container mx-auto max-w-5xl text-gray-100 px-4 py-6 space-y-8">
+    <h1 class="text-2xl font-bold mb-4">📁 Projects</h1>
     <p class="text-gray-400 font-bold">{`<Imported from ${appState.settings.tool}>`}</p>
     
     <div class="grid w-5xl grid-cols-1 md:grid-cols-2 gap-8">

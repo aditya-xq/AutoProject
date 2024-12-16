@@ -1,9 +1,10 @@
 <script lang="ts">
     import "../app.css";
     import { page } from '$app/stores';
-    import { NotificationBar, Loading } from "$lib/components";
+    import { NotificationBar, Loading, Footer } from "$lib/components";
 
     let menuOpen = false;
+    let scrollY: number;
 
     // Function to determine whether a link is active
     function isActive(path: string) {
@@ -15,68 +16,80 @@
     }
 </script>
 
+<svelte:window bind:scrollY={scrollY}/>
+
 <svelte:head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🚀 AutoProject</title>
     <meta charset="UTF-8">
 </svelte:head>
 
-<div class="max-md:hidden"><NotificationBar/></div>
+<!-- Floating Header for All Screens -->
+<header class="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-50 backdrop-blur-md bg-black/75 rounded-2xl shadow-lg shadow-purple-500/20 transition-all duration-300 {scrollY > 20 ? 'py-2' : 'py-4'}">
+    <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between">
+            <a href="/" class="flex items-center space-x-2">
+                <span class="text-2xl">🚀</span>
+                <h1 class="text-2xl font-bold text-purple-400">AutoProject</h1>
+            </a>
 
-<!-- Mobile Header with Project Name -->
-<header class="fixed top-0 left-0 p-4 z-50 w-full bg-black md:hidden">
-    <NotificationBar/>
-    <a href="/" class="flex items-center space-x-2">
-        <span class="text-2xl">🚀</span>
-        <h1 class="text-2xl font-bold text-purple-400">AutoProject</h1>
-    </a>
-    <!-- Mobile Menu Button -->
-    <button class="fixed top-3 right-4 z-50 p-2 text-gray-100 rounded-lg focus:outline-hidden md:hidden" onclick={toggleMenu}>
-        {#if menuOpen}
-            ✖️
-        {:else}
-            ☰
-        {/if}
-    </button>
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center space-x-6">
+                <a href="/" class={`nav-link ${isActive('/') ? 'active' : ''}`}>Home</a>
+                <a href="/projects" class={`nav-link ${isActive('/projects') ? 'active' : ''}`}>Projects</a>
+                <a href="/settings" class={`nav-link ${isActive('/settings') ? 'active' : ''}`}>Settings</a>
+                <a href="/about" class={`nav-link ${isActive('/about') ? 'active' : ''}`}>About</a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden p-2 text-gray-100 rounded-lg focus:outline-none" on:click={toggleMenu}>
+                {#if menuOpen}
+                    ✖️
+                {:else}
+                    ☰
+                {/if}
+            </button>
+        </div>
+    </div>
 </header>
 
-<!-- Full-Screen Overlay Menu for Mobile -->
-<div class={`fixed z-200 inset-0 bg-gradient-to-b from-gray-900 to-black text-gray-100 flex flex-col items-center justify-center transition-transform duration-300 transform ${menuOpen ? 'translate-x-0' : 'translate-x-full'} md:hidden`}>
-    <div class="grow w-full flex flex-col items-center space-y-8 mt-40">
-        <!-- Links with conditional class for active route -->
-        <a href="/" class={`hover:bg-gray-800 rounded-md py-4 px-8 text-center text-2xl ${isActive('/') ? 'bg-purple-700' : ''}`} onclick={toggleMenu}>Home</a>
-        <a href="/projects" class={`hover:bg-gray-800 rounded-md py-4 px-8 text-center text-2xl ${isActive('/projects') ? 'bg-purple-700' : ''}`} onclick={toggleMenu}>Projects</a>
-        <a href="/settings" class={`hover:bg-gray-800 rounded-md py-4 px-8 text-center text-2xl ${isActive('/settings') ? 'bg-purple-700' : ''}`} onclick={toggleMenu}>Settings</a>
-        <a href="/about" class={`hover:bg-gray-800 rounded-md py-4 px-8 text-center text-2xl ${isActive('/about') ? 'bg-purple-700' : ''}`} onclick={toggleMenu}>About</a>
-        <!-- <a href="/keys" class={`hover:bg-gray-800 rounded-md py-4 px-8 text-center text-2xl ${isActive('/keys') ? 'bg-purple-700' : ''}`} onclick={toggleMenu}>Keys</a> -->
+<!-- Mobile Menu Overlay -->
+<div class={`fixed inset-0 z-40 bg-black/95 backdrop-blur-lg transform transition-transform duration-300 ${menuOpen ? 'translate-y-0' : '-translate-y-full'} md:hidden`}>
+    <div class="flex flex-col items-center justify-center h-full space-y-8">
+        <a href="/" class={`mobile-nav-link ${isActive('/') ? 'active' : ''}`} on:click={toggleMenu}>Home</a>
+        <a href="/projects" class={`mobile-nav-link ${isActive('/projects') ? 'active' : ''}`} on:click={toggleMenu}>Projects</a>
+        <a href="/settings" class={`mobile-nav-link ${isActive('/settings') ? 'active' : ''}`} on:click={toggleMenu}>Settings</a>
+        <a href="/about" class={`mobile-nav-link ${isActive('/about') ? 'active' : ''}`} on:click={toggleMenu}>About</a>
     </div>
 </div>
 
-<!-- Navigation Bar for Larger Screens -->
-<nav class="hidden md:flex fixed top-0 left-0 h-screen w-54 bg-black text-gray-100 flex-col items-center py-6 px-4 space-y-6">
-    <!-- Brand Header -->
-    <a href="/" class="flex items-center space-x-2">
-        <span class="text-xl">🚀</span>
-        <h1 class="text-xl font-bold text-purple-400">AutoProject</h1>
-    </a>
-    <div class="grow w-full flex flex-col mt-8 space-y-4">
-        <!-- Links with conditional class for active route -->
-        <a href="/" class={`hover:bg-gray-800 rounded-md py-2 px-4 text-center ${isActive('/') ? 'bg-purple-700' : ''}`}>Home</a>
-        <a href="/projects" class={`hover:bg-gray-800 rounded-md py-2 px-4 text-center ${isActive('/projects') ? 'bg-purple-700' : ''}`}>Projects</a>
-        <a href="/settings" class={`hover:bg-gray-800 rounded-md py-2 px-4 text-center ${isActive('/settings') ? 'bg-purple-700' : ''}`}>Settings</a>
-        <a href="/about" class={`hover:bg-gray-800 rounded-md py-2 px-4 text-center ${isActive('/about') ? 'bg-purple-700' : ''}`}>About</a>
-        <!-- <a href="/keys" class={`hover:bg-gray-800 rounded-md py-2 px-4 text-center ${isActive('/keys') ? 'bg-purple-700' : ''}`}>Keys</a> -->
-    </div>
-</nav>
-
+<NotificationBar/>
 <Loading/>
 
-<main class="max-md:pt-16 bg-linear-to-b from-black to-neutral-950 md:pl-54">
+<main class="pt-28 bg-neutral-950">
     <slot/>
+    <Footer/>
 </main>
 
 <style>
+    @import "tailwindcss/theme";
+    .nav-link {
+        @apply px-4 py-2 text-gray-300 rounded-lg transition-all duration-300 hover:text-white hover:bg-purple-500/20;
+    }
+
+    .nav-link.active {
+        @apply bg-purple-600 text-white;
+    }
+
+    .mobile-nav-link {
+        @apply text-2xl text-gray-300 py-4 px-8 rounded-xl transition-all duration-300 hover:text-white hover:bg-purple-500/20;
+    }
+
+    .mobile-nav-link.active {
+        @apply bg-purple-600 text-white;
+    }
+
     main {
-        transition: padding-left 0.3s ease;
+        min-height: 100vh;
     }
 </style>

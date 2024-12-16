@@ -1,5 +1,6 @@
 <script lang="ts">
     import { notificationStore, type NotificationType } from "$lib/store";
+    import { fade, fly } from 'svelte/transition';
     
     let notifications: NotificationType[] = [];
 
@@ -12,17 +13,60 @@
     }
 </script>
 
-<div class="fixed top-4 right-4 sm:top-4 sm:right-4 md:top-4 md:right-4 flex flex-col space-y-2 z-50">
-    {#each notifications as { id, type, message }}
-        <div class={`flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 rounded-xl shadow-lg text-white 
-                    ${type === 'error' ? 'bg-red-700' : 
-                     type === 'success' ? 'bg-green-700' : 'bg-blue-700'}`}>
-            <p class="flex-1">{message}</p>
-            <button onclick={() => removeNotification(id)}
-                    class="mt-2 sm:mt-0 sm:ml-4 w-6 h-6 flex items-center justify-center text-gray-900 bg-white text-current rounded-full"
-                    aria-label="Close">
-                &#x2715;
+<div class="fixed top-4 right-4 sm:top-6 sm:right-6 flex flex-col space-y-3 z-50">
+    {#each notifications as { id, type, message } (id)}
+        <div 
+            in:fly="{{ x: 50, duration: 300 }}"
+            out:fade="{{ duration: 200 }}"
+            class={`flex flex-row items-center p-4 rounded-lg shadow-lg text-white min-w-[300px] max-w-md transform transition-all
+                    ${type === 'error' ? 'bg-gradient-to-r from-red-600 to-red-700 border-l-4 border-red-800' : 
+                     type === 'success' ? 'bg-gradient-to-r from-green-600 to-green-700 border-l-4 border-green-800' : 
+                     'bg-gradient-to-r from-blue-600 to-blue-700 border-l-4 border-blue-800'}`}>
+            <div class="flex-1 pr-2">
+                <div class="flex items-center space-x-2">
+                    {#if type === 'error'}
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    {:else if type === 'success'}
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    {:else}
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    {/if}
+                    <p class="text-sm font-medium">{message}</p>
+                </div>
+            </div>
+            <button 
+                onclick={() => removeNotification(id)}
+                class="p-1 hover:bg-white/20 rounded-full transition-colors duration-200"
+                aria-label="Close">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
             </button>
         </div>
     {/each}
 </div>
+
+<style>
+    :global(.notification-enter) {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    :global(.notification-enter-active) {
+        transform: translateX(0);
+        opacity: 1;
+        transition: all 300ms ease-out;
+    }
+    :global(.notification-exit) {
+        opacity: 1;
+    }
+    :global(.notification-exit-active) {
+        opacity: 0;
+        transition: all 200ms ease-in;
+    }
+</style>
