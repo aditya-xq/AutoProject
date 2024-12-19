@@ -2,11 +2,10 @@ import type { RequestHandler } from '@sveltejs/kit';
 import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
 import { createValidationError, errors } from '$lib';
 import { handleAIInference, handleGeminiInference, handleGroqInference } from '../../../lib/services/generate';
-import { createResponse, validateAndParseToProjectDetails } from '$lib/utils/helper';
+import { createResponse, validateAndParseFeatureSuggestions } from '$lib/utils/helper';
 import { CONFIG, GROQ_API_ENDPOINT, LM_STUDIO_SERVER } from '$lib/utils/config';
 import { SECRET_GEMINI_API_KEY, SECRET_GROQ_API_KEY } from '$env/static/private';
-import { ADD_NEW_FEATURE_TO_EXISTING_PROJECT, USER_STORY_PROMPT } from '$lib/services/prompts';
-import { appState } from '$lib/state.svelte';
+import { SUGGEST_FEATURES_PROMPT } from '$lib/services/prompts';
 
 let genAI: GoogleGenerativeAI | undefined, geminiModel: GenerativeModel;
 
@@ -15,13 +14,13 @@ const groqHeaders = CONFIG.headers.groq(SECRET_GROQ_API_KEY ?? '');
 
 export const POST: RequestHandler = async ({ request }) => {
     try {
-        const { prd, settings, isJsonMode, jsonSchema } = await request.json();
+        const { projectContext, settings, isJsonMode, jsonSchema } = await request.json();
 
-        if (!prd) {
-            throw createValidationError('Missing required field: prd');
+        if (!projectContext) {
+            throw createValidationError('Missing required field: projectContext');
         }
 
-        const prompt = appState.activeProject.name ? `${prd} ${ADD_NEW_FEATURE_TO_EXISTING_PROJECT(settings.userStoryType)}` : `${prd} ${USER_STORY_PROMPT(settings.userStoryType)}`;
+        const prompt = SUGGEST_FEATURES_PROMPT(projectContext);
 
         let result;
         switch (settings.aiInferenceType) {
@@ -66,7 +65,7 @@ export const POST: RequestHandler = async ({ request }) => {
                 throw new Error(errors.invalidAiInferenceType);
         }
 
-        return createResponse(validateAndParseToProjectDetails(result), 200);
+        return createResponse(validateAndParseFeatureSuggestions(result), 200);
 
     } catch (error: any) {
         return createResponse(error.message || errors.unknownError, error.code || 500);

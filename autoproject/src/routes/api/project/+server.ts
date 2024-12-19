@@ -1,5 +1,5 @@
 import { createResponse, createValidationError } from '$lib';
-import { createLinearProject, getAllLinearProjects } from '$lib/integrations/linear';
+import { createLinearProject, getAllLinearProjects, updateLinearProject } from '$lib/integrations/linear';
 import type { RequestHandler } from '@sveltejs/kit';
 // import { createJiraProject } from '$lib/integrations/jira';
 // import { createAsanaProject } from '$lib/integrations/asana';
@@ -8,13 +8,13 @@ import type { RequestHandler } from '@sveltejs/kit';
 
 export const POST: RequestHandler = async ({ request }) => {
     try {
-        const { projectDetails, prd, tool } = await request.json();
+        const { projectId, projectDetails, prd, tool } = await request.json();
 
         let response;
         
         switch (tool) {
             case 'Linear':
-                response = await createLinearProject(projectDetails, prd);
+                response = projectId ? await updateLinearProject(projectId, projectDetails, prd) : await createLinearProject(projectDetails, prd);
                 break;
             // case 'Jira':
             //     response = await createJiraProject(projectDetails, userStories);

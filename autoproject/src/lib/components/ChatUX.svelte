@@ -34,7 +34,11 @@
         appState.isLoading = true;
         appState.promptType = 'prd';
         promptSuffix = PRD_PROMPTS[appState.settings.prdType];
-        prompt = `Requirement: ${appState.requirements}. ${promptSuffix}`;
+        if (appState.activeProject.name) {
+            prompt = `Existing project Name: ${appState.activeProject.name}. description: ${appState.activeProject.description}. New feature requirement to be added to this project: ${appState.requirements}. ${promptSuffix}`;
+        } else {
+            prompt = `Requirement: ${appState.requirements}. ${promptSuffix}`;
+        }
         setMessages([]);
         input.set(prompt);
         handleSubmit();
@@ -61,7 +65,7 @@
             autocomplete="off"
             class="grow text-white p-4 bg-gray-800/50 backdrop-blur-sm border border-purple-500/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-lg transition-all duration-200"
             bind:value={appState.requirements}
-            placeholder="E.g. A webapp for xyz usecase..."
+            placeholder="What to build?"
             aria-label="Enter Project Requirements"
             on:keydown={(e) => e.key === 'Enter' && handleSubmitHandler()}
         />
@@ -74,18 +78,17 @@
         >
             Generate PRD
         </button>
-
         <button
             on:click={clearContent}
             class="px-6 rounded-xl text-sm font-medium text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-lg transition-all duration-200"
             aria-label="Clear Content"
         >
-            Clear All
+            Reset
         </button>
     </div>
 
     <!-- Starter Prompts with updated styling -->
-    {#if !appState.prd}
+    {#if !appState.prd && !appState.activeProject.name}
         <div class="space-y-4">
             <p class="text-sm text-gray-400 font-medium">Explore ideas:</p>
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -94,6 +97,21 @@
                         on:click={() => handleStarterClick(requirements)}
                         class="p-4 rounded-xl border border-purple-500/20 bg-gray-800/50 backdrop-blur-sm hover:bg-gray-700/50 cursor-pointer transition-all duration-200 shadow-lg hover:shadow-purple-500/20 text-gray-300 hover:text-white">
                         {label}
+                    </button>
+                {/each}
+            </div>
+        </div>
+    {/if}
+    <!-- Suggested features to add based on the imported project context -->
+    {#if !appState.prd && appState.activeProject.name && appState.activeProject?.suggestions?.length > 0}
+        <div class="space-y-4">
+            <p class="text-sm text-gray-400 font-medium">Suggested features:</p>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {#each appState.activeProject.suggestions as suggestion}
+                    <button
+                        on:click={() => handleStarterClick(suggestion)}
+                        class="p-4 rounded-xl border border-purple-500/20 bg-gray-800/50 backdrop-blur-sm hover:bg-gray-700/50 cursor-pointer transition-all duration-200 shadow-lg hover:shadow-purple-500/20 text-gray-300 hover:text-white">
+                        {suggestion}
                     </button>
                 {/each}
             </div>

@@ -1,5 +1,5 @@
 import { createValidationError, errors } from "./errors";
-import type { ProjectDetails, UserStory } from "./interface";
+import type { ProjectDetails, SuggestionsObject, UserStory } from "./interface";
 
 const JSON_PATTERNS = [
     /```json\s+([\s\S]+?)\s+```/,
@@ -54,6 +54,31 @@ export function validateAndParseToProjectDetails(jsonString: string): ProjectDet
 
     return details;
 }
+
+export function validateAndParseFeatureSuggestions(jsonString: string): string[] {
+    if (!jsonString?.trim()) {
+        throw createValidationError('Empty or invalid JSON string provided');
+    }
+
+    const suggestionsObject = extractJson<SuggestionsObject>(jsonString);
+    
+    if (!Array.isArray(suggestionsObject.suggestions)) {
+        throw createValidationError('Feature suggestions must be an array');
+    }
+
+    if (suggestionsObject.suggestions.length === 0 || suggestionsObject.suggestions.length > 4) {
+        throw createValidationError('Feature suggestions must contain between 1 and 4 items');
+    }
+
+    suggestionsObject.suggestions.forEach((suggestion, index) => {
+        if (!suggestion?.trim()) {
+            throw createValidationError(`Feature suggestion at index ${index} is empty or invalid`);
+        }
+    });
+
+    return suggestionsObject.suggestions;
+}
+
 
 export function createResponse(data: any, status: number): Response {
     return new Response(

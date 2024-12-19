@@ -5,7 +5,7 @@
 <div
     id="loading-overlay"
     class:hidden={!appState.isLoading}
-    class="fixed inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center space-y-12 animate-fadeIn z-50"
+    class="fixed inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center space-y-12 animate-fadeIn z-100"
     role="status"
     aria-live="polite"
     aria-labelledby="loading-text"
@@ -14,7 +14,7 @@
     <!-- Clean Text Display -->
     <div class="font-mono flex flex-col items-center space-y-3">
         <div class="text-green-400/90 text-3xl tracking-widest">
-            PROCESSING
+            {appState.loadingText}
         </div>
         <div class="flex space-x-2">
             {#each Array(3) as _, i}

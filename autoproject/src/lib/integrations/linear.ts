@@ -44,6 +44,36 @@ export const createLinearProject = async (projectDetails: ProjectDetails, prd: s
     }
 }
 
+export const updateLinearProject = async (projectId: string, featureDetails: ProjectDetails, prd: string) => {
+    const teams = await linearClient.teams();
+    const team = teams.nodes[0];
+    const userId  = (await linearClient.viewer).id;
+    if (team.id) {
+        const documentResponse = await linearClient.createDocument({
+            title: `Feature PRD: ${featureDetails.name}`,
+            content: prd,
+            projectId: projectId,
+        });
+        if (!documentResponse.success) {
+            throw new Error('Failed to create Feature PRD');
+        }
+        // Create new user stories under the existing project
+        for (const userStory of featureDetails.userStories) {
+            const issueResponse = await linearClient.createIssue({
+                title: userStory.title,
+                description: userStory.description,
+                teamId: team.id,
+                projectId: projectId,
+                assigneeId: userId,
+            });
+            if (!issueResponse.success) {
+                throw new Error(`Failed to create user story.`);
+            }
+        }
+        return createResponse(`Project updated successfully.`, 200);
+    }
+}
+
 export const getAllLinearProjects = async () => {
     const projectResponse = await linearClient.projects();
     const projects = await Promise.all(projectResponse.nodes.map(async (project) => {

@@ -76,6 +76,23 @@ export const PROJECT_SCHEMA_FOR_LMSTUDIO = {
     }
 };
 
+export const FEATURE_SUGGESTIONS_SCHEMA = {
+    type: "json_schema",
+    json_schema: {
+        name: "featureSuggestions",
+        schema: {
+            type: "array",
+            items: {
+                type: "string",
+                description: "A suggested feature description"
+            },
+            minItems: 1,
+            maxItems: 4
+        }
+    }
+};
+
+
 export const LM_STUDIO_SERVER = 'http://localhost:1234/v1/chat/completions';
 export const GROQ_API_ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions';
 export const SYSTEM_PROMPT = "You are a smart and intelligent assistant who always responds correctly and meticulously follow the given instructions. You will directly start with the answer to the point.";

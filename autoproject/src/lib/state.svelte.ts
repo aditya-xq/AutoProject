@@ -3,6 +3,7 @@ import type { AppState } from "./utils/interface";
 
 export const appState: AppState = $state({
 	isLoading: false,
+    loadingText: 'PROCESSING',
     promptType: 'prd',
 	requirements: '',
     prd: '',
@@ -18,7 +19,9 @@ export const appState: AppState = $state({
         userStoryType: 'Technical', 
         aiInferenceType: 'Gemini',
         aiModel: modelMap['Gemini 2 Flash'],
-    }
+    },
+    projects: [],
+    activeProject: {},
 });
 
 export const resetState = () => {

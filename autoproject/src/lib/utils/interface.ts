@@ -11,6 +11,10 @@ export interface ProjectDetails {
     userStories: UserStory[]
 }
 
+export interface SuggestionsObject {
+    suggestions: string[]
+}
+
 export interface GeneratePrdResponse {
     prd: string
     projectDetails: {
@@ -40,9 +44,12 @@ export interface Settings {
 
 export interface AppState {
     isLoading: boolean
+    loadingText: string
     promptType: PromptType
     requirements: string
     prd: string
     projectDetails: ProjectDetails
     settings: Settings
+    projects: any[]
+    activeProject: any
 }
