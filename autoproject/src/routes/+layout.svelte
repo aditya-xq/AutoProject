@@ -42,7 +42,7 @@
             </nav>
 
             <!-- Mobile Menu Button -->
-            <button class="md:hidden p-2 text-gray-100 rounded-lg focus:outline-none" on:click={toggleMenu}>
+            <button class="md:hidden p-2 text-gray-100 rounded-lg focus:outline-none" onclick={toggleMenu}>
                 {#if menuOpen}
                     ✖️
                 {:else}
@@ -56,10 +56,10 @@
 <!-- Mobile Menu Overlay -->
 <div class={`fixed inset-0 z-40 bg-black/95 backdrop-blur-lg transform transition-transform duration-300 ${menuOpen ? 'translate-y-0' : '-translate-y-full'} md:hidden`}>
     <div class="flex flex-col items-center justify-center h-full space-y-8">
-        <a href="/" class={`mobile-nav-link ${isActive('/') ? 'active' : ''}`} on:click={toggleMenu}>Home</a>
-        <a href="/projects" data-sveltekit-preload-data class={`mobile-nav-link ${isActive('/projects') ? 'active' : ''}`} on:click={toggleMenu}>Projects</a>
-        <a href="/settings" class={`mobile-nav-link ${isActive('/settings') ? 'active' : ''}`} on:click={toggleMenu}>Settings</a>
-        <a href="/about" class={`mobile-nav-link ${isActive('/about') ? 'active' : ''}`} on:click={toggleMenu}>About</a>
+        <a href="/" class={`mobile-nav-link ${isActive('/') ? 'active' : ''}`} onclick={toggleMenu}>Home</a>
+        <a href="/projects" data-sveltekit-preload-data class={`mobile-nav-link ${isActive('/projects') ? 'active' : ''}`} onclick={toggleMenu}>Projects</a>
+        <a href="/settings" class={`mobile-nav-link ${isActive('/settings') ? 'active' : ''}`} onclick={toggleMenu}>Settings</a>
+        <a href="/about" class={`mobile-nav-link ${isActive('/about') ? 'active' : ''}`} onclick={toggleMenu}>About</a>
     </div>
 </div>
 
