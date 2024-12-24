@@ -18,8 +18,8 @@ export const starterPrompts = [
     { label: '⌛ Digital Time Capsule', requirements: 'App creating multimedia memories with friends and family, set to unlock at future dates with AI-enhanced storytelling' },
 ];
 
-export const prdTypeOptions: PRDType[] = ['Feature Based', 'Focused', 'Minimal', 'Narrative'];
-export const userStoryTypeOptions: UserStoryType[] = ['Technical', 'User-Focused', 'Minimal'];
+export const prdTypeOptions: PRDType[] = ['Feature Based', 'Focused', 'Minimal', 'Narrative', 'Research'];
+export const userStoryTypeOptions: UserStoryType[] = ['Technical', 'User-Focused', 'Minimal', 'Research'];
 export const aiInferenceOptions: AIInferenceType[] = ['Gemini', 'Groq', 'LM Studio'];
 export const tools: ProjectManagementTool[] = ['Linear', 'Asana', 'Jira', 'Plane'];
 export const aiModelOptions: Record<string, string[]> = {

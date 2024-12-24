@@ -4,10 +4,10 @@
     import { tools, prdTypeOptions, aiInferenceOptions, modelMap, aiModelOptions, userStoryTypeOptions } from '$lib/utils/config';
 </script>
 
-<div class="container mx-auto max-w-5xl text-gray-100 px-4 py-6">
+<div class="container mx-auto max-w-6xl text-gray-100 px-4 py-6">
     <h1 class="text-2xl font-bold">⚙️ Settings</h1>
     <div class="p-6"><Presets/></div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Left Column -->
         <div class="space-y-4 px-4">
             <!-- Project Management Tool -->

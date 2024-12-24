@@ -5,7 +5,7 @@ import { handleAIInference, handleGeminiInference, handleGroqInference } from '.
 import { createResponse, validateAndParseToProjectDetails } from '$lib/utils/helper';
 import { CONFIG, GROQ_API_ENDPOINT, LM_STUDIO_SERVER } from '$lib/utils/config';
 import { SECRET_GEMINI_API_KEY, SECRET_GROQ_API_KEY } from '$env/static/private';
-import { ADD_NEW_FEATURE_TO_EXISTING_PROJECT, USER_STORY_PROMPT } from '$lib/services/prompts';
+import { ADD_NEW_FEATURE_TO_EXISTING_PROJECT, RESEARCH_USER_STORY_PROMPT, USER_STORY_PROMPT } from '$lib/services/prompts';
 import { appState } from '$lib/state.svelte';
 
 let genAI: GoogleGenerativeAI | undefined, geminiModel: GenerativeModel;
@@ -21,7 +21,19 @@ export const POST: RequestHandler = async ({ request }) => {
             throw createValidationError('Missing required field: prd');
         }
 
-        const prompt = appState.activeProject.name ? `${prd} ${ADD_NEW_FEATURE_TO_EXISTING_PROJECT(settings.userStoryType)}` : `${prd} ${USER_STORY_PROMPT(settings.userStoryType)}`;
+        const getPrompt = () => {
+            if (appState.activeProject.name) {
+                return `${prd} ${ADD_NEW_FEATURE_TO_EXISTING_PROJECT(settings.userStoryType)}`;
+            }
+            
+            const promptType = settings.userStoryType === 'Research' 
+                ? RESEARCH_USER_STORY_PROMPT 
+                : USER_STORY_PROMPT;
+                
+            return `${prd} ${promptType(settings.userStoryType)}`;
+        };
+
+        const prompt = getPrompt();
 
         let result;
         switch (settings.aiInferenceType) {
