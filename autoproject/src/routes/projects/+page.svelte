@@ -51,7 +51,7 @@
                         <button 
                             onclick={() => selectProject(project)}
                             class="w-full text-left rounded-lg overflow-hidden border border-gray-800 hover:border-gray-600 transition-all duration-200
-                            {selectedProject?.id === project.id ? 'border-blue-600 bg-gray-800 shadow-lg shadow-blue-900/20' : ''}"
+                            {selectedProject?.id === project.id ? 'bg-gray-800 shadow-lg' : ''}"
                         >
                             <div class="p-4 space-y-2">
                                 <h2 class="text-lg font-medium text-gray-100">
@@ -116,22 +116,24 @@
 
                         {#if selectedProject.issues?.length > 0}
                             <div class="space-y-3">
-                                <h3 class="text-lg font-medium text-white">User Stories</h3>
+                                <h3 class="text-lg font-medium text-white">Open User Stories</h3>
                                 <div class="space-y-3">
                                     {#each selectedProject.issues as issue}
-                                        <div class="bg-gray-800/50 rounded-lg p-4 space-y-2">
-                                            <div class="flex items-center justify-between">
-                                                <h4 class="font-medium text-white">
-                                                    {issue.title}
-                                                </h4>
-                                                <span class="text-sm text-gray-400">
-                                                    {formatDate(issue.updatedAt)}
-                                                </span>
+                                        {#if !issue.completedAt}
+                                            <div class="bg-gray-800/50 rounded-lg p-4 space-y-2">
+                                                <div class="flex items-center justify-between">
+                                                    <h4 class="font-medium text-white">
+                                                        {issue.title}
+                                                    </h4>
+                                                    <span class="text-sm text-gray-400">
+                                                        {formatDate(issue.updatedAt)}
+                                                    </span>
+                                                </div>
+                                                <div class="prose prose-invert max-w-none text-sm text-gray-300">
+                                                    {@html marked(issue.description || 'No description available')}
+                                                </div>
                                             </div>
-                                            <div class="prose prose-invert max-w-none text-sm text-gray-300">
-                                                {@html marked(issue.description || 'No description available')}
-                                            </div>
-                                        </div>
+                                        {/if}
                                     {/each}
                                 </div>
                             </div>

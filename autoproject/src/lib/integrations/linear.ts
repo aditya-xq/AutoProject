@@ -84,6 +84,7 @@ export const getAllLinearProjects = async () => {
             description: issue.description,
             url: issue.url,
             updatedAt: issue.updatedAt,
+            completedAt: issue.completedAt,
         }));
         
         return {
