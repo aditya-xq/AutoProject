@@ -3,7 +3,7 @@ import { createOpenAI } from '@ai-sdk/openai';
 import { createGroq } from '@ai-sdk/groq';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import type { RequestHandler } from '@sveltejs/kit';
-import { createGenerationError, createResponse, errors } from '$lib';
+import { createGenerationError, errors } from '$lib';
 import { SECRET_GEMINI_API_KEY, SECRET_GROQ_API_KEY } from '$env/static/private';
 
 const lmstudio = createOpenAI({

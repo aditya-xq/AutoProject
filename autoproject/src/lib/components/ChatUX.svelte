@@ -26,7 +26,8 @@
     }
 
     $: if ($error) {
-        notificationStore.addNotification('Error occurred during inference. Please check if your inference server is running properly', 'error');
+        const errorMessage = 'Error occurred during inference. Please check if your API keys or if inference server is running properly';
+        notificationStore.addNotification(errorMessage, 'error');
         appState.isLoading = false;
     }
 

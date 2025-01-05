@@ -7,4 +7,9 @@ export default defineConfig({
 		sveltekit(),
 		tailwindcss(),
 	],
+	server: {
+		hmr: {
+			overlay: false,
+		}
+	}
 });
