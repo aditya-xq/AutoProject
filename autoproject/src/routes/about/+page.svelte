@@ -1,12 +1,12 @@
 <div class="container mx-auto max-w-5xl text-gray-100 px-4 py-6 space-y-8">
     <!-- Title Section -->
     <h1 class="text-xl md:text-2xl font-bold text-purple-400">🚀 Welcome to AutoProject</h1>
-    <p class="max-w-xl md:max-w-3xl">
+    <p class="max-w-xl md:max-w-4xl">
         Your ultimate BYOK tool to automate project management with AI-powered workflows. Craft your project user stories with the precision of a rocket engineer and the ease of autopilot.
     </p>
 
     <!-- Features Section -->
-    <div class="space-y-4 max-w-xl md:max-w-5xl">
+    <div class="space-y-4 max-w-xl md:max-w-4xl">
         <h2 class="text-lg md:text-xl font-semibold text-green-400">🌟 Key Features</h2>
         <ul class="list-disc pl-6 space-y-1">
             <li><strong>Generative PRD Creation:</strong> Feed your requirements and receive a tailor-made PRD that aligns perfectly with your workflow.</li>
@@ -35,7 +35,7 @@
             <span>Quick Settings Presets</span>
         </h2>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Rapid POC -->
             <div class="bg-black p-6 rounded-xl border border-gray-800 hover:border-white transition-all duration-300">
                 <div class="flex items-center gap-3 mb-4">
@@ -125,6 +125,34 @@
                     Optimized for user experience flows.
                 </p>
             </div>
+            <div class="bg-black p-6 rounded-xl border border-gray-800 hover:border-white transition-all duration-300">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-2xl">🔬</span>
+                    <h3 class="text-lg font-medium text-white">Research</h3>
+                </div>
+                <ul class="space-y-3">
+                    <li class="flex justify-between items-center">
+                        <span class="text-gray-400 text-sm">Platform</span>
+                        <span class="text-white">Gemini</span>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span class="text-gray-400 text-sm">Model</span>
+                        <span class="text-white">Gemini 2 Flash</span>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span class="text-gray-400 text-sm">PRD Type</span>
+                        <span class="text-white">Research</span>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span class="text-gray-400 text-sm">User Story</span>
+                        <span class="text-white">Research</span>
+                    </li>
+                </ul>
+                <div class="h-[1px] bg-gray-800 my-4"></div>
+                <p class="text-sm text-gray-400">
+                    Ideal for research projects and experiments.
+                </p>
+            </div>
         </div>
     </div>
 
@@ -184,6 +212,10 @@
                         <h4 class="text-green-400">Narrative</h4>
                         <p class="text-xs text-gray-400">Best for: User-centric experiences</p>
                     </div>
+                    <div class="space-y-2">
+                        <h4 class="text-green-400">Research</h4>
+                        <p class="text-xs text-gray-400">Best for: Research and experimental projects</p>
+                    </div>
                 </div>
             </div>
 
@@ -205,6 +237,10 @@
                     <div class="space-y-2">
                         <h4 class="text-blue-400">Minimal</h4>
                         <p class="text-xs text-gray-400">Best for: Core functionality</p>
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="text-blue-400">Research</h4>
+                        <p class="text-xs text-gray-400">Best for: Research-oriented tasks</p>
                     </div>
                 </div>
             </div>
