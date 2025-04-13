@@ -1,33 +1,33 @@
 <script>
-    import { appState } from "$lib/state.svelte";
-    import { modelMap } from "$lib/utils/config";
+    import { appState } from "$lib/state.svelte"
+    import { modelMap } from "$lib/utils/config"
 
     function getActivePreset() {
         if (appState.settings.aiInferenceType === 'Groq' &&
             appState.settings.aiModel === modelMap['Llama 3.3 70b'] &&
             appState.settings.prdType === 'Minimal' &&
             appState.settings.userStoryType === 'Minimal') {
-            return 'rapid';
+            return 'rapid'
         } else if (appState.settings.aiInferenceType === 'Gemini' &&
             appState.settings.aiModel === modelMap['Gemini 2 Flash'] &&
             appState.settings.prdType === 'Feature Based' &&
             appState.settings.userStoryType === 'Technical') {
-            return 'enterprise';
+            return 'enterprise'
         } else if (appState.settings.aiInferenceType === 'LM Studio' &&
             appState.settings.aiModel === modelMap['Llama 3.1 8b'] &&
             appState.settings.prdType === 'Narrative' &&
             appState.settings.userStoryType === 'User-Focused') {
-            return 'user-centric';
+            return 'user-centric'
         } else if (appState.settings.aiInferenceType === 'Gemini' &&
-            appState.settings.aiModel === modelMap['Gemini 2 Flash'] &&
+            appState.settings.aiModel === modelMap['Gemini 2.5 Pro'] &&
             appState.settings.prdType === 'Research' &&
             appState.settings.userStoryType === 'Research') {
-            return 'research';
+            return 'research'
         }
-        return '';
+        return ''
     }
 
-    let activePreset = $derived(getActivePreset());
+    let activePreset = $derived(getActivePreset())
 </script>
 
 <div class="grid grid-cols-1 md:grid-cols-4 my-6 gap-8">
@@ -36,10 +36,10 @@
         class="group relative bg-gradient-to-br from-gray-900 to-gray-800 p-4 rounded-lg border border-gray-700 hover:border-orange-500 transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/20 text-left
             {activePreset === 'rapid' ? 'bg-gradient-to-br from-gray-900 to-gray-950 border-orange-500 shadow-lg shadow-orange-500/20' : ''}"
         onclick={() => {
-            appState.settings.aiInferenceType = 'Groq';
-            appState.settings.aiModel = modelMap['Llama 3.3 70b'];
-            appState.settings.prdType = 'Minimal';
-            appState.settings.userStoryType = 'Minimal';
+            appState.settings.aiInferenceType = 'Groq'
+            appState.settings.aiModel = modelMap['Llama 3.3 70b']
+            appState.settings.prdType = 'Minimal'
+            appState.settings.userStoryType = 'Minimal'
         }}
     >
         {#if activePreset === 'rapid'}
@@ -82,10 +82,10 @@
         class="group relative bg-gradient-to-br from-gray-900 to-gray-800 p-4 rounded-lg border border-gray-700 hover:border-purple-500 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20 text-left 
             {activePreset === 'enterprise' ? 'bg-gradient-to-br from-gray-900 to-gray-950 !border-purple-500 shadow-lg shadow-purple-500/20' : ''}"
         onclick={() => {
-            appState.settings.aiInferenceType = 'Gemini';
-            appState.settings.aiModel = modelMap['Gemini 2 Flash'];
-            appState.settings.prdType = 'Feature Based';
-            appState.settings.userStoryType = 'Technical';
+            appState.settings.aiInferenceType = 'Gemini'
+            appState.settings.aiModel = modelMap['Gemini 2 Flash']
+            appState.settings.prdType = 'Feature Based'
+            appState.settings.userStoryType = 'Technical'
         }}
     >
         {#if activePreset === 'enterprise'}
@@ -119,7 +119,7 @@
         </ul>
         <div class="h-[1px] bg-gradient-to-r from-transparent via-gray-700 to-transparent my-2"></div>
         <p class="text-xs text-gray-400">
-            Built for complex projects with technical depth.
+            Complex projects with technical depth.
         </p>
     </button>
 
@@ -128,10 +128,10 @@
         class="group relative bg-gradient-to-br from-gray-900 to-gray-800 p-4 rounded-lg border border-gray-700 hover:border-green-500 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/20 text-left 
             {activePreset === 'user-centric' ? 'bg-gradient-to-br from-gray-900 to-gray-950  border-green-500 shadow-lg shadow-green-500/20' : ''}"
         onclick={() => {
-            appState.settings.aiInferenceType = 'LM Studio';
-            appState.settings.aiModel = modelMap['Llama 3.1 8b'];
-            appState.settings.prdType = 'Narrative';
-            appState.settings.userStoryType = 'User-Focused';
+            appState.settings.aiInferenceType = 'LM Studio'
+            appState.settings.aiModel = modelMap['Llama 3.1 8b']
+            appState.settings.prdType = 'Narrative'
+            appState.settings.userStoryType = 'User-Focused'
         }}
     >
         {#if activePreset === 'user-centric'}
@@ -165,7 +165,7 @@
         </ul>
         <div class="h-[1px] bg-gradient-to-r from-transparent via-gray-700 to-transparent my-2"></div>
         <p class="text-xs text-gray-400">
-            Optimized for user experience flows.
+            Optimized for UX flows.
         </p>
     </button>
     <!-- Research Preset -->
@@ -173,10 +173,10 @@
         class="group relative bg-gradient-to-br from-gray-900 to-gray-800 p-4 rounded-lg border border-gray-700 hover:border-blue-500 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 text-left 
             {activePreset === 'research' ? 'bg-gradient-to-br from-gray-900 to-gray-950 !border-blue-500 shadow-lg shadow-blue-500/20' : ''}"
         onclick={() => {
-            appState.settings.aiInferenceType = 'Gemini';
-            appState.settings.aiModel = modelMap['Gemini 2 Flash'];
-            appState.settings.prdType = 'Research';
-            appState.settings.userStoryType = 'Research';
+            appState.settings.aiInferenceType = 'Gemini'
+            appState.settings.aiModel = modelMap['Gemini 2.5 Pro']
+            appState.settings.prdType = 'Research'
+            appState.settings.userStoryType = 'Research'
         }}
     >
         {#if activePreset === 'research'}
@@ -197,7 +197,7 @@
             </li>
             <li class="flex justify-between items-center">
                 <span class="text-gray-400">Model</span>
-                <span class="text-blue-400">Gemini 2 Flash</span>
+                <span class="text-blue-400">Gemini 2.5 Pro</span>
             </li>
             <li class="flex justify-between items-center">
                 <span class="text-gray-400">PRD Type</span>
@@ -210,7 +210,7 @@
         </ul>
         <div class="h-[1px] bg-gradient-to-r from-transparent via-gray-700 to-transparent my-2"></div>
         <p class="text-xs text-gray-400">
-            Ideal for research projects and experiments.
+            For research projects and experiments.
         </p>
     </button>
 </div>

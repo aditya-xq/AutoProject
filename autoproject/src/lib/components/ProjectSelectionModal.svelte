@@ -1,15 +1,15 @@
 <script lang="ts">
-    import { fade, fly } from 'svelte/transition';
-    import { cubicOut } from 'svelte/easing';
-    import { appState } from '$lib/state.svelte';
-    import { notificationStore } from '$lib/store';
-    import { FEATURE_SUGGESTIONS_SCHEMA } from '$lib/utils/config';
+    import { fade, fly } from 'svelte/transition'
+    import { cubicOut } from 'svelte/easing'
+    import { appState } from '$lib/state.svelte'
+    import { notificationStore } from '$lib/store'
+    import { FEATURE_SUGGESTIONS_SCHEMA } from '$lib/utils/config'
 
-    let { isOpen = $bindable() } = $props();
+    let { isOpen = $bindable() } = $props()
 
-    let searchTerm = $state('');
-    let projects: any[] = $derived(appState.projects);
-    let loading = false;
+    let searchTerm = $state('')
+    let projects: any[] = $derived(appState.projects)
+    let loading = false
 
     let filteredProjects = $derived(projects.filter((project) => 
         project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -17,7 +17,7 @@
     ))
 
     async function handleFeatureSuggestions() {
-        appState.isLoading = true;
+        appState.isLoading = true
         const response = await fetch('/api/feature', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -27,29 +27,29 @@
                 isJsonMode: true,
                 jsonSchema: FEATURE_SUGGESTIONS_SCHEMA,
             })
-        });
-        const result = await response.json();
+        })
+        const result = await response.json()
         if (response.ok) {
-            appState.isLoading = false;
-            appState.activeProject.suggestions = result.data;
-            return;
+            appState.isLoading = false
+            appState.activeProject.suggestions = result.data
+            return
         }
         if (!response.ok || !result.success) {
-            appState.isLoading = false;
-            return;
+            appState.isLoading = false
+            return
         }
     }
 
     async function handleProjectSelect(project: any) {
-        appState.activeProject = project;
-        await handleFeatureSuggestions();        
-        isOpen = false;
-        notificationStore.addNotification('Project imported successfully', 'success');
+        appState.activeProject = project
+        await handleFeatureSuggestions()        
+        isOpen = false
+        notificationStore.addNotification('Project imported successfully', 'success')
     }
 
     function handleClose() {
-        searchTerm = '';
-        isOpen = false;
+        searchTerm = ''
+        isOpen = false
     }
 
 </script>
