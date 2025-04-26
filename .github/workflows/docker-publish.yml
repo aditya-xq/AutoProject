@@ -1,0 +1,58 @@
+name: 🚀 Build, Scan, and Publish Docker Image
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*.*.*'   # Only tags like v1.2.0
+
+jobs:
+  build-scan-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛒 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔑 Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: 🏷️ Extract Git Tag (if exists)
+        id: vars
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            VERSION_TAG=${GITHUB_REF#refs/tags/}
+          else
+            VERSION_TAG=""
+          fi
+          echo "VERSION_TAG=$VERSION_TAG" >> $GITHUB_ENV
+
+      - name: 🏗️ Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🛡️ Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget
+          wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.50.0_Linux-64bit.deb
+          sudo dpkg -i trivy_0.50.0_Linux-64bit.deb
+
+      - name: 🏗️ Build Docker image (multi-arch)
+        run: |
+          if [ -z "${{ env.VERSION_TAG }}" ]; then
+            echo "No version tag — building :latest only"
+            docker buildx build --platform linux/amd64,linux/arm64 -t xqbuilds/autoproject:latest --push .
+          else
+            echo "Version tag detected: ${{ env.VERSION_TAG }}"
+            docker buildx build --platform linux/amd64,linux/arm64 -t xqbuilds/autoproject:latest -t xqbuilds/autoproject:${{ env.VERSION_TAG }} --push .
+          fi
+
+      - name: 🔍 Trivy Scan (optional, non-blocking)
+        continue-on-error: true
+        run: |
+          echo "Scanning image for vulnerabilities..."
+          trivy image xqbuilds/autoproject:latest
