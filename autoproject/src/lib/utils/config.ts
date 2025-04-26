@@ -23,14 +23,13 @@ export const userStoryTypeOptions: UserStoryType[] = ['Technical', 'User-Focused
 export const aiInferenceOptions: AIInferenceType[] = ['Gemini', 'Groq', 'LM Studio']
 export const tools: ProjectManagementTool[] = ['Linear', 'Asana', 'Jira', 'Plane']
 export const aiModelOptions: Record<string, string[]> = {
-    'Groq' : ['Llama 3.3 70b', 'Qwen 2.5 32b', 'Llama 4 Scout'],
+    'Groq' : ['Llama 3.3 70b', 'Llama 4 Maverick'],
     'LM Studio' : ['Llama 3.1 8b', 'Phi 4', 'Gemma 3 12b'],
     'Gemini' : ['Gemini 2 Flash', 'Gemini 2.5 Pro'],
 }
 export const modelMap: any = {
     'Llama 3.3 70b' : 'llama-3.3-70b-versatile',
-    'Qwen 2.5 32b' : 'qwen-2.5-32b',
-    'Llama 4 Scout' : 'meta-llama/llama-4-scout-17b-16e-instruct',
+    'Llama 4 Maverick' : 'meta-llama/llama-4-maverick-17b-128e-instruct',
     'Phi 4' : 'phi-4',
     'Llama 3.1 8b' : 'meta-llama-3.1-8b-instruct',
     'Gemma 3 12b' : 'gemma-3-12b-it',
@@ -93,6 +92,5 @@ export const FEATURE_SUGGESTIONS_SCHEMA = {
     }
 }
 
-export const LM_STUDIO_SERVER = 'http://localhost:1234/v1/chat/completions'
 export const GROQ_API_ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions'
 export const SYSTEM_PROMPT = "You are a smart and intelligent assistant who always responds correctly and meticulously follow the given instructions. You will directly start with the answer to the point."
