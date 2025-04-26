@@ -4,7 +4,7 @@ FROM oven/bun:1 AS build
 WORKDIR /app
 
 # Copy only the lockfile and package manifest first for better caching
-COPY package.json bun.lockb* ./
+COPY autoproject/package.json autoproject/bun.lockb* ./
 
 # Install dependencies with strict lockfile
 RUN bun install --frozen-lockfile --no-progress
