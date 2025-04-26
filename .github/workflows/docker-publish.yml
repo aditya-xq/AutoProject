@@ -45,10 +45,10 @@ jobs:
         run: |
           if [ -z "${{ env.VERSION_TAG }}" ]; then
             echo "No version tag — building :latest only"
-            docker buildx build --platform linux/amd64,linux/arm64 -f autoproject/Dockerfile -t xqbuilds/autoproject:latest --push autoproject
+            docker buildx build --platform linux/amd64,linux/arm64 -t xqbuilds/autoproject:latest --push .
           else
             echo "Version tag detected: ${{ env.VERSION_TAG }}"
-            docker buildx build --platform linux/amd64,linux/arm64 -f autoproject/Dockerfile -t xqbuilds/autoproject:latest -t xqbuilds/autoproject:${{ env.VERSION_TAG }} --push autoproject
+            docker buildx build --platform linux/amd64,linux/arm64 -t xqbuilds/autoproject:latest -t xqbuilds/autoproject:${{ env.VERSION_TAG }} --push .
           fi
 
       - name: 🔍 Trivy Scan (optional, non-blocking)

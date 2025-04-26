@@ -10,7 +10,7 @@ COPY autoproject/package.json autoproject/bun.lockb* ./
 RUN bun install --frozen-lockfile --no-progress
 
 # Copy the rest of the source code
-COPY . .
+COPY autoproject/ ./
 
 # Build your app
 RUN bun run build
