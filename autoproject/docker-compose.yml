@@ -1,0 +1,12 @@
+services:
+  autoproject:
+    container_name: autoproject_app
+    image: xqbuilds/autoproject:latest
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      DOCKER_ENV: true
+    restart: unless-stopped
