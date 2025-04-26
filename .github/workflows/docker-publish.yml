@@ -39,7 +39,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y wget
           wget https://github.com/aquasecurity/trivy/releases/download/v0.61.1/trivy_0.61.1_Linux-64bit.deb
-          sudo dpkg -i trivy_0.50.0_Linux-64bit.deb
+          sudo dpkg -i trivy_0.61.1_Linux-64bit.deb
 
       - name: 🏗️ Build Docker image (multi-arch)
         run: |
