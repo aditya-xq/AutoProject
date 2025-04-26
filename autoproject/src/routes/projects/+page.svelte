@@ -1,29 +1,29 @@
 <script lang="ts">
-    import { appState } from '$lib/state.svelte';
-    import { marked } from 'marked';
+    import { appState } from '$lib/state.svelte'
+    import { marked } from 'marked'
 
-    let projects = $derived(appState.projects);
-    let selectedProject = $state(null);
-    let searchQuery = $state('');
+    let projects = $derived(appState.projects)
+    let selectedProject = $state<any>({})
+    let searchQuery = $state('')
 
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'short',
             day: 'numeric'
-        });
-    };
+        })
+    }
 
     const selectProject = (project: any) => {
-        selectedProject = project;
-    };
+        selectedProject = project
+    }
 
     const filteredProjects = $derived(searchQuery
         ? projects.filter(p => 
             p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             p.description.toLowerCase().includes(searchQuery.toLowerCase())
           )
-        : projects);
+        : projects)
 </script>
 
 <div class="min-h-screen">
@@ -39,7 +39,7 @@
                     type="text"
                     bind:value={searchQuery}
                     placeholder="Search projects..."
-                    class="w-full px-4 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-300 placeholder-gray-500 focus:outline-none focus:border-blue-600"
+                    class="w-full px-4 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-300 placeholder-gray-500 focus:outline-none focus:border-purple-400"
                 />
             </div>
         </div>
