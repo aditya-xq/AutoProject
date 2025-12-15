@@ -28,7 +28,7 @@ export const POST: RequestHandler = async ({ request }) => {
                 result = await handleAIInference(
                     `${LM_STUDIO_SERVER}/v1/chat/completions`, 
                     commonHeaders,
-                    `LM Studio Community/${settings.aiModel}`,
+                    settings.aiModel,
                     prompt,
                     isJsonMode,
                     jsonSchema,

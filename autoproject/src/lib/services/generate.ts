@@ -1,18 +1,18 @@
-import type { GenerativeModel } from "@google/generative-ai";
-import { createGenerationError, errors } from "$lib";
-import { SYSTEM_PROMPT } from "$lib/utils/config";
+import type { GenerativeModel } from "@google/generative-ai"
+import { createGenerationError, errors } from "$lib"
+import { SYSTEM_PROMPT } from "$lib/utils/config"
 
 export async function handleGeminiInference(
     model: GenerativeModel, 
     prompt: string,
 ) { 
-    const contentResult = await model.generateContent(prompt);
+    const contentResult = await model.generateContent(prompt)
     
     if (!contentResult?.response) {
-        throw createGenerationError(errors.emptyGeminiResponse);
+        throw createGenerationError(errors.emptyGeminiResponse)
     }
 
-    const responseString = contentResult.response.text();
+    const responseString = contentResult.response.text()
     return responseString;
 }
 
@@ -37,19 +37,19 @@ export async function handleGroqInference(
             stream: false,
             
         })
-    });
+    })
 
     if (!response.ok) {
-        throw createGenerationError(`${response.status}: ${errors.aiServiceResponseError}`);
+        throw createGenerationError(`${response.status}: ${errors.aiServiceResponseError}`)
     }
 
     const jsonData = await response.json();
     
     if (!jsonData.choices?.[0]?.message?.content) {
-        throw createGenerationError(errors.aiServiceResponseError);
+        throw createGenerationError(errors.aiServiceResponseError)
     }
 
-    return jsonData.choices[0].message.content;
+    return jsonData.choices[0].message.content
 }
 
 export async function handleAIInference(
@@ -73,17 +73,17 @@ export async function handleAIInference(
             temperature: 0.8,
             stream: false,
         })
-    });
+    })
 
     if (!response.ok) {
-        throw createGenerationError(`${errors.aiServiceResponseError} ${response.status}`);
+        throw createGenerationError(`${errors.aiServiceResponseError} ${response.status}`)
     }
 
-    const jsonData = await response.json();
+    const jsonData = await response.json()
     
     if (!jsonData.choices?.[0]?.message?.content) {
-        throw createGenerationError(errors.aiServiceResponseError);
+        throw createGenerationError(errors.aiServiceResponseError)
     }
 
-    return jsonData.choices[0].message.content;
+    return jsonData.choices[0].message.content
 }
