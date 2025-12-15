@@ -1,117 +1,157 @@
 <script lang="ts">
-    import { appState, resetState } from '$lib/state.svelte';
-    import { notificationStore } from '$lib/store';
-    import { starterPrompts } from '$lib/utils/config';
-    import { PRD_PROMPTS } from '$lib/services/prompts';
-    import { useChat } from '@ai-sdk/svelte';
+    import { appState, resetState } from '$lib/state.svelte'
+    import { notificationStore } from '$lib/store'
+    import { starterPrompts } from '$lib/utils/config'
+    import { PRD_PROMPTS } from '$lib/services/prompts'
+    import { Chat } from '@ai-sdk/svelte'
 
-    export let generatePrdDisabled = false;
+    let { generatePrdDisabled = false } = $props()
 
-    const { input, handleSubmit, messages, setMessages, stop, error } = useChat({
-        api: '/api/chat',
-        body: {
-            settings: appState.settings,
-        }
-    });
+    const chat = new Chat({})
 
-    let promptSuffix = '';
-    let prompt = '';
+    let promptSuffix = $state('')
+    let prompt = $state('')
 
-    $: if ($messages.length > 1) {
-        appState.isLoading = false;
-        const lastMessage = $messages[$messages.length - 1];
-        if (lastMessage.role === 'assistant' && appState.promptType === 'prd') {
-            appState.prd = lastMessage.content;
-        }
-    }
-
-    $: if ($error) {
-        const errorMessage = 'Error occurred during inference. Please check if your API keys or if inference server is running properly';
-        notificationStore.addNotification(errorMessage, 'error');
-        appState.isLoading = false;
-    }
-
-    function handleSubmitHandler() {
-        appState.isLoading = true;
-        appState.promptType = 'prd';
-        promptSuffix = PRD_PROMPTS[appState.settings.prdType];
+    function handleSubmit(event: Event) {
+        event.preventDefault()
+        appState.isLoading = true
+        appState.promptType = 'prd'
+        promptSuffix = PRD_PROMPTS[appState.settings.prdType]
         if (appState.activeProject.name) {
-            prompt = `Existing project Name: ${appState.activeProject.name}. description: ${appState.activeProject.description}. New feature requirement to be added to this project: ${appState.requirements}. ${promptSuffix}`;
+            prompt = `Existing project Name: ${appState.activeProject.name}. description: ${appState.activeProject.description}. New feature requirement to be added to this project: ${appState.requirements}. ${promptSuffix}`
         } else {
-            prompt = `Requirement: ${appState.requirements}. ${promptSuffix}`;
+            prompt = `Requirement: ${appState.requirements}. ${promptSuffix}`
         }
-        setMessages([]);
-        input.set(prompt);
-        handleSubmit();
+        chat.sendMessage(
+            { text: prompt},
+            { body: {
+                "settings": appState.settings,
+                "prompt": prompt,
+        }})
     }
+
+    // Handle messages updates
+    $effect(() => {
+        if (chat.messages.length > 1) {
+            appState.isLoading = false;
+            const lastMessage = chat.messages[chat.messages.length - 1]
+            if (lastMessage.role === 'assistant' && appState.promptType === 'prd') {
+                appState.prd = lastMessage.parts[1].type === "text" ? lastMessage.parts[1].text : ''
+            }
+        }
+    })
+
+    // Handle error
+    $effect(() => {
+        if (chat.error) {
+            const errorMessage = 'Error occurred during inference. Please check if your API keys or if inference server is running properly'
+            notificationStore.addNotification(errorMessage, 'error')
+            appState.isLoading = false
+        }
+    })
 
     function clearContent() {
-        resetState();
-        setMessages([]);
-        input.set('');
-        stop();
-        notificationStore.addNotification('All content cleared', 'success');
+        resetState()
+        stop()
+        notificationStore.addNotification('All content cleared', 'success')
     }
 
-    function handleStarterClick(requirements: string) {
-        appState.requirements = requirements;
-        handleSubmitHandler();
+    function handleStarterClick(requirements: string, event: Event) {
+        appState.requirements = requirements
+        handleSubmit(event)
     }
 </script>
 
 <div class="flex flex-col space-y-4">
-    <div class="flex gap-3">
+    <div class="flex gap-2 items-center">
         <input
-            id="requirements" 
+            id="requirements"
             autocomplete="off"
-            class="grow text-white p-4 bg-gray-800/50 backdrop-blur-sm border border-purple-500/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-lg transition-all duration-200"
             bind:value={appState.requirements}
-            placeholder="What to build?"
-            aria-label="Enter Project Requirements"
-            on:keydown={(e) => e.key === 'Enter' && handleSubmitHandler()}
+            placeholder="What do you want to build?"
+            aria-label="Enter project requirements"
+            onkeydown={(e) => e.key === 'Enter' && handleSubmit(e)}
+            class="grow p-4 text-lg text-neutral-100
+                bg-neutral-900
+                border border-neutral-800
+                rounded-md
+                placeholder:text-neutral-500
+                focus:outline-none focus:border-neutral-600
+                transition"
         />
+    </div>
+    <div class="text-right">
         <button
             id="generate-prd"
             aria-label="Generate PRD"
             disabled={generatePrdDisabled}
-            on:click={handleSubmitHandler}
-            class="px-6 rounded-xl text-sm font-medium text-white bg-purple-600 hover:bg-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-purple-600"
+            onclick={handleSubmit}
+            class="px-3 py-2 text-sm font-medium
+                bg-purple-600 text-white
+                rounded-md
+                hover:bg-purple-500
+                transition
+                disabled:opacity-40
+                disabled:cursor-not-allowed"
         >
-            Generate PRD
+            Generate
         </button>
         <button
-            on:click={clearContent}
-            class="px-6 rounded-xl text-sm font-medium text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-lg transition-all duration-200"
+            onclick={clearContent}
             aria-label="Clear Content"
+            class="px-3 py-2 text-sm font-medium
+                text-neutral-300
+                bg-neutral-800
+                border border-neutral-700
+                rounded-md
+                hover:bg-neutral-700
+                transition"
         >
             Reset
         </button>
     </div>
-
-    <!-- Starter Prompts with updated styling -->
     {#if !appState.prd && !appState.activeProject.name}
         <div class="space-y-4">
-            <p class="text-sm text-gray-400 font-medium">Explore ideas:</p>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            <p class="text-sm text-neutral-400 font-semibold">Explore Ideas</p>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                 {#each starterPrompts as { label, requirements }}
                     <button
-                        on:click={() => handleStarterClick(requirements)}
-                        class="p-4 rounded-xl border border-purple-500/20 bg-gray-800/50 backdrop-blur-sm hover:bg-gray-700/50 cursor-pointer transition-all duration-200 shadow-lg hover:shadow-purple-500/20 text-gray-300 hover:text-white">
+                        onclick={(e) => handleStarterClick(requirements, e)}
+                        class="px-4 py-2
+                                rounded-md
+                                border border-neutral-700/50 
+                                bg-neutral-900 
+                                hover:bg-neutral-800 
+                                cursor-pointer 
+                                transition-colors duration-200 
+                                text-neutral-200 
+                                text-left text-sm
+                                font-medium"
+                    >
                         {label}
                     </button>
                 {/each}
             </div>
         </div>
     {/if}
-    <!-- Suggested features to add based on the imported project context -->
     {#if !appState.prd && appState.activeProject.name && appState.activeProject?.suggestions?.length > 0}
         <div class="space-y-4">
-            <p class="text-sm text-gray-400 font-medium">Suggested features:</p>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+             <p class="text-sm text-neutral-400 font-semibold">Suggested Features</p>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                 {#each appState.activeProject.suggestions as suggestion}
                     <button
-                        on:click={() => handleStarterClick(suggestion)}
-                        class="p-4 rounded-xl border border-purple-500/20 bg-gray-800/50 backdrop-blur-sm hover:bg-gray-700/50 cursor-pointer transition-all duration-200 shadow-lg hover:shadow-purple-500/20 text-gray-300 hover:text-white">
+                        onclick={(e) => handleStarterClick(suggestion, e)}
+                        class="px-4 py-2
+                                rounded-md
+                                border border-neutral-700/50 
+                                bg-neutral-900 
+                                hover:bg-neutral-800 
+                                cursor-pointer 
+                                transition-colors duration-200 
+                                text-neutral-200 
+                                text-left text-sm
+                                font-medium"
+                    >
                         {suggestion}
                     </button>
                 {/each}

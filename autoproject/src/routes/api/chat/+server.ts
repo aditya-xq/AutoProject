@@ -22,7 +22,7 @@ export const POST = (async ({ request }) => {
     apiKey: env.SECRET_GEMINI_API_KEY,
   })
   try {
-    const { messages, settings } = await request.json()
+    const { settings, prompt }: { settings: any, prompt: any} = await request.json()
     if (settings.aiInferenceType === 'LM Studio') {
         // Check if the server is up and running
         const response = await fetch(`${LM_STUDIO_SERVER}/v1/models`)
@@ -31,23 +31,23 @@ export const POST = (async ({ request }) => {
         }
         const result = streamText({
         model: lmstudio(settings.aiModel),
-        messages,
+        prompt: prompt
       })
-      return result.toDataStreamResponse()
+      return result.toUIMessageStreamResponse()
     }
     if (settings.aiInferenceType === 'Groq') {
       const result = streamText({
         model: groq(settings.aiModel),
-        messages,
+        prompt: prompt
       })
-      return result.toDataStreamResponse()
+      return result.toUIMessageStreamResponse()
     }
     if (settings.aiInferenceType === 'Gemini') {
       const result = streamText({
         model: gemini(`models/${settings.aiModel}`),
-        messages,
+        prompt: prompt
       })
-      return result.toDataStreamResponse()
+      return result.toUIMessageStreamResponse()
     }
     throw createGenerationError(errors.invalidAiInferenceType)
   } catch (error: any) {
