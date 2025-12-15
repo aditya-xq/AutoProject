@@ -11,11 +11,11 @@ export const CONFIG = {
 }
 
 export const starterPrompts = [
-    { label: '🎵 Music Mood Journal', requirements: 'App that creates personalized playlists based on daily mood entries and helps track emotional well-being through music' },
-    { label: '🌍 Carbon Tracker', requirements: 'An enterprise solution for companies to track, report, and optimize their carbon emissions across supply chains' },
-    { label: '📚 Academic Assistant', requirements: 'Platform helping researchers analyze papers, extract key findings, and generate literature review summaries with citation management' },
-    { label: '🎨 Design Generator', requirements: 'A tool that automatically generates and maintains component libraries and design tokens from Figma files' },
-    { label: '⌛ Digital Time Capsule', requirements: 'App creating multimedia memories with friends and family, set to unlock at future dates with AI-enhanced storytelling' },
+    { label: '💰 FIRE Simulator', requirements: 'A Financial Independence, Retire Early (FIRE) Calculator that goes beyond standard formulas. It integrates dynamic variables like regional inflation projections, anticipated geo-arbitrage shifts (cost of living in target countries), and generates Monte Carlo simulations showing the probability of financial stability across various withdrawal strategies.' },
+    { label: '📚 Lit Review Assistant', requirements: 'A Literature Review Platform that ingests academic PDFs, uses natural language processing (NLP) to map connections between key methodologies and findings across hundreds of papers, and generates a visualized knowledge graph to identify and summarize emergent themes or historical research gaps.' },
+    { label: '👓 Reading App', requirements: 'A Clean Reading Application that is a cross-platform (mobile/desktop) markdown editor prioritizing distraction-free writing and reading. It features optional dynamic text highlighting based on reading speed, a customizable Bionic Reading mode, and seamless single-command export to web, EPUB, and LaTeX.' },
+    { label: '👾 Eco-Simulator', requirements: 'An Indie Video Game where the player manages a procedurally generated micro-ecosystem (e.g., a pond, a terrarium). The core mechanic revolves around introducing new life forms and managing the resulting non-linear cascading effects on the food web, water quality, and climate, with a simple, clean, pixel-art aesthetic.' },
+    { label: '📺 OTT Tracker', requirements: 'A Dynamic OTT Release Dashboard that scrapes movie/series release data from multiple regional aggregator sites for the current and next week (e.g., Netflix, Prime Video, Disney+). The dashboard must feature personalized filtering by user-defined favorite platforms, languages (e.g., Hindi, Telugu, English), and automatic cross-reference with IMDb/Rotten Tomatoes to display aggregated critic/audience scores alongside each entry.' },
 ]
 
 export const prdTypeOptions: PRDType[] = ['Feature Based', 'Focused', 'Minimal', 'Narrative', 'Research']
