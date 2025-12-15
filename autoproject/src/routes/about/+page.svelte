@@ -1,3 +1,7 @@
+<script lang="ts">
+  import { modelGuide, quickPresets } from './content.config'
+</script>
+
 <div class="container mx-auto max-w-5xl text-gray-100 px-4 py-6 space-y-8">
     <!-- Title Section -->
     <h1 class="text-xl md:text-2xl font-bold text-purple-400">🚀 Welcome to AutoProject</h1>
@@ -34,125 +38,28 @@
             <span>⚡</span>
             <span>Quick Settings Presets</span>
         </h2>
-        
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Rapid POC -->
-            <div class="bg-black p-6 rounded-xl border border-gray-800 hover:border-white transition-all duration-300">
+            {#each quickPresets as preset}
+                <div class="bg-black p-6 rounded-xl border border-gray-800 hover:border-white transition-all duration-300">
                 <div class="flex items-center gap-3 mb-4">
-                    <span class="text-2xl">🚀</span>
-                    <h3 class="text-lg font-medium text-white">Rapid POC</h3>
+                    <span class="text-2xl">{preset.icon}</span>
+                    <h3 class="text-lg font-medium text-white">{preset.title}</h3>
                 </div>
-                <ul class="space-y-3">
-                    <li class="flex justify-between items-center">
-                        <span class="text-gray-400 text-sm">Platform</span>
-                        <span class="text-white">Groq</span>
-                    </li>
-                    <li class="flex justify-between items-center">
-                        <span class="text-gray-400 text-sm">Model</span>
-                        <span class="text-white">Llama 3.3 70b</span>
-                    </li>
-                    <li class="flex justify-between items-center">
-                        <span class="text-gray-400 text-sm">PRD Type</span>
-                        <span class="text-white">Minimal</span>
-                    </li>
-                    <li class="flex justify-between items-center">
-                        <span class="text-gray-400 text-sm">User Story</span>
-                        <span class="text-white">Minimal</span>
-                    </li>
-                </ul>
-                <div class="h-[1px] bg-gray-800 my-4"></div>
-                <p class="text-sm text-gray-400">
-                    Zero to MVP in record time. Perfect for quick validation.
-                </p>
-            </div>
 
-            <!-- Enterprise Project -->
-            <div class="bg-black p-6 rounded-xl border border-gray-800 hover:border-white transition-all duration-300">
-                <div class="flex items-center gap-3 mb-4">
-                    <span class="text-2xl">🏢</span>
-                    <h3 class="text-lg font-medium text-white">Enterprise</h3>
-                </div>
                 <ul class="space-y-3">
+                    {#each preset.items as [label, value]}
                     <li class="flex justify-between items-center">
-                        <span class="text-gray-400 text-sm">Platform</span>
-                        <span class="text-white">Gemini</span>
+                        <span class="text-gray-400 text-sm">{label}</span>
+                        <span class="text-white">{value}</span>
                     </li>
-                    <li class="flex justify-between items-center">
-                        <span class="text-gray-400 text-sm">Model</span>
-                        <span class="text-white">Gemini 2 Flash</span>
-                    </li>
-                    <li class="flex justify-between items-center">
-                        <span class="text-gray-400 text-sm">PRD Type</span>
-                        <span class="text-white">Feature Based</span>
-                    </li>
-                    <li class="flex justify-between items-center">
-                        <span class="text-gray-400 text-sm">User Story</span>
-                        <span class="text-white">Technical</span>
-                    </li>
+                    {/each}
                 </ul>
-                <div class="h-[1px] bg-gray-800 my-4"></div>
-                <p class="text-sm text-gray-400">
-                    Built for complex projects requiring technical depth.
-                </p>
-            </div>
 
-            <!-- User-Centric -->
-            <div class="bg-black p-6 rounded-xl border border-gray-800 hover:border-white transition-all duration-300">
-                <div class="flex items-center gap-3 mb-4">
-                    <span class="text-2xl">👥</span>
-                    <h3 class="text-lg font-medium text-white">User-Centric</h3>
+                <div class="h-px bg-gray-800 my-4"></div>
+
+                <p class="text-sm text-gray-400">{preset.description}</p>
                 </div>
-                <ul class="space-y-3">
-                    <li class="flex justify-between items-center">
-                        <span class="text-gray-400 text-sm">Platform</span>
-                        <span class="text-white">LM Studio</span>
-                    </li>
-                    <li class="flex justify-between items-center">
-                        <span class="text-gray-400 text-sm">Model</span>
-                        <span class="text-white">Llama 3.1 8b</span>
-                    </li>
-                    <li class="flex justify-between items-center">
-                        <span class="text-gray-400 text-sm">PRD Type</span>
-                        <span class="text-white">Narrative</span>
-                    </li>
-                    <li class="flex justify-between items-center">
-                        <span class="text-gray-400 text-sm">User Story</span>
-                        <span class="text-white">User-Focused</span>
-                    </li>
-                </ul>
-                <div class="h-[1px] bg-gray-800 my-4"></div>
-                <p class="text-sm text-gray-400">
-                    Optimized for user experience flows.
-                </p>
-            </div>
-            <div class="bg-black p-6 rounded-xl border border-gray-800 hover:border-white transition-all duration-300">
-                <div class="flex items-center gap-3 mb-4">
-                    <span class="text-2xl">🔬</span>
-                    <h3 class="text-lg font-medium text-white">Research</h3>
-                </div>
-                <ul class="space-y-3">
-                    <li class="flex justify-between items-center">
-                        <span class="text-gray-400 text-sm">Platform</span>
-                        <span class="text-white">Gemini</span>
-                    </li>
-                    <li class="flex justify-between items-center">
-                        <span class="text-gray-400 text-sm">Model</span>
-                        <span class="text-white">Gemini 2 Flash</span>
-                    </li>
-                    <li class="flex justify-between items-center">
-                        <span class="text-gray-400 text-sm">PRD Type</span>
-                        <span class="text-white">Research</span>
-                    </li>
-                    <li class="flex justify-between items-center">
-                        <span class="text-gray-400 text-sm">User Story</span>
-                        <span class="text-white">Research</span>
-                    </li>
-                </ul>
-                <div class="h-[1px] bg-gray-800 my-4"></div>
-                <p class="text-sm text-gray-400">
-                    Ideal for research projects and experiments.
-                </p>
-            </div>
+            {/each}
         </div>
     </div>
 
@@ -162,88 +69,32 @@
             <span>🎯</span>
             <span>Model & Settings Guide</span>
         </h2>
-
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- AI Platforms Card -->
-            <div class="bg-black p-6 rounded-xl border border-gray-800 hover:border-white transition-all duration-300">
+            {#each modelGuide as card}
+                <div class="bg-black p-6 rounded-xl border border-gray-800 hover:border-white transition-all duration-300">
                 <div class="flex items-center gap-3 mb-4">
-                    <span class="text-2xl">🤖</span>
-                    <h3 class="text-lg font-medium text-white">AI Platforms</h3>
+                    <span class="text-2xl">{card.icon}</span>
+                    <h3 class="text-lg font-medium text-white">{card.title}</h3>
                 </div>
-                <div class="space-y-4">
-                    <div class="space-y-2">
-                        <h4 class="text-purple-400">Groq</h4>
-                        <p class="text-sm text-gray-300">Llama 3.3 70b, Gemma 2 9b, Mixtral 8x7b</p>
-                        <p class="text-xs text-gray-400">Best for: Enterprise-grade inference</p>
-                    </div>
-                    <div class="space-y-2">
-                        <h4 class="text-purple-400">LM Studio</h4>
-                        <p class="text-sm text-gray-300">Llama 3.1 8b, Qwen 2.5 14b</p>
-                        <p class="text-xs text-gray-400">Best for: Local development</p>
-                    </div>
-                    <div class="space-y-2">
-                        <h4 class="text-purple-400">Gemini</h4>
-                        <p class="text-sm text-gray-300">Gemini 2 Flash, Gemini 1.5 Flash</p>
-                        <p class="text-xs text-gray-400">Best for: Complex reasoning</p>
-                    </div>
-                </div>
-            </div>
 
-            <!-- PRD Types Card -->
-            <div class="bg-black p-6 rounded-xl border border-gray-800 hover:border-white transition-all duration-300">
-                <div class="flex items-center gap-3 mb-4">
-                    <span class="text-2xl">📝</span>
-                    <h3 class="text-lg font-medium text-white">PRD Types</h3>
-                </div>
                 <div class="space-y-4">
-                    <div class="space-y-2">
-                        <h4 class="text-green-400">Feature Based</h4>
-                        <p class="text-xs text-gray-400">Best for: Detailed enterprise projects</p>
-                    </div>
-                    <div class="space-y-2">
-                        <h4 class="text-green-400">Focused</h4>
-                        <p class="text-xs text-gray-400">Best for: Mid-sized projects</p>
-                    </div>
-                    <div class="space-y-2">
-                        <h4 class="text-green-400">Minimal</h4>
-                        <p class="text-xs text-gray-400">Best for: Quick MVPs</p>
-                    </div>
-                    <div class="space-y-2">
-                        <h4 class="text-green-400">Narrative</h4>
-                        <p class="text-xs text-gray-400">Best for: User-centric experiences</p>
-                    </div>
-                    <div class="space-y-2">
-                        <h4 class="text-green-400">Research</h4>
-                        <p class="text-xs text-gray-400">Best for: Research and experimental projects</p>
-                    </div>
+                    {#each card.sections as section}
+                    {#if Array.isArray(section)}
+                        <div class="space-y-1">
+                        <h4 class={card.accent}>{section[0]}</h4>
+                        <p class="text-xs text-gray-400">Best for: {section[1]}</p>
+                        </div>
+                    {:else}
+                        <div class="space-y-1">
+                        <h4 class="text-purple-400">{section.title}</h4>
+                        <p class="text-sm text-gray-300">{section.detail}</p>
+                        <p class="text-xs text-gray-400">{section.hint}</p>
+                        </div>
+                    {/if}
+                    {/each}
                 </div>
-            </div>
-
-            <!-- User Story Types Card -->
-            <div class="bg-black p-6 rounded-xl border border-gray-800 hover:border-white transition-all duration-300">
-                <div class="flex items-center gap-3 mb-4">
-                    <span class="text-2xl">📚</span>
-                    <h3 class="text-lg font-medium text-white">Story Types</h3>
                 </div>
-                <div class="space-y-4">
-                    <div class="space-y-2">
-                        <h4 class="text-blue-400">Technical</h4>
-                        <p class="text-xs text-gray-400">Best for: System architecture</p>
-                    </div>
-                    <div class="space-y-2">
-                        <h4 class="text-blue-400">User-Focused</h4>
-                        <p class="text-xs text-gray-400">Best for: UX-driven features</p>
-                    </div>
-                    <div class="space-y-2">
-                        <h4 class="text-blue-400">Minimal</h4>
-                        <p class="text-xs text-gray-400">Best for: Core functionality</p>
-                    </div>
-                    <div class="space-y-2">
-                        <h4 class="text-blue-400">Research</h4>
-                        <p class="text-xs text-gray-400">Best for: Research-oriented tasks</p>
-                    </div>
-                </div>
-            </div>
+            {/each}
         </div>
     </div>
 
