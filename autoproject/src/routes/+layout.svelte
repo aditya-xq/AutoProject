@@ -3,24 +3,47 @@
     import { page } from '$app/state'
     import { NotificationBar, Loading, Footer } from "$lib/components"
     import { fly, fade } from 'svelte/transition'
+    
     let { children } = $props()
 
     let menuOpen = $state(false)
     let scrollY: number = $state(0)
+    
+    const links = [
+        { path: '/', label: 'Home' },
+        { path: '/projects', label: 'Projects' },
+        { path: '/settings', label: 'Settings' },
+        { path: '/about', label: 'About' }
+    ]
 
-    // Helper to check active state
-    function isActive(path: string) {
-        return page.url.pathname === path
-    }
+    let navElements: Record<string, HTMLElement> = $state({})
+    let marker = $state({ left: 0, width: 0, opacity: 0 })
 
     function toggleMenu() {
         menuOpen = !menuOpen
     }
 
-    // Close menu when clicking a link
     function closeMenu() {
         menuOpen = false
     }
+
+    // Effect to move the marker when the path changes
+    $effect(() => {
+        const activePath = page.url.pathname
+        const el = navElements[activePath]
+
+        if (el) {
+            // Calculate position relative to the parent nav
+            marker = {
+                left: el.offsetLeft,
+                width: el.offsetWidth,
+                opacity: 1
+            }
+        } else {
+            // Optional: Hide marker if current page isn't in the menu
+            marker = { ...marker, opacity: 0 }
+        }
+    })
 </script>
 
 <svelte:window bind:scrollY={scrollY}/>
@@ -46,19 +69,20 @@
                 </span>
             </a>
 
-            <nav class="hidden md:flex items-center gap-1 rounded-full px-2 py-1 border border-white/5">
-                {#each [
-                    { path: '/', label: 'Home' },
-                    { path: '/projects', label: 'Projects' },
-                    { path: '/settings', label: 'Settings' },
-                    { path: '/about', label: 'About' }
-                ] as link}
+            <nav class="hidden md:flex relative items-center gap-1 rounded-full px-2 py-1">
+                <div 
+                    class="absolute top-1 bottom-1 rounded-full bg-purple-700 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
+                    style="left: {marker.left}px; width: {marker.width}px; opacity: {marker.opacity};"
+                ></div>
+
+                {#each links as link}
                     <a 
+                        bind:this={navElements[link.path]}
                         href={link.path} 
-                        class="px-4 py-1.5 text-sm font-medium rounded-full transition-all duration-200 
-                        {isActive(link.path) 
-                            ? 'bg-white/10 text-white shadow-sm' 
-                            : 'text-zinc-400 hover:text-white hover:bg-white/5'}"
+                        class="relative z-10 px-4 py-1.5 text-sm font-medium rounded-full transition-colors duration-200 
+                        {page.url.pathname === link.path
+                            ? 'text-white' 
+                            : 'text-zinc-400 hover:text-white'}"
                     >
                         {link.label}
                     </a>
@@ -86,16 +110,11 @@
         transition:fade={{ duration: 200 }}
     >
         <div class="flex flex-col items-center space-y-6" in:fly={{ y: 20, duration: 300, delay: 100 }}>
-            {#each [
-                { path: '/', label: 'Home' },
-                { path: '/projects', label: 'Projects' },
-                { path: '/settings', label: 'Settings' },
-                { path: '/about', label: 'About' }
-            ] as link}
+            {#each links as link}
                 <a 
                     href={link.path} 
                     class="text-3xl font-light tracking-tight transition-colors duration-200
-                    {isActive(link.path) ? 'text-white font-medium scale-105' : 'text-zinc-500 hover:text-zinc-300'}"
+                    {page.url.pathname === link.path ? 'text-white font-medium scale-105' : 'text-zinc-500 hover:text-zinc-300'}"
                     onclick={closeMenu}
                 >
                     {link.label}
