@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { Presets } from '$lib/components';
-    import { appState } from '$lib/state.svelte';
-    import { tools, prdTypeOptions, aiInferenceOptions, modelMap, aiModelOptions, userStoryTypeOptions } from '$lib/utils/config';
+    import { Presets } from '$lib/components'
+    import { appState } from '$lib/state.svelte'
+    import { tools, prdTypeOptions, aiInferenceOptions, modelMap, aiModelOptions, userStoryTypeOptions } from '$lib/utils/config'
 </script>
 
 <div class="container mx-auto max-w-6xl text-gray-100 px-4 py-6">
@@ -15,7 +15,7 @@
             <div class="flex flex-wrap gap-2">
                 {#each tools as type}
                     <button 
-                        class="px-3 py-2 rounded-lg text-sm transition-colors {appState.settings.tool === type ? 'bg-purple-600 text-white' : 'bg-gray-800 hover:bg-gray-700'}"
+                        class="px-3 py-2 rounded-lg text-sm transition-colors {appState.settings.tool === type ? 'bg-purple-700 text-white' : 'bg-gray-800 hover:bg-gray-700'}"
                         onclick={() => appState.settings.tool = type}>
                         {type}
                     </button>
@@ -27,7 +27,7 @@
             <div class="flex flex-wrap gap-2">
                 {#each prdTypeOptions as type}
                     <button 
-                        class="px-3 py-2 rounded-lg text-sm transition-colors {appState.settings.prdType === type ? 'bg-purple-600 text-white' : 'bg-gray-800 hover:bg-gray-700'}"
+                        class="px-3 py-2 rounded-lg text-sm transition-colors {appState.settings.prdType === type ? 'bg-purple-700 text-white' : 'bg-gray-800 hover:bg-gray-700'}"
                         onclick={() => appState.settings.prdType = type}>
                         {type}
                     </button>
@@ -39,7 +39,7 @@
             <div class="flex flex-wrap gap-2">
                 {#each userStoryTypeOptions as type}
                     <button 
-                        class="px-3 py-2 rounded-lg text-sm transition-colors {appState.settings.userStoryType === type ? 'bg-purple-600 text-white' : 'bg-gray-800 hover:bg-gray-700'}"
+                        class="px-3 py-2 rounded-lg text-sm transition-colors {appState.settings.userStoryType === type ? 'bg-purple-700 text-white' : 'bg-gray-800 hover:bg-gray-700'}"
                         onclick={() => appState.settings.userStoryType = type}>
                         {type}
                     </button>
@@ -54,7 +54,7 @@
             <div class="flex flex-wrap gap-2">
                 {#each aiInferenceOptions as type}
                     <button 
-                        class="px-3 py-2 rounded-lg text-sm transition-colors {appState.settings.aiInferenceType === type ? 'bg-purple-600 text-white' : 'bg-gray-800 hover:bg-gray-700'}"
+                        class="px-3 py-2 rounded-lg text-sm transition-colors {appState.settings.aiInferenceType === type ? 'bg-purple-700 text-white' : 'bg-gray-800 hover:bg-gray-700'}"
                         onclick={() => {
                             appState.settings.aiInferenceType = type;
                             appState.settings.aiModel = modelMap[aiModelOptions[type][0]];
@@ -68,7 +68,7 @@
             <div class="flex flex-wrap gap-2">
                 {#each aiModelOptions[appState.settings.aiInferenceType] as type}
                     <button 
-                        class="px-3 py-2 rounded-lg text-sm transition-colors {appState.settings.aiModel === modelMap[type] ? 'bg-purple-600 text-white' : 'bg-gray-800 hover:bg-gray-700'}"
+                        class="px-3 py-2 rounded-lg text-sm transition-colors {appState.settings.aiModel === modelMap[type] ? 'bg-purple-700 text-white' : 'bg-gray-800 hover:bg-gray-700'}"
                         onclick={() => appState.settings.aiModel = modelMap[type]}>
                         {type}
                     </button>

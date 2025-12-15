@@ -1,5 +1,5 @@
-import { modelMap } from "./utils/config";
-import type { AppState } from "./utils/interface";
+import { modelMap } from "./utils/config"
+import type { AppState } from "./utils/interface"
 
 export const appState: AppState = $state({
 	isLoading: false,
@@ -15,17 +15,17 @@ export const appState: AppState = $state({
     },
     settings: {
         tool: 'Linear',
-        prdType: 'Feature Based', 
-        userStoryType: 'Technical', 
-        aiInferenceType: 'Gemini',
-        aiModel: modelMap['Gemini 2 Flash'],
+        prdType: 'Minimal', 
+        userStoryType: 'Minimal', 
+        aiInferenceType: 'Groq',
+        aiModel: modelMap['Kimi K2'],
     },
     projects: [],
     activeProject: {},
-});
+})
 
 export const resetState = () => {
-    appState.prd = '';
-    appState.projectDetails.userStories = [];
-    appState.requirements = '';
+    appState.prd = ''
+    appState.projectDetails.userStories = []
+    appState.requirements = ''
 }
