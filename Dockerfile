@@ -1,3 +1,15 @@
+# ----------- Build Stage -----------
+FROM oven/bun:1 AS builder
+
+WORKDIR /app
+
+COPY autoproject/package.json autoproject/bun.lockb* ./
+RUN bun install --frozen-lockfile --no-progress
+
+COPY autoproject/ ./
+RUN bun run build
+
+# ----------- Production Stage -----------
 FROM oven/bun:1-slim AS production
 
 RUN apt-get update \
@@ -8,8 +20,8 @@ RUN adduser --disabled-password --gecos "" appuser
 
 WORKDIR /app
 
-COPY --from=build /app/build ./build
-COPY --from=build /app/package.json ./
+COPY --from=builder /app/build ./build
+COPY --from=builder /app/package.json ./
 
 RUN bun install --production --no-progress
 
