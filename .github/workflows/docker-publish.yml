@@ -2,10 +2,9 @@ name: 🚀 Build, Scan, and Publish Docker Image
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
     tags:
-      - 'v*.*.*'   # Only tags like v1.2.0
+      - 'v*.*.*'
 
 jobs:
   build-scan-push:
@@ -21,38 +20,31 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: 🏷️ Extract Git Tag (if exists)
-        id: vars
-        run: |
-          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
-            VERSION_TAG=${GITHUB_REF#refs/tags/}
-          else
-            VERSION_TAG=""
-          fi
-          echo "VERSION_TAG=$VERSION_TAG" >> $GITHUB_ENV
+      - name: 🏷️ Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: xqbuilds/autoproject
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=semver,pattern={{version}}
 
       - name: 🏗️ Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: 🛡️ Install Trivy
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget
-          wget https://github.com/aquasecurity/trivy/releases/download/v0.61.1/trivy_0.61.1_Linux-64bit.deb
-          sudo dpkg -i trivy_0.61.1_Linux-64bit.deb
-
-      - name: 🏗️ Build Docker image (multi-arch)
-        run: |
-          if [ -z "${{ env.VERSION_TAG }}" ]; then
-            echo "No version tag — building :latest only"
-            docker buildx build --platform linux/amd64,linux/arm64 -t xqbuilds/autoproject:latest --push .
-          else
-            echo "Version tag detected: ${{ env.VERSION_TAG }}"
-            docker buildx build --platform linux/amd64,linux/arm64 -t xqbuilds/autoproject:latest -t xqbuilds/autoproject:${{ env.VERSION_TAG }} --push .
-          fi
-
-      - name: 🔍 Trivy Scan (optional, non-blocking)
+      - name: 🛡️ Trivy Scan (pre-push, non-blocking)
         continue-on-error: true
-        run: |
-          echo "Scanning image for vulnerabilities..."
-          trivy image xqbuilds/autoproject:latest
+        uses: aquasecurity/trivy-action@v0.28.0
+        with:
+          image-ref: xqbuilds/autoproject:latest
+          format: table
+          severity: CRITICAL,HIGH
+
+      - name: 🏗️ Build & Push (multi-arch)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
