@@ -1,15 +1,15 @@
 <script lang="ts">
-    import { notificationStore, type NotificationType } from "$lib/store";
-    import { fade, fly } from 'svelte/transition';
+    import { notificationStore, type NotificationType } from "$lib/store"
+    import { fade, fly } from 'svelte/transition'
     
-    let notifications: NotificationType[] = [];
+    let notifications: NotificationType[] = []
 
-    notificationStore.subscribe(value => {
-        notifications = value;
-    });
+    notificationStore.subscribe((value) => {
+        notifications = value
+    })
 
     function removeNotification(id: number): void {
-        notificationStore.removeNotification(id);
+        notificationStore.removeNotification(id)
     }
 </script>
 
@@ -18,10 +18,10 @@
         <div 
             in:fly="{{ x: 50, duration: 300 }}"
             out:fade="{{ duration: 200 }}"
-            class={`flex flex-row items-center p-4 rounded-lg shadow-lg text-white min-w-[300px] max-w-md transform transition-all
-                    ${type === 'error' ? 'bg-gradient-to-r from-red-600 to-red-700 border-l-4 border-red-800' : 
-                     type === 'success' ? 'bg-gradient-to-r from-green-600 to-green-700 border-l-4 border-green-800' : 
-                     'bg-gradient-to-r from-blue-600 to-blue-700 border-l-4 border-blue-800'}`}>
+            class={`flex flex-row items-center p-4 rounded-lg shadow-lg text-white min-w-75 max-w-md transform transition-all
+                    ${type === 'error' ? 'bg-linear-to-r from-red-600 to-red-700 border-l-4 border-red-800' : 
+                     type === 'success' ? 'bg-linear-to-r from-green-600 to-green-700 border-l-4 border-green-800' : 
+                     'bg-linear-to-r from-blue-600 to-blue-700 border-l-4 border-blue-800'}`}>
             <div class="flex-1 pr-2">
                 <div class="flex items-center space-x-2">
                     {#if type === 'error'}
