@@ -52,6 +52,10 @@
         isOpen = false
     }
 
+    function handleInput(e: any) {
+        searchTerm = (e.target as HTMLInputElement).value
+    }
+
 </script>
 
 {#if isOpen}
@@ -81,7 +85,7 @@
                     <input
                         type="text"
                         value={searchTerm}
-                        oninput={(e) => searchTerm = (e.target as HTMLInputElement).value}
+                        oninput={handleInput}
                         placeholder="Search projects..."
                         class="w-full px-3 py-2 text-white bg-gray-800/50 border border-gray-700/50 rounded-md focus:ring-1 focus:ring-purple-500 focus:border-transparent text-sm transition-all duration-200"
                     />
