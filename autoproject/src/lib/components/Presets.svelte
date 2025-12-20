@@ -39,14 +39,14 @@
             checkBg: 'bg-purple-500',
             list: [
                 { label: 'Platform', value: 'Gemini' },
-                { label: 'Model', value: 'Gemini 2.5 Flash' },
+                { label: 'Model', value: 'Gemini 3 Flash' },
                 { label: 'PRD Type', value: 'Feature Based' },
                 { label: 'User Story', value: 'Technical' }
             ],
             description: 'Complex projects with technical depth.',
             settings: {
                 aiInferenceType: 'Gemini',
-                aiModel: modelMap['Gemini 2.5 Flash'],
+                aiModel: modelMap['Gemini 3 Flash'],
                 prdType: 'Feature Based',
                 userStoryType: 'Technical'
             }

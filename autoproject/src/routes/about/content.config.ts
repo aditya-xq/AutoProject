@@ -18,7 +18,7 @@ export const quickPresets = [
         description: 'Built for complex projects requiring technical depth.',
         items: [
         ['Platform', 'Gemini'],
-        ['Model', 'Gemini 2.5 Flash'],
+        ['Model', 'Gemini 3 Flash'],
         ['PRD Type', 'Feature Based'],
         ['User Story', 'Technical'],
         ],
@@ -66,7 +66,7 @@ export const modelGuide = [
         },
         {
             title: 'Gemini',
-            detail: 'Gemini 2.5 Flash, Gemini 3 Pro',
+            detail: 'Gemini 3 Flash, Gemini 3 Pro',
             hint: 'Best for: Complex reasoning',
         },
         ],
