@@ -2,11 +2,14 @@
     import { appState } from '$lib/state.svelte'
     import { notificationStore } from '$lib/store'
     import { marked } from 'marked'
-    
+   
     let selectedProjectId = $state<number | null>(null)
     let searchQuery = $state('')
     let expandedIssueId = $state<number | null>(null)
-    let completingIssues = $state<Set<number>>(new Set())
+    let updatingIssues = $state<Set<number>>(new Set())
+    let deletingIssues = $state<Set<number>>(new Set())
+    let showDeleteConfirm = $state<number | null>(null)
+    let completedInSession = $state<Set<number>>(new Set())
 
     // Derive selected project based on ID (safe against array mutations)
     let selectedProject = $derived(
@@ -23,11 +26,11 @@
         : appState.projects
     )
 
-    // Only show open issues
+    // Show all issues, with completed ones staying visible in this session
     let openIssues = $derived(
         selectedProject?.issues 
             ? [...selectedProject.issues]
-                .filter((i: any) => !i.completedAt)
+                .filter((i: any) => !i.completedAt || completedInSession.has(i.id))
                 .sort((a: any, b: any) => 
                     new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
                 )
@@ -45,33 +48,147 @@
     const selectProject = (id: number) => {
         selectedProjectId = id
         expandedIssueId = null // Reset expanded issue when switching projects
+        showDeleteConfirm = null // Reset delete confirmation
+        completedInSession.clear() // Reset completed in session when switching projects
     }
 
     const toggleIssueExpansion = (issueId: number) => {
         expandedIssueId = expandedIssueId === issueId ? null : issueId
     }
 
-    const toggleIssueComplete = (issueId: number) => {
-        // Add to completing set for animation
-        completingIssues.add(issueId)
-        completingIssues = completingIssues // Trigger reactivity
+    const isIssueCompleted = (issue: any) => {
+        return issue.completedAt && !updatingIssues.has(issue.id)
+    }
+
+    async function updateIssueStatus(issueId: number, status: string) {
+        if (updatingIssues.has(issueId)) return // Prevent duplicate requests
         
-        // TODO: Call your API to mark issue as complete
-        // For now, we'll just animate it out after a delay
-        setTimeout(() => {
-            completingIssues.delete(issueId)
-            completingIssues = completingIssues
-            // The issue will be filtered out on next data fetch
-        }, 600)
+        // Immediately add to updating state for UI feedback
+        updatingIssues = new Set(updatingIssues).add(issueId)
+
+        try {
+            const response = await fetch(`/api/story/${issueId}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    tool: appState.settings.tool,
+                    status: status
+                })
+            })
+
+            const result = await response.json()
+
+            if (response.ok) {
+                notificationStore.addNotification('Story updated successfully', 'success')
+                
+                // Update the issue
+                if (selectedProject) {
+                    const issueIndex = selectedProject.issues.findIndex((i: any) => i.id === issueId)
+                    if (issueIndex !== -1) {
+                        if (status === 'DONE') {
+                            selectedProject.issues[issueIndex].completedAt = new Date().toISOString()
+                            completedInSession.add(issueId)
+                        } else if (status === 'UNDONE') {
+                            selectedProject.issues[issueIndex].completedAt = null
+                            completedInSession.delete(issueId)
+                        }
+                    }
+                }
+                
+                // Remove from updating state after a brief delay for animation
+                setTimeout(() => {
+                    const newSet = new Set(updatingIssues)
+                    newSet.delete(issueId)
+                    updatingIssues = newSet
+                }, 300)
+            } else {
+                notificationStore.addNotification(result.error || 'Failed to update story status', 'error')
+                const newSet = new Set(updatingIssues)
+                newSet.delete(issueId)
+                updatingIssues = newSet
+            }
+        } catch (error) {
+            console.error('Error updating story status:', error)
+            notificationStore.addNotification('Failed to update story status', 'error')
+            const newSet = new Set(updatingIssues)
+            newSet.delete(issueId)
+            updatingIssues = newSet
+        }
+    }
+
+    function confirmDelete(issueId: number) {
+        showDeleteConfirm = issueId
+    }
+
+    function cancelDelete() {
+        showDeleteConfirm = null
+    }
+
+    async function deleteIssue(issueId: number) {
+        if (deletingIssues.has(issueId)) return // Prevent duplicate requests
+        
+        showDeleteConfirm = null
+        
+        // Immediately add to deleting state for UI feedback
+        deletingIssues = new Set(deletingIssues).add(issueId)
+
+        try {
+            const response = await fetch(`/api/story/${issueId}/status`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    tool: appState.settings.tool
+                })
+            })
+
+            if (response.ok) {
+                notificationStore.addNotification('Story deleted', 'success')
+                
+                // Update the appState to remove the issue
+                if (selectedProject) {
+                    const issueIndex = selectedProject.issues.findIndex((i: any) => i.id === issueId)
+                    if (issueIndex !== -1) {
+                        selectedProject.issues.splice(issueIndex, 1)
+                    }
+                }
+                
+                // Remove from completedInSession if it was there
+                completedInSession.delete(issueId)
+                
+                // Wait for animation to complete before removing from deleting state
+                setTimeout(() => {
+                    const newSet = new Set(deletingIssues)
+                    newSet.delete(issueId)
+                    deletingIssues = newSet
+                }, 600)
+            } else {
+                const result = await response.json()
+                notificationStore.addNotification(result.error || 'Failed to delete story', 'error')
+                const newSet = new Set(deletingIssues)
+                newSet.delete(issueId)
+                deletingIssues = newSet
+            }
+        } catch (error) {
+            console.error('Error deleting story:', error)
+            notificationStore.addNotification('Failed to delete story', 'error')
+            const newSet = new Set(deletingIssues)
+            newSet.delete(issueId)
+            deletingIssues = newSet
+        }
     }
 
     const copyIssue = (issue: any) => {
         const content = `${issue.title}\n\n${issue.description || ''}`
         try {
             navigator.clipboard.writeText(content)
-            notificationStore.addNotification('Issue copied to clipboard', 'success')
+            notificationStore.addNotification('Story copied to clipboard', 'success')
         } catch (err) {
             console.error('Failed to copy:', err)
+            notificationStore.addNotification('Failed to copy story', 'error')
         }
     }
 </script>
@@ -123,7 +240,7 @@
     <main class="flex-1 flex flex-col min-w-0">
         {#if selectedProject}
             <!-- HEADER -->
-            <header class="flex-none px-6 py-5 border border-zinc-800">
+            <header class="flex-none px-6 py-5 border-b border-zinc-800">
                 <div class="flex items-start justify-between">
                     <div class="space-y-1 max-w-4xl">
                         <div class="flex items-center gap-3">
@@ -161,15 +278,21 @@
                 {#if openIssues.length > 0}
                     <div class="space-y-2 max-w-5xl mx-auto">
                         {#each openIssues as issue (issue.id)}
+                            {@const isCompleted = isIssueCompleted(issue)}
                             <div 
                                 class="group rounded-lg border border-zinc-800 hover:border-zinc-700 transition-all duration-300 overflow-hidden
-                                {completingIssues.has(issue.id) ? 'completing' : ''}"
+                                {deletingIssues.has(issue.id) ? 'deleting' : ''}"
                             >
                                 <div class="flex items-start gap-4 p-3">
                                     <button 
-                                        onclick={() => toggleIssueComplete(issue.id)}
-                                        class="mt-1 shrink-0 w-4 h-4 rounded border flex items-center justify-center transition-all duration-200 bg-transparent border-zinc-600 hover:border-purple-400 text-transparent hover:text-purple-400"
-                                        title="Mark as complete"
+                                        onclick={() => updateIssueStatus(issue.id, isCompleted ? "UNDONE" : "DONE")}
+                                        disabled={updatingIssues.has(issue.id) || deletingIssues.has(issue.id)}
+                                        class="mt-1 shrink-0 w-4 h-4 rounded border flex items-center justify-center transition-all duration-200 
+                                        {isCompleted
+                                            ? 'bg-purple-400 border-purple-400 text-white' 
+                                            : 'bg-transparent border-zinc-600 hover:border-purple-400 text-transparent hover:text-purple-400'}
+                                        disabled:opacity-50 disabled:cursor-not-allowed"
+                                        title={isCompleted ? "Mark as incomplete" : "Mark as complete"}
                                     >
                                         <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
@@ -181,13 +304,15 @@
                                             <button
                                                 onclick={() => toggleIssueExpansion(issue.id)}
                                                 class="flex-1 text-left pr-4"
+                                                disabled={deletingIssues.has(issue.id)}
                                             >
-                                                <h4 class="text-base font-medium text-zinc-200 truncate hover:text-white transition-colors">
+                                                <h4 class="text-base font-medium text-zinc-200 truncate hover:text-white transition-colors
+                                                {isCompleted ? 'line-through opacity-60' : ''}">
                                                     {issue.title}
                                                 </h4>
                                             </button>
                                             <div class="flex items-center gap-3">
-                                                <span class="text-base text-zinc-600 font-mono whitespace-nowrap">
+                                                <span class="text-xs text-zinc-600 font-mono whitespace-nowrap">
                                                     {formatDate(issue.updatedAt)}
                                                 </span>
                                                 
@@ -196,7 +321,8 @@
                                                         e.stopPropagation()
                                                         copyIssue(issue)
                                                     }}
-                                                    class="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-purple-400 transition-all duration-200"
+                                                    disabled={deletingIssues.has(issue.id)}
+                                                    class="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-purple-400 transition-all duration-200 disabled:opacity-0"
                                                     title="Copy Story"
                                                 >
                                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -204,23 +330,50 @@
                                                     </svg>
                                                 </button>
 
-                                                <button 
-                                                    onclick={(e) => {
-                                                        e.stopPropagation()
-                                                        // TODO: Add delete issue handler
-                                                    }}
-                                                    class="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-red-400 transition-all duration-200"
-                                                    title="Delete Story"
-                                                >
-                                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                    </svg>
-                                                </button>
+                                                {#if showDeleteConfirm === issue.id}
+                                                    <div class="flex items-center gap-2">
+                                                        <button 
+                                                            onclick={(e) => {
+                                                                e.stopPropagation()
+                                                                deleteIssue(issue.id)
+                                                            }}
+                                                            class="px-2 py-1 text-xs bg-red-500 hover:bg-red-600 text-white rounded transition-colors"
+                                                            title="Confirm Delete"
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                        <button 
+                                                            onclick={(e) => {
+                                                                e.stopPropagation()
+                                                                cancelDelete()
+                                                            }}
+                                                            class="px-2 py-1 text-xs bg-zinc-700 hover:bg-zinc-600 text-white rounded transition-colors"
+                                                            title="Cancel"
+                                                        >
+                                                            Cancel
+                                                        </button>
+                                                    </div>
+                                                {:else}
+                                                    <button 
+                                                        onclick={(e) => {
+                                                            e.stopPropagation()
+                                                            confirmDelete(issue.id)
+                                                        }}
+                                                        disabled={deletingIssues.has(issue.id)}
+                                                        class="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-red-400 transition-all duration-200 disabled:opacity-0"
+                                                        title="Delete Story"
+                                                    >
+                                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        </svg>
+                                                    </button>
+                                                {/if}
 
                                                 {#if issue.description}
                                                     <button
                                                         onclick={() => toggleIssueExpansion(issue.id)}
-                                                        class="text-zinc-600 hover:text-zinc-400 transition-all duration-200"
+                                                        disabled={deletingIssues.has(issue.id)}
+                                                        class="text-zinc-600 hover:text-zinc-400 transition-all duration-200 disabled:opacity-50"
                                                         title={expandedIssueId === issue.id ? "Collapse" : "Expand"}
                                                     >
                                                         <svg 
@@ -239,7 +392,8 @@
                                         {#if issue.description}
                                             <div class="accordion-content {expandedIssueId === issue.id ? 'expanded' : ''}">
                                                 <div class="accordion-inner pt-2">
-                                                    <div class="prose prose-invert max-w-none text-zinc-500 text-sm">
+                                                    <div class="prose prose-invert max-w-none text-zinc-500 text-sm
+                                                    {isCompleted ? 'line-through opacity-60' : ''}">
                                                         {@html marked(issue.description)}
                                                     </div>
                                                 </div>
@@ -308,23 +462,23 @@
         transform: translateY(0);
     }
 
-    /* Completion animation */
-    .completing {
-        animation: completeAndFade 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    /* Deletion animation */
+    .deleting {
+        animation: deleteAndFade 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
 
-    @keyframes completeAndFade {
+    @keyframes deleteAndFade {
         0% {
             opacity: 1;
             transform: translateX(0) scale(1);
         }
         50% {
-            opacity: 0.5;
-            transform: translateX(8px) scale(0.98);
+            opacity: 0.3;
+            transform: translateX(-8px) scale(0.98);
         }
         100% {
             opacity: 0;
-            transform: translateX(20px) scale(0.95);
+            transform: translateX(-20px) scale(0.95);
             max-height: 0;
             margin: 0;
             padding: 0;

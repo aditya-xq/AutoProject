@@ -216,7 +216,7 @@
                                    bg-purple-600 text-white
                                    rounded-md hover:bg-purple-500 transition"
                         >
-                            {appState.activeProject.name ? 'Update' : 'Create'} {appState.settings.tool}
+                            {appState.activeProject.name ? 'Update on' : 'Export to'} {appState.settings.tool}
                         </button>
                     </div>
 
