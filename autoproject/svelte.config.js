@@ -6,6 +6,11 @@ const config = {
 	preprocess: vitePreprocess({ script: true }),
 	kit: {
 		adapter: adapter()
+	},
+	compilerOptions: {
+		experimental: {
+			async: true
+		}
 	}
 }
 

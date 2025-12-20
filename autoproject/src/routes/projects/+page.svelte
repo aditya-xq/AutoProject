@@ -2,9 +2,13 @@
     import { appState } from '$lib/state.svelte'
     import { notificationStore } from '$lib/store'
     import { marked } from 'marked'
-   
-    let selectedProjectId = $state<number | null>(null)
-    let searchQuery = $state('')
+    import { page } from '$app/state'
+    import { goto } from '$app/navigation'
+
+    let selectedProjectId = $derived<string | null>(
+        page.url.searchParams.get('id') ? String(page.url.searchParams.get('id')) : null
+    )
+    let searchQuery = $state('') as string
     let expandedIssueId = $state<number | null>(null)
     let updatingIssues = $state<Set<number>>(new Set())
     let deletingIssues = $state<Set<number>>(new Set())
@@ -46,7 +50,7 @@
     }
 
     const selectProject = (id: number) => {
-        selectedProjectId = id
+        goto('/projects?id=' + id)
         expandedIssueId = null // Reset expanded issue when switching projects
         showDeleteConfirm = null // Reset delete confirmation
         completedInSession.clear() // Reset completed in session when switching projects
@@ -312,7 +316,7 @@
                                                 </h4>
                                             </button>
                                             <div class="flex items-center gap-3">
-                                                <span class="text-xs text-zinc-600 font-mono whitespace-nowrap">
+                                                <span class="text-sm text-zinc-600 font-mono whitespace-nowrap">
                                                     {formatDate(issue.updatedAt)}
                                                 </span>
                                                 
