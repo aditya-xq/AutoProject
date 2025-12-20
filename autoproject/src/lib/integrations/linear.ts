@@ -1,5 +1,4 @@
 import { env } from "$env/dynamic/private"
-import { createResponse } from "$lib"
 import type { ProjectDetails } from "$lib/utils/interface"
 import { LinearClient } from "@linear/sdk"
 
@@ -18,10 +17,11 @@ export const createLinearProject = async (projectDetails: ProjectDetails, prd: s
         if (!projectResponse.success) {
             throw new Error('Failed to create project')
         }
+        const projectId = (await projectResponse.project)?.id
         const documentResponse = await linearClient.createDocument({
             title: `PRD: ${projectDetails.name}`,
             content: prd,
-            projectId: (await projectResponse.project)?.id,
+            projectId: projectId,
         })
         if (!documentResponse.success) {
             throw new Error('Failed to create PRD')
@@ -32,14 +32,14 @@ export const createLinearProject = async (projectDetails: ProjectDetails, prd: s
                 title: userStory.title,
                 description: userStory.description,
                 teamId: team.id,
-                projectId: (await projectResponse.project)?.id,
+                projectId: projectId,
                 assigneeId: userId,
             })
             if (!issueResponse.success) {
                 throw new Error(`Failed to create user story.`)
             }
         }
-        return createResponse(`Project created successfully.`, 200)
+        return projectId
     }
 }
 
@@ -70,7 +70,7 @@ export const updateLinearProject = async (projectId: string, featureDetails: Pro
                 throw new Error(`Failed to create user story.`)
             }
         }
-        return createResponse(`Project updated successfully.`, 200)
+        return projectId
     }
 }
 

@@ -3,6 +3,7 @@
     import { appState } from "$lib/state.svelte"
     import { notificationStore } from "$lib/store"
     import { marked } from "marked"
+    import { goto } from "$app/navigation"
 
     let showProjectModal = $state(false)
 
@@ -19,6 +20,25 @@
 
     function removeMarkdownCodeBlocks(content: string): string {
         return content.replace(/```markdown\n/g, '').replace(/```markdown/g, '')
+    }
+
+    async function refreshProjects() {
+        try {
+            const tool = appState.settings.tool
+            const projectData = await fetch(`/api/project?tool=${tool}`, {
+                method: 'GET',
+            })
+            const projectJson = await projectData.json()
+            appState.projects = projectJson.data
+        } catch (error) {
+            console.error('Failed to refresh projects:', error)
+        }
+    }
+
+    function cleanupState() {
+        appState.prd = ''
+        appState.requirements = ''
+        appState.projectDetails.userStories = []
     }
 
     async function handleUserStoryGeneration() {
@@ -62,11 +82,15 @@
         })
 
         const result = await response.json()
-        appState.isLoading = false
 
         if (response.ok) {
+            await refreshProjects()
+            cleanupState()
+            goto('/projects?id=' + result.data.projectId)
+            appState.isLoading = false
             notificationStore.addNotification('Project created successfully', 'success')
         } else {
+            appState.isLoading = false
             notificationStore.addNotification(
                 result.data || 'Failed to create project',
                 'error'
@@ -93,6 +117,10 @@
 
         if (response.ok) {
             notificationStore.addNotification('Project updated successfully', 'success')
+            
+            await refreshProjects()
+            cleanupState()
+            goto('/projects?id=' + appState.activeProject?.id)
         } else {
             notificationStore.addNotification(
                 result.data || 'Failed to update project',

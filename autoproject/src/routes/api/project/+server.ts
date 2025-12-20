@@ -31,7 +31,7 @@ export const POST: RequestHandler = async ({ request }) => {
             default:
                 throw createValidationError('Invalid tool selected', 400)
             }
-            return createResponse(response, 200)
+            return createResponse({projectId: response}, 200)
     } catch (error: any) {
         return createResponse(error.message || 'Internal server error', error.code || 500)
     }

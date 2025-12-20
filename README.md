@@ -1,16 +1,17 @@
 # 🚀 AutoProject
 
-AutoProject is your ultimate **Bring Your Own Keys (BYOK)** tool to automate product and project management with AI-powered workflows.  
-Run locally, in production, or securely in Docker — your choice.
+AutoProject is your ultimate **Bring Your Own Keys (BYOK)** tool to automate product and project management with AI-powered workflows. Run locally, in production, or securely in Docker, or self-host. It's your choice.
 
 ---
 
 ## 🌟 Key Features
 
-- **Generative PRD Creation**: Feed your requirements and receive tailor-made PRDs.
-- **AI-Powered User Story Generation**: Convert PRDs into smart, structured user stories.
-- **Tool Integration**: Instantly push stories into Linear, Asana, Jira, or Plane.
-
+- **AI PRD Creation**: Feed your requirements and receive tailor-made PRDs.
+- **AI User Story Generation**: Convert PRDs into smart, structured user stories.
+- **Project View**: Manage your user stories, copy their details for AI prompting.
+- **Tool Integration**: Instantly push stories into Linear.
+- **Mutiple Inference Support**: Choose from Gemini, Groq, LM Studio.
+- **Preset Modes**: Specialized configurations for different use cases.
 ---
 
 ## 🛠️ Tech Stack
