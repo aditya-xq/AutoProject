@@ -2,6 +2,7 @@ services:
   autoproject:
     container_name: autoproject_app
     image: xqbuilds/autoproject:latest
+    pull_policy: always
     ports:
       - "3000:3000"
     env_file:
