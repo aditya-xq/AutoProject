@@ -99,3 +99,27 @@ export const getAllLinearProjects = async () => {
     }))
     return projects
 }
+
+export const markIssueAsCompleted = async (issueId: string) => {
+    const DEFAULT_ID_FOR_COMPLETED = "3c08af79-7b48-47bd-9c2f-ca1733a7866c"
+    const linearClient = new LinearClient({ apiKey: env.SECRET_LINEAR_API_KEY })
+    const issueResponse = await linearClient.updateIssue(issueId, {
+        stateId: DEFAULT_ID_FOR_COMPLETED,
+    })
+    return issueResponse
+}
+
+export const unmarkIssueAsCompleted = async (issueId: string) => {
+    const DEFAULT_ID_FOR_BACKLOG = "776a627c-9985-466b-a0da-566e2c760e81"
+    const linearClient = new LinearClient({ apiKey: env.SECRET_LINEAR_API_KEY })
+    const issueResponse = await linearClient.updateIssue(issueId, {
+        stateId: DEFAULT_ID_FOR_BACKLOG,
+    })
+    return issueResponse
+}
+
+export const deleteLinearIssue = async (issueId: string) => {
+    const linearClient = new LinearClient({ apiKey: env.SECRET_LINEAR_API_KEY })
+    const issueResponse = await linearClient.deleteIssue(issueId)
+    return issueResponse
+}
