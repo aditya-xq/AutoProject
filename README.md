@@ -14,19 +14,6 @@ AutoProject is your ultimate **Bring Your Own Keys (BYOK)** tool to automate pro
 - **Preset Modes**: Specialized configurations for different use cases.
 ---
 
-## 🛠️ Tech Stack
-
-| Part | Technology |
-|:-----|:-----------|
-| Backend | SvelteKit (API routes) |
-| Frontend | Svelte 5 + TailwindCSS v4 |
-| AI Engines | Gemini, Groq, LM Studio (local inference) |
-| Project Management API | Linear SDK |
-
-Built with ⚡ **Bun** for fast runtime performance.
-
----
-
 ## 🐳 Running with Docker (Recommended for users)
 
 ### 1. Using Docker Compose (Recommended)
