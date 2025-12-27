@@ -13,7 +13,7 @@
     let updatingIssues = $state<Set<number>>(new Set())
     let deletingIssues = $state<Set<number>>(new Set())
     let showDeleteConfirm = $state<number | null>(null)
-    let completedInSession = $state<Set<number>>(new Set())
+    let activeTab = $state<'open' | 'completed'>('open')
 
     // Derive selected project based on ID (safe against array mutations)
     let selectedProject = $derived(
@@ -30,13 +30,24 @@
         : appState.projects
     )
 
-    // Show all issues, with completed ones staying visible in this session
+    // Open issues - not completed
     let openIssues = $derived(
         selectedProject?.issues 
             ? [...selectedProject.issues]
-                .filter((i: any) => !i.completedAt || completedInSession.has(i.id))
+                .filter((i: any) => !i.completedAt)
                 .sort((a: any, b: any) => 
                     new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+                )
+            : []
+    )
+
+    // Completed issues - have completedAt date
+    let completedIssues = $derived(
+        selectedProject?.issues 
+            ? [...selectedProject.issues]
+                .filter((i: any) => i.completedAt)
+                .sort((a: any, b: any) => 
+                    new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime()
                 )
             : []
     )
@@ -51,23 +62,18 @@
 
     const selectProject = (id: number) => {
         goto('/projects?id=' + id)
-        expandedIssueId = null // Reset expanded issue when switching projects
-        showDeleteConfirm = null // Reset delete confirmation
-        completedInSession.clear() // Reset completed in session when switching projects
+        expandedIssueId = null
+        showDeleteConfirm = null
+        activeTab = 'open'
     }
 
     const toggleIssueExpansion = (issueId: number) => {
         expandedIssueId = expandedIssueId === issueId ? null : issueId
     }
 
-    const isIssueCompleted = (issue: any) => {
-        return issue.completedAt && !updatingIssues.has(issue.id)
-    }
-
     async function updateIssueStatus(issueId: number, status: string) {
-        if (updatingIssues.has(issueId)) return // Prevent duplicate requests
+        if (updatingIssues.has(issueId)) return
         
-        // Immediately add to updating state for UI feedback
         updatingIssues = new Set(updatingIssues).add(issueId)
 
         try {
@@ -87,21 +93,18 @@
             if (response.ok) {
                 notificationStore.addNotification('Story updated successfully', 'success')
                 
-                // Update the issue
+                // Update the issue immediately
                 if (selectedProject) {
                     const issueIndex = selectedProject.issues.findIndex((i: any) => i.id === issueId)
                     if (issueIndex !== -1) {
                         if (status === 'DONE') {
                             selectedProject.issues[issueIndex].completedAt = new Date().toISOString()
-                            completedInSession.add(issueId)
                         } else if (status === 'UNDONE') {
                             selectedProject.issues[issueIndex].completedAt = null
-                            completedInSession.delete(issueId)
                         }
                     }
                 }
                 
-                // Remove from updating state after a brief delay for animation
                 setTimeout(() => {
                     const newSet = new Set(updatingIssues)
                     newSet.delete(issueId)
@@ -131,11 +134,9 @@
     }
 
     async function deleteIssue(issueId: number) {
-        if (deletingIssues.has(issueId)) return // Prevent duplicate requests
+        if (deletingIssues.has(issueId)) return
         
         showDeleteConfirm = null
-        
-        // Immediately add to deleting state for UI feedback
         deletingIssues = new Set(deletingIssues).add(issueId)
 
         try {
@@ -152,7 +153,6 @@
             if (response.ok) {
                 notificationStore.addNotification('Story deleted', 'success')
                 
-                // Update the appState to remove the issue
                 if (selectedProject) {
                     const issueIndex = selectedProject.issues.findIndex((i: any) => i.id === issueId)
                     if (issueIndex !== -1) {
@@ -160,10 +160,6 @@
                     }
                 }
                 
-                // Remove from completedInSession if it was there
-                completedInSession.delete(issueId)
-                
-                // Wait for animation to complete before removing from deleting state
                 setTimeout(() => {
                     const newSet = new Set(deletingIssues)
                     newSet.delete(issueId)
@@ -251,9 +247,6 @@
                             <h1 class="text-xl font-semibold text-white tracking-tight">
                                 {selectedProject.name}
                             </h1>
-                            <span class="px-2 py-0.5 rounded text-[10px] font-mono text-zinc-400 border border-zinc-700">
-                                {openIssues.length}
-                            </span>
                         </div>
                         <p class="text-sm text-zinc-400 leading-relaxed">
                             {selectedProject.description}
@@ -277,141 +270,310 @@
                 </div>
             </header>
 
+            <!-- TABS -->
+            <div class="flex-none border-b border-zinc-800">
+                <div class="px-6 flex gap-6">
+                    <button
+                        onclick={() => activeTab = 'open'}
+                        class="relative px-1 py-3 text-sm font-medium transition-colors
+                        {activeTab === 'open' 
+                            ? 'text-purple-400' 
+                            : 'text-zinc-500 hover:text-zinc-300'}"
+                    >
+                        Open
+                        <span class="ml-2 px-1.5 py-0.5 rounded text-[10px] font-mono
+                        {activeTab === 'open' 
+                            ? 'bg-purple-400/10 text-purple-400 border border-purple-400/20' 
+                            : 'bg-zinc-800 text-zinc-500 border border-zinc-700'}">
+                            {openIssues.length}
+                        </span>
+                        {#if activeTab === 'open'}
+                            <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-400"></div>
+                        {/if}
+                    </button>
+                    <button
+                        onclick={() => activeTab = 'completed'}
+                        class="relative px-1 py-3 text-sm font-medium transition-colors
+                        {activeTab === 'completed' 
+                            ? 'text-purple-400' 
+                            : 'text-zinc-500 hover:text-zinc-300'}"
+                    >
+                        Completed
+                        <span class="ml-2 px-1.5 py-0.5 rounded text-[10px] font-mono
+                        {activeTab === 'completed' 
+                            ? 'bg-purple-400/10 text-purple-400 border border-purple-400/20' 
+                            : 'bg-zinc-800 text-zinc-500 border border-zinc-700'}">
+                            {completedIssues.length}
+                        </span>
+                        {#if activeTab === 'completed'}
+                            <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-400"></div>
+                        {/if}
+                    </button>
+                </div>
+            </div>
+
             <!-- STORIES LIST -->
             <div class="flex-1 overflow-y-auto p-6 scrollbar-thin">
-                {#if openIssues.length > 0}
-                    <div class="space-y-2 max-w-5xl mx-auto">
-                        {#each openIssues as issue (issue.id)}
-                            {@const isCompleted = isIssueCompleted(issue)}
-                            <div 
-                                class="group rounded-lg border border-zinc-800 hover:border-zinc-700 transition-all duration-300 overflow-hidden
-                                {deletingIssues.has(issue.id) ? 'deleting' : ''}"
-                            >
-                                <div class="flex items-start gap-4 p-3">
-                                    <button 
-                                        onclick={() => updateIssueStatus(issue.id, isCompleted ? "UNDONE" : "DONE")}
-                                        disabled={updatingIssues.has(issue.id) || deletingIssues.has(issue.id)}
-                                        class="mt-1 shrink-0 w-4 h-4 rounded border flex items-center justify-center transition-all duration-200 
-                                        {isCompleted
-                                            ? 'bg-purple-400 border-purple-400 text-white' 
-                                            : 'bg-transparent border-zinc-600 hover:border-purple-400 text-transparent hover:text-purple-400'}
-                                        disabled:opacity-50 disabled:cursor-not-allowed"
-                                        title={isCompleted ? "Mark as incomplete" : "Mark as complete"}
-                                    >
-                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </button>
+                {#if activeTab === 'open'}
+                    {#if openIssues.length > 0}
+                        <div class="space-y-2 max-w-5xl mx-auto">
+                            {#each openIssues as issue (issue.id)}
+                                <div 
+                                    class="group rounded-lg border border-zinc-800 hover:border-zinc-700 transition-all duration-300 overflow-hidden
+                                    {deletingIssues.has(issue.id) ? 'opacity-0 scale-95' : ''}"
+                                >
+                                    <div class="flex items-start gap-4 p-3">
+                                        <button 
+                                            onclick={() => updateIssueStatus(issue.id, "DONE")}
+                                            disabled={updatingIssues.has(issue.id) || deletingIssues.has(issue.id)}
+                                            class="mt-1 shrink-0 w-4 h-4 rounded border flex items-center justify-center transition-all duration-200 
+                                            bg-transparent border-zinc-600 hover:border-purple-400 text-transparent hover:text-purple-400
+                                            disabled:opacity-50 disabled:cursor-not-allowed"
+                                            title="Mark as complete"
+                                        >
+                                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </button>
 
-                                    <div class="flex-1 min-w-0">
-                                        <div class="flex items-center justify-between mb-1">
-                                            <button
-                                                onclick={() => toggleIssueExpansion(issue.id)}
-                                                class="flex-1 text-left pr-4"
-                                                disabled={deletingIssues.has(issue.id)}
-                                            >
-                                                <h4 class="text-base font-medium text-zinc-200 truncate hover:text-white transition-colors
-                                                {isCompleted ? 'line-through opacity-60' : ''}">
-                                                    {issue.title}
-                                                </h4>
-                                            </button>
-                                            <div class="flex items-center gap-3">
-                                                <span class="text-sm text-zinc-600 font-mono whitespace-nowrap">
-                                                    {formatDate(issue.updatedAt)}
-                                                </span>
-                                                
-                                                <button 
-                                                    onclick={(e) => {
-                                                        e.stopPropagation()
-                                                        copyIssue(issue)
-                                                    }}
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex items-center justify-between mb-1">
+                                                <button
+                                                    onclick={() => toggleIssueExpansion(issue.id)}
+                                                    class="flex-1 text-left pr-4"
                                                     disabled={deletingIssues.has(issue.id)}
-                                                    class="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-purple-400 transition-all duration-200 disabled:opacity-0"
-                                                    title="Copy Story"
                                                 >
-                                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                                    </svg>
+                                                    <h4 class="text-base font-medium text-zinc-200 truncate hover:text-white transition-colors">
+                                                        {issue.title}
+                                                    </h4>
                                                 </button>
-
-                                                {#if showDeleteConfirm === issue.id}
-                                                    <div class="flex items-center gap-2">
-                                                        <button 
-                                                            onclick={(e) => {
-                                                                e.stopPropagation()
-                                                                deleteIssue(issue.id)
-                                                            }}
-                                                            class="px-2 py-1 text-xs bg-red-500 hover:bg-red-600 text-white rounded transition-colors"
-                                                            title="Confirm Delete"
-                                                        >
-                                                            Delete
-                                                        </button>
-                                                        <button 
-                                                            onclick={(e) => {
-                                                                e.stopPropagation()
-                                                                cancelDelete()
-                                                            }}
-                                                            class="px-2 py-1 text-xs bg-zinc-700 hover:bg-zinc-600 text-white rounded transition-colors"
-                                                            title="Cancel"
-                                                        >
-                                                            Cancel
-                                                        </button>
-                                                    </div>
-                                                {:else}
+                                                <div class="flex items-center gap-3">
+                                                    <span class="text-sm text-zinc-600 font-mono whitespace-nowrap">
+                                                        {formatDate(issue.updatedAt)}
+                                                    </span>
+                                                    
                                                     <button 
                                                         onclick={(e) => {
                                                             e.stopPropagation()
-                                                            confirmDelete(issue.id)
+                                                            copyIssue(issue)
                                                         }}
                                                         disabled={deletingIssues.has(issue.id)}
-                                                        class="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-red-400 transition-all duration-200 disabled:opacity-0"
-                                                        title="Delete Story"
+                                                        class="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-purple-400 transition-all duration-200 disabled:opacity-0"
+                                                        title="Copy Story"
                                                     >
                                                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                                                         </svg>
                                                     </button>
-                                                {/if}
 
-                                                {#if issue.description}
-                                                    <button
-                                                        onclick={() => toggleIssueExpansion(issue.id)}
-                                                        disabled={deletingIssues.has(issue.id)}
-                                                        class="text-zinc-600 hover:text-zinc-400 transition-all duration-200 disabled:opacity-50"
-                                                        title={expandedIssueId === issue.id ? "Collapse" : "Expand"}
-                                                    >
-                                                        <svg 
-                                                            class="w-4 h-4 transition-transform duration-300 {expandedIssueId === issue.id ? 'rotate-180' : ''}" 
-                                                            fill="none" 
-                                                            viewBox="0 0 24 24" 
-                                                            stroke="currentColor"
+                                                    {#if showDeleteConfirm === issue.id}
+                                                        <div class="flex items-center gap-2">
+                                                            <button 
+                                                                onclick={(e) => {
+                                                                    e.stopPropagation()
+                                                                    deleteIssue(issue.id)
+                                                                }}
+                                                                class="px-2 py-1 text-xs bg-red-500 hover:bg-red-600 text-white rounded transition-colors"
+                                                                title="Confirm Delete"
+                                                            >
+                                                                Delete
+                                                            </button>
+                                                            <button 
+                                                                onclick={(e) => {
+                                                                    e.stopPropagation()
+                                                                    cancelDelete()
+                                                                }}
+                                                                class="px-2 py-1 text-xs bg-zinc-700 hover:bg-zinc-600 text-white rounded transition-colors"
+                                                                title="Cancel"
+                                                            >
+                                                                Cancel
+                                                            </button>
+                                                        </div>
+                                                    {:else}
+                                                        <button 
+                                                            onclick={(e) => {
+                                                                e.stopPropagation()
+                                                                confirmDelete(issue.id)
+                                                            }}
+                                                            disabled={deletingIssues.has(issue.id)}
+                                                            class="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-red-400 transition-all duration-200 disabled:opacity-0"
+                                                            title="Delete Story"
                                                         >
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                                                        </svg>
-                                                    </button>
-                                                {/if}
-                                            </div>
-                                        </div>
-                                        
-                                        {#if issue.description}
-                                            <div class="accordion-content {expandedIssueId === issue.id ? 'expanded' : ''}">
-                                                <div class="accordion-inner pt-2">
-                                                    <div class="prose prose-invert max-w-none text-zinc-500 text-sm
-                                                    {isCompleted ? 'line-through opacity-60' : ''}">
-                                                        {@html marked(issue.description)}
-                                                    </div>
+                                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                            </svg>
+                                                        </button>
+                                                    {/if}
+
+                                                    {#if issue.description}
+                                                        <button
+                                                            onclick={() => toggleIssueExpansion(issue.id)}
+                                                            disabled={deletingIssues.has(issue.id)}
+                                                            class="text-zinc-600 hover:text-zinc-400 transition-all duration-200 disabled:opacity-50"
+                                                            title={expandedIssueId === issue.id ? "Collapse" : "Expand"}
+                                                        >
+                                                            <svg 
+                                                                class="w-4 h-4 transition-transform duration-300 {expandedIssueId === issue.id ? 'rotate-180' : ''}" 
+                                                                fill="none" 
+                                                                viewBox="0 0 24 24" 
+                                                                stroke="currentColor"
+                                                            >
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                            </svg>
+                                                        </button>
+                                                    {/if}
                                                 </div>
                                             </div>
-                                        {/if}
+                                            
+                                            {#if issue.description}
+                                                <div class="accordion-content {expandedIssueId === issue.id ? 'expanded' : ''}">
+                                                    <div class="accordion-inner pt-2">
+                                                        <div class="prose prose-invert max-w-none text-zinc-500 text-sm">
+                                                            {@html marked(issue.description)}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {/if}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        {/each}
-                    </div>
+                            {/each}
+                        </div>
+                    {:else}
+                        <div class="flex flex-col items-center justify-center h-64 text-zinc-500">
+                            <p class="text-sm">No open stories</p>
+                        </div>
+                    {/if}
                 {:else}
-                    <div class="flex flex-col items-center justify-center h-64 text-zinc-500">
-                        <p class="text-sm">No open stories</p>
-                    </div>
+                    {#if completedIssues.length > 0}
+                        <div class="space-y-2 max-w-5xl mx-auto">
+                            {#each completedIssues as issue (issue.id)}
+                                <div 
+                                    class="group rounded-lg border border-zinc-800 hover:border-zinc-700 transition-all duration-300 overflow-hidden
+                                    {deletingIssues.has(issue.id) ? 'opacity-0 scale-95' : ''}"
+                                >
+                                    <div class="flex items-start gap-4 p-3">
+                                        <button 
+                                            onclick={() => updateIssueStatus(issue.id, "UNDONE")}
+                                            disabled={updatingIssues.has(issue.id) || deletingIssues.has(issue.id)}
+                                            class="mt-1 shrink-0 w-4 h-4 rounded border flex items-center justify-center transition-all duration-200 
+                                            bg-purple-400 border-purple-400 text-white
+                                            disabled:opacity-50 disabled:cursor-not-allowed"
+                                            title="Mark as incomplete"
+                                        >
+                                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </button>
+
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex items-center justify-between mb-1">
+                                                <button
+                                                    onclick={() => toggleIssueExpansion(issue.id)}
+                                                    class="flex-1 text-left pr-4"
+                                                    disabled={deletingIssues.has(issue.id)}
+                                                >
+                                                    <h4 class="text-base font-medium text-zinc-200 truncate hover:text-white transition-colors">
+                                                        {issue.title}
+                                                    </h4>
+                                                </button>
+                                                <div class="flex items-center gap-3">
+                                                    <span class="text-sm text-zinc-600 font-mono whitespace-nowrap">
+                                                        {formatDate(issue.completedAt)}
+                                                    </span>
+                                                    
+                                                    <button 
+                                                        onclick={(e) => {
+                                                            e.stopPropagation()
+                                                            copyIssue(issue)
+                                                        }}
+                                                        disabled={deletingIssues.has(issue.id)}
+                                                        class="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-purple-400 transition-all duration-200 disabled:opacity-0"
+                                                        title="Copy Story"
+                                                    >
+                                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                                        </svg>
+                                                    </button>
+
+                                                    {#if showDeleteConfirm === issue.id}
+                                                        <div class="flex items-center gap-2">
+                                                            <button 
+                                                                onclick={(e) => {
+                                                                    e.stopPropagation()
+                                                                    deleteIssue(issue.id)
+                                                                }}
+                                                                class="px-2 py-1 text-xs bg-red-500 hover:bg-red-600 text-white rounded transition-colors"
+                                                                title="Confirm Delete"
+                                                            >
+                                                                Delete
+                                                            </button>
+                                                            <button 
+                                                                onclick={(e) => {
+                                                                    e.stopPropagation()
+                                                                    cancelDelete()
+                                                                }}
+                                                                class="px-2 py-1 text-xs bg-zinc-700 hover:bg-zinc-600 text-white rounded transition-colors"
+                                                                title="Cancel"
+                                                            >
+                                                                Cancel
+                                                            </button>
+                                                        </div>
+                                                    {:else}
+                                                        <button 
+                                                            onclick={(e) => {
+                                                                e.stopPropagation()
+                                                                confirmDelete(issue.id)
+                                                            }}
+                                                            disabled={deletingIssues.has(issue.id)}
+                                                            class="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-red-400 transition-all duration-200 disabled:opacity-0"
+                                                            title="Delete Story"
+                                                        >
+                                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                            </svg>
+                                                        </button>
+                                                    {/if}
+
+                                                    {#if issue.description}
+                                                        <button
+                                                            onclick={() => toggleIssueExpansion(issue.id)}
+                                                            disabled={deletingIssues.has(issue.id)}
+                                                            class="text-zinc-600 hover:text-zinc-400 transition-all duration-200 disabled:opacity-50"
+                                                            title={expandedIssueId === issue.id ? "Collapse" : "Expand"}
+                                                        >
+                                                            <svg 
+                                                                class="w-4 h-4 transition-transform duration-300 {expandedIssueId === issue.id ? 'rotate-180' : ''}" 
+                                                                fill="none" 
+                                                                viewBox="0 0 24 24" 
+                                                                stroke="currentColor"
+                                                            >
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                            </svg>
+                                                        </button>
+                                                    {/if}
+                                                </div>
+                                            </div>
+                                            
+                                            {#if issue.description}
+                                                <div class="accordion-content {expandedIssueId === issue.id ? 'expanded' : ''}">
+                                                    <div class="accordion-inner pt-2">
+                                                        <div class="prose prose-invert max-w-none text-zinc-500 text-sm">
+                                                            {@html marked(issue.description)}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {/if}
+                                        </div>
+                                    </div>
+                                </div>
+                            {/each}
+                        </div>
+                    {:else}
+                        <div class="flex flex-col items-center justify-center h-64 text-zinc-500">
+                            <p class="text-sm">No completed stories</p>
+                        </div>
+                    {/if}
                 {/if}
             </div>
         {:else}
