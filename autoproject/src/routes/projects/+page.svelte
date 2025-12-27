@@ -627,28 +627,4 @@
         opacity: 1;
         transform: translateY(0);
     }
-
-    /* Deletion animation */
-    .deleting {
-        animation: deleteAndFade 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    }
-
-    @keyframes deleteAndFade {
-        0% {
-            opacity: 1;
-            transform: translateX(0) scale(1);
-        }
-        50% {
-            opacity: 0.3;
-            transform: translateX(-8px) scale(0.98);
-        }
-        100% {
-            opacity: 0;
-            transform: translateX(-20px) scale(0.95);
-            max-height: 0;
-            margin: 0;
-            padding: 0;
-            border: none;
-        }
-    }
 </style>
