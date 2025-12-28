@@ -30,6 +30,10 @@
     // Effect to move the marker when the path changes
     $effect(() => {
         const activePath = page.url.pathname
+        
+        // Guard against invalid paths or missing elements
+        if (!activePath || !navElements) return
+        
         const el = navElements[activePath]
 
         if (el) {
@@ -40,8 +44,10 @@
                 opacity: 1
             }
         } else {
-            // Optional: Hide marker if current page isn't in the menu
-            marker = { ...marker, opacity: 0 }
+            // Only hide marker if it was previously visible
+            if (marker.opacity !== 0) {
+                marker = { ...marker, opacity: 0 }
+            }
         }
     })
 </script>

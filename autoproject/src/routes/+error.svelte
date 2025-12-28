@@ -1,5 +1,5 @@
 <script lang="ts">
-	  import { page } from '$app/state'
+	import { page } from '$app/state'
 
     const title = $derived(() => {
         if (page.status === 404) return 'Page not found'
@@ -27,22 +27,15 @@
 
 <div class="min-h-[60vh] flex items-center justify-center px-6">
     <div class="max-w-md text-center space-y-6">
-        <!-- status -->
         <div class="text-7xl font-semibold text-zinc-400">
             {page.status}
         </div>
-
-        <!-- headline -->
         <h1 class="text-2xl font-medium text-zinc-200">
             {message}
         </h1>
-
-        <!-- description -->
         <p class="text-sm text-zinc-500 leading-relaxed">
             {description()}
         </p>
-
-        <!-- actions -->
         <div class="flex items-center justify-center gap-3 pt-4">
             <a
                 href="/"
@@ -54,8 +47,6 @@
                 Go home
             </a>
         </div>
-
-        <!-- subtle footer note -->
         <p class="pt-6 text-xs text-zinc-600">
             If this keeps happening, it’s probably a bug — not you.
         </p>
