@@ -36,7 +36,8 @@
             appState.isLoading = false;
             const lastMessage = chat.messages[chat.messages.length - 1]
             if (lastMessage.role === 'assistant' && appState.promptType === 'prd') {
-                appState.prd = lastMessage.parts[1].type === "text" ? lastMessage.parts[1].text : ''
+                const textPart = lastMessage.parts.find((part: any) => part.type === 'text') as any
+                appState.prd = textPart?.text ?? ''
             }
         }
     })
@@ -44,7 +45,7 @@
     // Handle error
     $effect(() => {
         if (chat.error) {
-            const errorMessage = 'Error occurred during inference. Please check if your API keys or if inference server is running properly'
+            const errorMessage = 'Error occurred during inference. Please check if you hit rate limits or if API keys are correct or if inference server is running properly'
             notificationStore.addNotification(errorMessage, 'error')
             appState.isLoading = false
         }
