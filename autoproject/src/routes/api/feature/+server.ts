@@ -3,12 +3,12 @@ import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai'
 import { createValidationError, errors } from '$lib'
 import { handleAIInference, handleGeminiInference, handleGroqInference } from '../../../lib/services/generate'
 import { createResponse, validateAndParseFeatureSuggestions } from '$lib/utils/helper'
-import { CONFIG, GROQ_API_ENDPOINT } from '$lib/utils/config'
+import { CONFIG, GROQ_API_ENDPOINT, normalizeModelForInference } from '$lib/utils/config'
 import { env } from '$env/dynamic/private'
 import { SUGGEST_FEATURES_PROMPT } from '$lib/services/prompts'
 import { LM_STUDIO_SERVER } from '$lib/server/config'
 
-let genAI: GoogleGenerativeAI | undefined, geminiModel: GenerativeModel
+let genAI: GoogleGenerativeAI | undefined
 
 export const POST: RequestHandler = async ({ request }) => {
     const commonHeaders = CONFIG.headers.common
@@ -19,6 +19,11 @@ export const POST: RequestHandler = async ({ request }) => {
         if (!projectContext) {
             throw createValidationError('Missing required field: projectContext')
         }
+        if (!settings?.aiInferenceType || !settings?.aiModel) {
+            throw createValidationError('Missing required settings for feature suggestions')
+        }
+
+        const modelId = normalizeModelForInference(settings.aiInferenceType, settings.aiModel)
 
         const prompt = SUGGEST_FEATURES_PROMPT(projectContext)
 
@@ -28,7 +33,7 @@ export const POST: RequestHandler = async ({ request }) => {
                 result = await handleAIInference(
                     `${LM_STUDIO_SERVER}/v1/chat/completions`, 
                     commonHeaders,
-                    settings.aiModel,
+                    modelId,
                     prompt,
                     isJsonMode,
                     jsonSchema,
@@ -42,7 +47,7 @@ export const POST: RequestHandler = async ({ request }) => {
                     GROQ_API_ENDPOINT, 
                     groqHeaders, 
                     prompt,
-                    settings.aiModel, 
+                    modelId, 
                     isJsonMode
                 )
                 break
@@ -52,13 +57,13 @@ export const POST: RequestHandler = async ({ request }) => {
                         throw new Error(errors.geminiApiNotConfigured)
                     }
                     genAI = new GoogleGenerativeAI(env.SECRET_GEMINI_API_KEY)
-                    geminiModel = genAI.getGenerativeModel({ 
-                        model: settings.aiModel,
-                        generationConfig: {
-                            responseMimeType: isJsonMode ? "application/json" : "application/text",
-                        }
-                    })
                 }
+                const geminiModel: GenerativeModel = genAI.getGenerativeModel({ 
+                    model: modelId,
+                    generationConfig: {
+                        responseMimeType: isJsonMode ? "application/json" : "application/text",
+                    }
+                })
                 result = await handleGeminiInference(geminiModel, prompt)
                 break
             default:
