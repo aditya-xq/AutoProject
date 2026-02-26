@@ -8,6 +8,6 @@ export type UserStoryType =
 
 export type AIInferenceType = 'Gemini' | 'Groq' | 'LM Studio'
 
-export type ProjectManagementTool = 'Linear' | 'Jira' | 'Asana' | 'Plane' | 'TaskTab'
+export type ProjectManagementTool = 'Linear' | 'Jira' | 'Asana' | 'Plane'
 
 export type PromptType = 'prd' | 'userStory'

@@ -26,12 +26,8 @@ export interface GeneratePrdResponse {
 export interface GenerateRequest {
     prd?: string;
     requirements?: string;
-    settings: {
-        aiInferenceType: 'LM Studio' | 'Groq' | 'Gemini';
-        aiModel: string;
-        userStoryType: string;
-        prdType: string;
-    }
+    settings: Settings
+    isExistingProject?: boolean
 }
 
 export interface Settings {

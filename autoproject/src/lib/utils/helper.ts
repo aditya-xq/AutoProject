@@ -1,40 +1,58 @@
-import { createValidationError, errors } from "./errors"
-import type { ProjectDetails, SuggestionsObject, UserStory } from "./interface"
+import { createValidationError, errors } from './errors'
+import type { ProjectDetails, SuggestionsObject, UserStory } from './interface'
 
 const JSON_PATTERNS = [
-    /```json\s+([\s\S]+?)\s+```/,
-    /```javascript\s+([\s\S]+?)\s+```/,
-    /```js\s+([\s\S]+?)\s+```/,
-    /\{[\s\S]*\}/  // Fallback pattern to catch any JSON structure
+    /```json\s+([\s\S]+?)\s+```/i,
+    /```javascript\s+([\s\S]+?)\s+```/i,
+    /```js\s+([\s\S]+?)\s+```/i,
+    /(\{[\s\S]*\}|\[[\s\S]*\])/ // fallback for raw JSON object/array
 ] as const
 
-function extractJson<T>(markdown: string): T {
-    const cleanedMarkdown = markdown.trim()
-    let jsonStr = ''
-    
-    for (const pattern of JSON_PATTERNS) {
-        const match = cleanedMarkdown.match(pattern)
-        if (match?.[1] || match?.[0]) {  // Check for both group capture and full match
-            jsonStr = (match[1] || match[0]).trim()
-            break
-        }
-    }
-
-    if (!jsonStr) {
-        throw createValidationError(errors.jsonCodeFenceNotFound)
-    }
-
+function safeJsonParse<T>(value: string): T | null {
     try {
-        return JSON.parse(jsonStr) as T
-    } catch (e) {
-        throw createValidationError(`${errors.jsonParsingFailed}: ${e instanceof Error ? e.message : errors.unknownError}`)
+        return JSON.parse(value) as T
+    } catch {
+        return null
     }
 }
 
+function extractJson<T>(rawText: string): T {
+    const cleanedText = rawText.trim()
+
+    for (const pattern of JSON_PATTERNS) {
+        const match = cleanedText.match(pattern)
+        if (!match) continue
+
+        const candidate = (match[1] || match[0]).trim()
+        const parsed = safeJsonParse<T>(candidate)
+        if (parsed !== null) return parsed
+    }
+
+    throw createValidationError(errors.jsonCodeFenceNotFound)
+}
+
 function validateUserStory(story: UserStory, index: number): void {
-    if (!story.title?.trim() || !story.description?.trim()) {
+    if (!story?.title?.trim() || !story?.description?.trim()) {
         throw createValidationError(`User story at index ${index} has missing or invalid fields`)
     }
+}
+
+function validateSuggestionsArray(suggestions: string[]): string[] {
+    if (!Array.isArray(suggestions)) {
+        throw createValidationError('Feature suggestions must be an array')
+    }
+
+    if (suggestions.length === 0 || suggestions.length > 4) {
+        throw createValidationError('Feature suggestions must contain between 1 and 4 items')
+    }
+
+    suggestions.forEach((suggestion, index) => {
+        if (typeof suggestion !== 'string' || !suggestion.trim()) {
+            throw createValidationError(`Feature suggestion at index ${index} is empty or invalid`)
+        }
+    })
+
+    return suggestions
 }
 
 export function validateAndParseToProjectDetails(jsonString: string): ProjectDetails {
@@ -43,14 +61,18 @@ export function validateAndParseToProjectDetails(jsonString: string): ProjectDet
     }
 
     const details = extractJson<ProjectDetails>(jsonString)
-    
+
+    if (!details?.name?.trim() || !details?.description?.trim()) {
+        throw createValidationError('Project name or description is empty')
+    }
+
+    if (!Array.isArray(details.userStories) || details.userStories.length === 0) {
+        throw createValidationError('User stories must be a non-empty array')
+    }
+
     details.userStories.forEach((story, index) => {
         validateUserStory(story, index)
     })
-
-    if (!details.name?.trim() || !details.description?.trim()) {
-        throw createValidationError('Project name or description is empty')
-    }
 
     return details
 }
@@ -60,37 +82,31 @@ export function validateAndParseFeatureSuggestions(jsonString: string): string[]
         throw createValidationError('Empty or invalid JSON string provided')
     }
 
-    if (JSON.parse(jsonString).length === 4 ) {
-        return JSON.parse(jsonString)
+    const directParsed = safeJsonParse<string[] | SuggestionsObject>(jsonString)
+    if (Array.isArray(directParsed)) {
+        return validateSuggestionsArray(directParsed)
+    }
+    if (directParsed && Array.isArray((directParsed as SuggestionsObject).suggestions)) {
+        return validateSuggestionsArray((directParsed as SuggestionsObject).suggestions)
     }
 
-    const suggestionsObject = extractJson<SuggestionsObject>(jsonString)
-    
-    if (!Array.isArray(suggestionsObject.suggestions)) {
-        throw createValidationError('Feature suggestions must be an array')
+    const parsed = extractJson<string[] | SuggestionsObject>(jsonString)
+    if (Array.isArray(parsed)) {
+        return validateSuggestionsArray(parsed)
     }
 
-    if (suggestionsObject.suggestions.length === 0 || suggestionsObject.suggestions.length > 4) {
-        throw createValidationError('Feature suggestions must contain between 1 and 4 items')
-    }
-
-    suggestionsObject.suggestions.forEach((suggestion, index) => {
-        if (!suggestion?.trim()) {
-            throw createValidationError(`Feature suggestion at index ${index} is empty or invalid`)
-        }
-    })
-
-    return suggestionsObject.suggestions
+    const suggestionsObject = parsed as SuggestionsObject
+    return validateSuggestionsArray(suggestionsObject.suggestions)
 }
 
-export function createResponse(data: any, status: number): Response {
+export function createResponse(data: unknown, status: number): Response {
     return new Response(
         JSON.stringify({
             success: status >= 200 && status < 300,
-            data,
+            data
         }),
-        { 
-            status, 
+        {
+            status,
             headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' }
         }
     )

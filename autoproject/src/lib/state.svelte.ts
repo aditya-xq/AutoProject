@@ -1,4 +1,4 @@
-import { modelMap } from "./utils/config"
+import { getDefaultModelForInference } from "./utils/config"
 import type { AppState } from "./utils/interface"
 
 export const appState: AppState = $state({
@@ -18,7 +18,7 @@ export const appState: AppState = $state({
         prdType: 'Minimal', 
         userStoryType: 'Minimal', 
         aiInferenceType: 'Groq',
-        aiModel: modelMap['Kimi K2'],
+        aiModel: getDefaultModelForInference('Groq'),
     },
     projects: [],
     activeProject: {},
