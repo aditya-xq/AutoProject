@@ -23,20 +23,24 @@ export async function handleGroqInference(
     model: string, 
     isJsonMode: boolean,
 ) {
+    const payload: Record<string, unknown> = {
+        model,
+        messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: prompt }
+        ],
+        temperature: 0.8,
+        stream: false,
+    }
+
+    if (isJsonMode) {
+        payload.response_format = { type: "json_object" }
+    }
+
     const response = await fetch(endpoint, {
         method: 'POST',
         headers,
-        body: JSON.stringify({
-            model,
-            messages: [
-                { role: "system", content: SYSTEM_PROMPT },
-                { role: "user", content: prompt }
-            ],
-            response_format: isJsonMode && { type: "json_object"},
-            temperature: 0.8,
-            stream: false,
-            
-        })
+        body: JSON.stringify(payload)
     })
 
     if (!response.ok) {
@@ -58,21 +62,26 @@ export async function handleAIInference(
     model: string, 
     prompt: string,
     isJsonMode: boolean,
-    jsonSchema: string
+    jsonSchema: unknown
 ) {
+    const payload: Record<string, unknown> = {
+        model,
+        messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: prompt }
+        ],
+        temperature: 0.8,
+        stream: false,
+    }
+
+    if (isJsonMode && jsonSchema) {
+        payload.response_format = jsonSchema
+    }
+
     const response = await fetch(endpoint, {
         method: 'POST',
         headers,
-        body: JSON.stringify({
-            model,
-            messages: [
-                { role: "system", content: SYSTEM_PROMPT },
-                { role: "user", content: prompt }
-            ],
-            response_format: isJsonMode && jsonSchema,
-            temperature: 0.8,
-            stream: false,
-        })
+        body: JSON.stringify(payload)
     })
 
     if (!response.ok) {
