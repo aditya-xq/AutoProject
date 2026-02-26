@@ -50,7 +50,8 @@
             body: JSON.stringify({
                 prd: appState.prd,
                 settings: appState.settings,
-                isJsonMode: true
+                isJsonMode: true,
+                isExistingProject: !!appState.activeProject?.name
             })
         })
 
