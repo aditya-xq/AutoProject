@@ -1,65 +1,74 @@
-import { type UserStoryType } from "$lib";
+import type { UserStoryType } from '$lib'
 
 export const PRD_PROMPTS = {
-    'Feature Based': `Write a comprehensive feature based PRD for the given requirements. Directly respond with Markdown format PRD.`,
-  
-    Focused: `Write a targeted PRD that defines the core problem, minimal viable solution, success criteria, critical user journeys, and essential feature set for the given reuquirements. Directly respond with Markdown format PRD.`,
-  
-    Minimal: `Write a lean PRD capturing the requirement's core purpose, primary user benefit, 3-5 essential features, key success metric, for the given requirements. Directly respond with Markdown format PRD.`,
-  
-    Narrative: `Write a story-driven PRD exploring the requirement's origin, user's emotional journey, solution impact, and feature narratives for the given requirements. Directly respond with Markdown format PRD.`,
+    'Feature Based': `Write a comprehensive feature-based PRD for the given requirement. Cover problem statement, goals, key features, user journeys, non-functional requirements, and success metrics. Return Markdown only.`,
+    Focused: `Write a focused PRD for the given requirement. Cover the core problem, scope boundaries, minimal solution, critical user flows, and measurable success criteria. Return Markdown only.`,
+    Minimal: `Write a lean PRD for the given requirement. Include purpose, target users, 3-5 essential features, constraints, and one primary success metric. Return Markdown only.`,
+    Narrative: `Write a narrative PRD for the given requirement. Explain user context, pain points, journey, solution storyline, and feature rationale. Return Markdown only.`,
+    Research: `Write a research-oriented PRD for the given requirement. Include research problem, hypotheses, methodology, experiment design, data strategy, analysis plan, risks, and expected outcomes. Return Markdown only.`
+} as const
 
-    Research: `Write a research-oriented project outline based on the given requirement, that defines the research problem, methodology, experimental design, data collection approach (if any), and expected outcomes. Include sections for literature review strategy, research gaps, hypothesis formulation. Structure the response as a Markdown format PRD.`,
-};
+const typeSpecificInstructions: Record<UserStoryType, string> = {
+    Technical: 'focused on architecture, APIs, storage design, integration contracts, and implementation detail',
+    'User-Focused': 'focused on UX flow, user intent, interaction quality, and adoption outcomes',
+    Minimal: 'focused on the smallest complete slice of value with clear implementation steps',
+    Research: 'focused on research milestones, methodology rigor, evidence collection, and analysis tasks'
+}
 
-const typeSpecificInstructions = {
-    'Technical': 'focusing on system architecture, APIs, database schemas, and technical requirements',
-    'User-Focused': 'detailing user interactions, experience flows, and satisfaction metrics',
-    'Minimal': 'focusing on core functionality and critical user needs',
-    'Research': 'emphasizing research methodology, data collection methods (if any), and analysis frameworks',
-};
+const USER_STORY_JSON_SCHEMA = `{
+  "name": "unique and concise project name",
+  "description": "short project summary",
+  "userStories": [
+    {
+      "title": "clear user story title",
+      "description": "markdown description with context, acceptance criteria, and implementation tasks"
+    }
+  ]
+}`
 
 export const USER_STORY_PROMPT = (userStoryType: UserStoryType) => {
-    return `Create user stories in ${userStoryType} type from the given PRD in the form of a code fenced JSON object {
-      name: 'Give the project a unique and creative name',
-      description: 'A short summary',
-      userStories: [
-        {
-          title: 'A title for the given user story',
-          description: 'A markdown string with short description to the userstory ${typeSpecificInstructions[userStoryType]}, followed by a list of tasks to implement the given user story in a step by step manner from a technical and system design perspective.'
-        },
-      ],
-    }. Your response must be the required code fenced json object with only the above mentioned keys. Do not add any additional information.`;
-};
+    return `Create ${userStoryType} user stories from the given PRD.
+The description for each story must be ${typeSpecificInstructions[userStoryType]}.
+Every story description must include:
+1) context and objective,
+2) acceptance criteria,
+3) implementation task list in execution order.
+
+Return ONLY a valid JSON object (no extra prose, no markdown fences) with this exact shape:
+${USER_STORY_JSON_SCHEMA}`
+}
 
 export const ADD_NEW_FEATURE_TO_EXISTING_PROJECT = (userStoryType: UserStoryType) => {
-  return `Create feature user stories in ${userStoryType} type from the given feature PRD in the form of a code fenced JSON object {
-    name: 'Give the feature a unique and creative name',
-    description: 'A short summary',
-    userStories: [
-      {
-        title: 'A title for the given feature user story',
-        description: 'A markdown string with short description to the userstory ${typeSpecificInstructions[userStoryType]}, followed by a list of tasks to implement the given user story in a step by step manner from a technical and system design perspective.'
-      },
-    ],
-  }. Your response must be the required code fenced json object with only the above mentioned keys. Do not add any additional information.`;
+    return `The input describes a new feature for an existing project.
+Create ${userStoryType} feature user stories that fit into the existing product context.
+The description for each story must be ${typeSpecificInstructions[userStoryType]}.
+Every story description must include:
+1) integration impact on existing behavior,
+2) acceptance criteria,
+3) implementation task list in execution order.
+
+Return ONLY a valid JSON object (no extra prose, no markdown fences) with this exact shape:
+${USER_STORY_JSON_SCHEMA}`
 }
 
 export const SUGGEST_FEATURES_PROMPT = (projectContext: string) => {
-  return `Use the below project context to ideate and suggest four new features that can be added into the project scope. The feature suggestion prompts must be short and concise and must imply as to be something that can be added to the existing project. 
-    Here's the context: ${projectContext}. Your response must be the required code fenced json array { suggestions: [] } with the required suggestion strings. Do not add any additional information.`;
+    return `Use the project context below to propose up to four high-impact feature ideas that can be realistically added to the current scope.
+Each suggestion must be concise (one sentence), specific, and implementation-oriented.
+Project context:
+${projectContext}
+
+Return ONLY a valid JSON object (no extra prose, no markdown fences) with this exact shape:
+{"suggestions": ["...", "..."]}`
 }
 
-// New research-specific user story prompt
 export const RESEARCH_USER_STORY_PROMPT = (userStoryType: UserStoryType) => {
-  return `Create research-focused user stories from the given Research project outline in the form of a code fenced JSON object {
-    name: 'Give the research project a unique and concise name',
-    description: 'A concise and short research abstract in two to four sentences',
-    userStories: [
-      {
-        title: 'A research milestone or component title',
-        description: 'A markdown string detailing the research component ${typeSpecificInstructions[userStoryType]}, including experimental setup, data collection protocols, analysis methods, and publication preparation tasks. Include specific technical implementation steps for research tools and frameworks.'
-      },
-    ],
-  }. Your response must be the required code fenced json object with only the above mentioned keys. Do not add any additional information.`;
-};
+    return `Create research-focused ${userStoryType} user stories from the given research PRD.
+The description for each story must be ${typeSpecificInstructions[userStoryType]}.
+Every story description must include:
+1) research objective and scope,
+2) validity criteria and measurable outputs,
+3) implementation tasks (tooling, data, analysis, reporting).
+
+Return ONLY a valid JSON object (no extra prose, no markdown fences) with this exact shape:
+${USER_STORY_JSON_SCHEMA}`
+}
