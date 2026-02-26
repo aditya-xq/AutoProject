@@ -4,14 +4,14 @@
 
 <div class="container mx-auto max-w-5xl text-gray-100 px-4 py-6 space-y-8">
     <!-- Title Section -->
-    <h1 class="text-xl md:text-2xl font-bold text-purple-400">🚀 Welcome to AutoProject</h1>
+    <h1 class="text-xl md:text-2xl font-bold text-purple-400">&#x1F680; Welcome to AutoProject</h1>
     <p class="max-w-xl md:max-w-4xl">
         Your ultimate BYOK tool to automate project management with AI-powered workflows. Craft your project user stories with the precision of a rocket engineer and the ease of autopilot.
     </p>
 
     <!-- Features Section -->
     <div class="space-y-4 max-w-xl md:max-w-4xl">
-        <h2 class="text-lg md:text-xl font-semibold text-green-400">🌟 Key Features</h2>
+        <h2 class="text-lg md:text-xl font-semibold text-green-400">&#x1F31F; Key Features</h2>
         <ul class="list-disc pl-6 space-y-1">
             <li><strong>Generative PRD Creation:</strong> Feed your requirements and receive a tailor-made PRD that aligns perfectly with your workflow.</li>
             <li><strong>AI-Powered Userstory Generation:</strong> The AI effortlessly transforms your PRD into a smart, structured userstories in your configured format.</li>
@@ -21,7 +21,7 @@
 
     <!-- Getting Started Section -->
     <div class="space-y-4 max-w-xl md:max-w-5xl">
-        <h2 class="text-lg md:text-xl font-semibold text-blue-400">🚀 Getting Started</h2>
+        <h2 class="text-lg md:text-xl font-semibold text-blue-400">&#x1F680; Getting Started</h2>
         <p>
             Start your journey with AutoProject and let AI automate your project workflows:
         </p>
@@ -35,7 +35,7 @@
     <!-- Quick Settings Presets -->
     <div class="space-y-6 max-w-xl md:max-w-5xl">
         <h2 class="text-lg md:text-xl font-semibold text-pink-400 flex items-center gap-2">
-            <span>⚡</span>
+            <span>&#x26A1;</span>
             <span>Quick Settings Presets</span>
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -66,7 +66,7 @@
     <!-- Model & Settings Guide -->
     <div class="space-y-8 max-w-xl md:max-w-5xl">
         <h2 class="text-lg md:text-xl font-semibold text-orange-400 flex items-center gap-2">
-            <span>🎯</span>
+            <span>&#x1F3AF;</span>
             <span>Model & Settings Guide</span>
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -100,15 +100,15 @@
 
     <!-- Fun Outro -->
     <div class="space-y-4 max-w-xl md:max-w-5xl">
-        <h2 class="text-lg md:text-xl font-semibold text-yellow-400">🎯 Hit the Bullseye</h2>
+        <h2 class="text-lg md:text-xl font-semibold text-yellow-400">&#x1F3AF; Hit the Bullseye</h2>
         <p>
-            With AutoProject, you're not just managing projects — you're pioneering a whole new way to organize, automate, and execute with precision. Unleash the power of AI and propel your projects into orbit!
+            With AutoProject, you're not just managing projects - you're pioneering a whole new way to organize, automate, and execute with precision. Unleash the power of AI and propel your projects into orbit!
         </p>
     </div>
 
     <!-- Feedback Section -->
     <div class="space-y-4 max-w-xl md:max-w-5xl">
-        <h2 class="text-lg md:text-xl font-semibold text-pink-400">💬 We Want Your Feedback!</h2>
+        <h2 class="text-lg md:text-xl font-semibold text-pink-400">&#x1F4AC; We Want Your Feedback!</h2>
         <p>
             Help us make AutoProject even better! If you have suggestions, questions, or just want to share your excitement, reach out to us on Twitter.
         </p>
