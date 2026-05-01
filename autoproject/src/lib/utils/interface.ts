@@ -9,6 +9,7 @@ export interface ProjectDetails {
     name: string
     description: string
     userStories: UserStory[]
+    teamIds?: string[]
 }
 
 export interface SuggestionsObject {

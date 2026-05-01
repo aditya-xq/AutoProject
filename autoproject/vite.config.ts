@@ -11,5 +11,16 @@ export default defineConfig({
 		hmr: {
 			overlay: false,
 		}
+	},
+	build: {
+		rollupOptions: {
+			output: {
+				manualChunks(id) {
+					if (id.includes('state.svelte')) {
+						return 'state-chunk'
+					}
+				}
+			}
+		}
 	}
 })

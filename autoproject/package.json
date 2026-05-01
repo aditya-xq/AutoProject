@@ -2,11 +2,11 @@
   "name": "auto-project-ui",
   "version": "0.0.1",
   "devDependencies": {
-    "@sveltejs/adapter-auto": "^3.3.1",
-    "svelte-adapter-bun": "^0.5.2",
-    "svelte-check": "^3.8.6",
-    "typescript": "^5.9.3",
-    "vite": "^6.4.1"
+    "@sveltejs/adapter-auto": "^7.0.1",
+    "svelte-adapter-bun": "^1.0.1",
+    "svelte-check": "^4.4.7",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.10"
   },
   "private": true,
   "scripts": {
@@ -18,8 +18,8 @@
   },
   "type": "module",
   "dependencies": {
-    "@sveltejs/kit": "^2.49.2",
-    "svelte": "^5.46.0",
+    "@sveltejs/kit": "^2.58.0",
+    "svelte": "^5.55.5",
     "zod": "^4.2.0",
     "tslib": "^2.8.1",
     "@ai-sdk/google": "^3.0.0-beta.72",
@@ -28,7 +28,7 @@
     "@ai-sdk/svelte": "^4.0.0-beta.151",
     "@google/generative-ai": "^0.11.5",
     "@linear/sdk": "^21.1.0",
-    "@sveltejs/vite-plugin-svelte": "^5.1.1",
+    "@sveltejs/vite-plugin-svelte": "^7.0.0",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.18",
     "ai": "^6.0.0-beta.151",

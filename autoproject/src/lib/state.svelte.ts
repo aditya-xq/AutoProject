@@ -1,7 +1,7 @@
 import { getDefaultModelForInference } from "./utils/config"
 import type { AppState } from "./utils/interface"
 
-export const appState: AppState = $state({
+export const appState = $state<AppState>({
 	isLoading: false,
     loadingText: 'PROCESSING',
     promptType: 'prd',
