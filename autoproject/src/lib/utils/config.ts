@@ -24,21 +24,21 @@ export const aiInferenceOptions: AIInferenceType[] = ['Gemini', 'Groq', 'LM Stud
 export const tools: ProjectManagementTool[] = ['Linear', 'Asana', 'Jira', 'Plane']
 
 export const aiModelOptions: Record<AIInferenceType, string[]> = {
-    Groq: ['Kimi K2', 'Llama 3.3 70b', 'Llama 4 Maverick'],
+    Groq: ['GPT-OSS 120B', 'Llama 3.3 70b', 'Groq Compound'],
     'LM Studio': ['Granite 4H Tiny', 'GLM 4.7 Flash', 'Qwen 3.5 35b', 'LFM 2.5 1.2B'],
-    Gemini: ['Gemini 3 Flash', 'Gemini 3 Pro', 'Gemini 3.1 Pro']
+    Gemini: ['Gemini 3 Flash', 'Gemini 3.1 Flash Lite', 'Gemini 3.1 Pro']
 }
 
 export const modelMap: Record<string, string> = {
     'Llama 3.3 70b': 'llama-3.3-70b-versatile',
-    'Llama 4 Maverick': 'meta-llama/llama-4-maverick-17b-128e-instruct',
+    'Groq Compound': 'groq/compound',
     'GLM 4.7 Flash': 'zai-org/glm-4.7-flash',
     'Qwen 3.5 35b': 'qwen/qwen3.5-35b-a3b',
     'LFM 2.5 1.2B': 'liquid/lfm2.5-1.2b',
-    'Gemini 3 Pro': 'gemini-3-pro-preview',
+    'Gemini 3.1 Flash Lite': 'gemini-3.1-flash-lite-preview',
     'Gemini 3.1 Pro': 'gemini-3.1-pro-preview',
     'Gemini 3 Flash': 'gemini-3-flash-preview',
-    'Kimi K2': 'moonshotai/kimi-k2-instruct',
+    'GPT-OSS 120B': 'openai/gpt-oss-120b',
     'Granite 4H Tiny': 'ibm/granite-4-h-tiny'
 }
 
