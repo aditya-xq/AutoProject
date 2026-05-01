@@ -25,7 +25,7 @@ export const presetConfigs: PresetConfig[] = [
         description: 'Zero to MVP in record time. Perfect for quick validation.',
         settings: {
             aiInferenceType: 'Groq',
-            aiModelLabel: 'Kimi K2',
+            aiModelLabel: 'GPT-OSS 120B',
             prdType: 'Minimal',
             userStoryType: 'Minimal'
         }
@@ -49,7 +49,7 @@ export const presetConfigs: PresetConfig[] = [
         description: 'Optimized for user experience flows.',
         settings: {
             aiInferenceType: 'Groq',
-            aiModelLabel: 'Kimi K2',
+            aiModelLabel: 'GPT-OSS 120B',
             prdType: 'Narrative',
             userStoryType: 'User-Focused'
         }
@@ -73,7 +73,7 @@ export const presetConfigs: PresetConfig[] = [
         description: 'Ideal for research projects and experiments.',
         settings: {
             aiInferenceType: 'Gemini',
-            aiModelLabel: 'Gemini 3 Pro',
+            aiModelLabel: 'Gemini 3.1 Pro',
             prdType: 'Research',
             userStoryType: 'Research'
         }
