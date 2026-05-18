@@ -1,0 +1,10 @@
+node_modules
+dist
+build
+.svelte-kit
+.autoproject
+*.db
+*.sqlite
+.git
+.github
+*.md

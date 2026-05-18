@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "devDependencies": {
     "@sveltejs/adapter-auto": "^7.0.1",
+    "prettier": "^3.8.3",
     "svelte-adapter-bun": "^1.0.1",
     "svelte-check": "^4.4.7",
     "typescript": "^6.0.3",
@@ -14,7 +15,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "type": "module",
   "dependencies": {
