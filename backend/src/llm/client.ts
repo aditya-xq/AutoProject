@@ -1,3 +1,4 @@
+import { ApiError, ErrorCodes } from '../shared/errors'
 import type { LLMConfig, LLMRequest, LLMResponse } from './types'
 import { defaultConfig } from './types'
 
@@ -63,7 +64,7 @@ export class LLMClient {
       } catch {
         message = errBody || `HTTP ${res.status}`
       }
-      throw Object.assign(new Error(message), { status: res.status, code: 'LLM_ERROR' })
+      throw new ApiError(ErrorCodes.LLM_ERROR, message, res.status)
     }
 
     const data = (await res.json()) as {

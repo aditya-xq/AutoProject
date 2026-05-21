@@ -1,5 +1,5 @@
 import { afterAll, afterEach, describe, expect, test } from 'bun:test'
-import { LLMClient } from './client'
+import { LLMClient } from '../client'
 
 const originalFetch = globalThis.fetch
 const originalEnv = { ...process.env }
