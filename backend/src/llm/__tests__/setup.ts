@@ -1,5 +1,5 @@
 import { beforeAll } from 'bun:test'
-import { fetchJSON, C, results, getReportPath } from './helpers'
+import { fetchJSON, C, results } from './helpers'
 
 export const BACKEND_URL = process.env.BACKEND_URL ?? 'http://127.0.0.1:3001'
 export const LLM_BASE_URL = process.env.LLM_BASE_URL ?? 'http://127.0.0.1:1234/v1'

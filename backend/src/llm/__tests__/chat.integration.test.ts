@@ -76,7 +76,13 @@ describe('[Integration] Chat - Successful Requests', () => {
 
 describe('[Integration] Chat - Validation Errors', () => {
   test('Rejects empty messages array', async () => {
-    await testReq('Rejects empty messages array', 'POST', `${BACKEND_URL}/api/llm/chat`, { messages: [] }, 400)
+    await testReq(
+      'Rejects empty messages array',
+      'POST',
+      `${BACKEND_URL}/api/llm/chat`,
+      { messages: [] },
+      400,
+    )
   })
 
   test('Rejects missing messages', async () => {
@@ -84,7 +90,13 @@ describe('[Integration] Chat - Validation Errors', () => {
   })
 
   test('Rejects non-array messages', async () => {
-    await testReq('Rejects non-array messages', 'POST', `${BACKEND_URL}/api/llm/chat`, { messages: 'not-array' }, 400)
+    await testReq(
+      'Rejects non-array messages',
+      'POST',
+      `${BACKEND_URL}/api/llm/chat`,
+      { messages: 'not-array' },
+      400,
+    )
   })
 
   test('Streaming enabled', async () => {
@@ -141,7 +153,10 @@ describe('[Integration] Chat - Message Shapes & Edge Cases', () => {
       'Special characters in message',
       'POST',
       `${BACKEND_URL}/api/llm/chat`,
-      { messages: [{ role: 'user', content: 'Hello! 你好 🌍 {"key": "value"}' }], model: LLM_MODEL },
+      {
+        messages: [{ role: 'user', content: 'Hello! 你好 🌍 {"key": "value"}' }],
+        model: LLM_MODEL,
+      },
       200,
       undefined,
       'Exercises Unicode, emoji, and embedded JSON-like text.',
@@ -200,7 +215,11 @@ describe('[Integration] Chat - Message Shapes & Edge Cases', () => {
             role: 'assistant',
             content: null,
             tool_calls: [
-              { id: 'call_1', type: 'function', function: { name: 'get_weather', arguments: '{}' } },
+              {
+                id: 'call_1',
+                type: 'function',
+                function: { name: 'get_weather', arguments: '{}' },
+              },
             ],
           },
           { role: 'tool', tool_call_id: 'call_1', content: '{"temp": 72}' },

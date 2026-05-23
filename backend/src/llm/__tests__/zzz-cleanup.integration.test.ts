@@ -7,10 +7,10 @@ import { generateReport } from './report'
 
 const _globalStart = performance.now()
 
-let _testStartTs: string = new Date()
-  .toISOString()
-  .replace(/\.\d+$/, '')
-  .replace('T', ' ')
+const TEST_PROMPT_CONTEXTS = [
+  'Build a calculator app with add, subtract, multiply, divide.',
+  'Completed step 1: setup project',
+]
 
 function resolveDbPath(): string {
   const explicit = process.env.CLEANUP_DB_PATH
@@ -30,12 +30,23 @@ function cleanup(): void {
   try {
     if (!existsSync(dbPath)) return
     const db = new Database(dbPath)
-    const stmt = db.query('SELECT COUNT(*) as cnt FROM prompt_runs WHERE created_at > ?')
-    const row = stmt.get(_testStartTs) as { cnt: number } | undefined
-    const count = row?.cnt ?? 0
-    if (count > 0) {
-      db.query('DELETE FROM prompt_runs WHERE created_at > ?').run(_testStartTs)
-      console.log(`  ${C.green}✓${C.nc} Cleaned up ${count} test prompt run(s)`)
+    const promptRuns = db
+      .query(
+        `SELECT id FROM prompt_runs
+         WHERE ${TEST_PROMPT_CONTEXTS.map(() => 'input_context LIKE ?').join(' OR ')}`,
+      )
+      .all(...TEST_PROMPT_CONTEXTS.map((context) => `%${context}%`)) as { id: string }[]
+
+    if (promptRuns.length > 0) {
+      db.transaction(() => {
+        for (const run of promptRuns) {
+          db.query('DELETE FROM worklog WHERE details LIKE ?').run(`%${run.id}%`)
+        }
+        db.query(
+          `DELETE FROM prompt_runs WHERE id IN (${promptRuns.map(() => '?').join(',')})`,
+        ).run(...promptRuns.map((run) => run.id))
+      })()
+      console.log(`  ${C.green}✓${C.nc} Cleaned up ${promptRuns.length} live LLM prompt run(s)`)
     }
     db.close()
   } catch {

@@ -62,9 +62,7 @@ describe('LLMClient.chat - validation', () => {
 
   test('throws when messages is not provided', async () => {
     const client = new LLMClient({ apiKey: 'sk-test' })
-    await expect(client.chat({} as never)).rejects.toThrow(
-      'messages must be a non-empty array',
-    )
+    await expect(client.chat({} as never)).rejects.toThrow('messages must be a non-empty array')
   })
 
   test('throws when messages is not an array', async () => {
@@ -487,7 +485,7 @@ describe('LLMClient.chat - edge cases', () => {
 
   test('passes multiple concurrent requests', async () => {
     let callCount = 0
-    globalThis.fetch = ((_url: RequestInfo | URL, init?: RequestInit) => {
+    globalThis.fetch = (() => {
       callCount++
       return okResponse({
         choices: [{ message: { content: `response-${callCount}` } }],

@@ -1,6 +1,5 @@
 import { writeFileSync } from 'node:fs'
 import { C, passCount, failCount, skipCount, results } from './helpers'
-import type { ScenarioResult } from './helpers'
 
 function esc(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')

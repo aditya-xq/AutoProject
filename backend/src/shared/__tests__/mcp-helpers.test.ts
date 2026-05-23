@@ -68,7 +68,9 @@ describe('wrapTool', () => {
   })
 
   test('returns mcpFail when handler throws synchronously', async () => {
-    const handler = wrapTool(() => { throw new Error('sync fail') })
+    const handler = wrapTool(() => {
+      throw new Error('sync fail')
+    })
     const result = await handler(undefined)
     expect(JSON.parse(result.content[0].text)).toEqual({
       code: 'ERROR',
@@ -78,7 +80,9 @@ describe('wrapTool', () => {
   })
 
   test('returns mcpFail when async handler rejects', async () => {
-    const handler = wrapTool(async () => { throw new Error('async fail') })
+    const handler = wrapTool(async () => {
+      throw new Error('async fail')
+    })
     const result = await handler(undefined)
     expect(JSON.parse(result.content[0].text).message).toBe('async fail')
     expect((result as Record<string, unknown>).isError).toBe(true)

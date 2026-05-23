@@ -35,9 +35,7 @@ llmRouter.post('/execute', async (c) => {
   let result
   try {
     const passthroughKeys = Object.fromEntries(
-      Object.entries(body).filter(
-        ([k]) => !['promptKey', 'stepId', 'context', 'llm'].includes(k),
-      ),
+      Object.entries(body).filter(([k]) => !['promptKey', 'stepId', 'context', 'llm'].includes(k)),
     )
     const llmOptions = { ...(body.llm as Record<string, unknown> | undefined), ...passthroughKeys }
     result = await llmClient.chat({
@@ -58,11 +56,15 @@ llmRouter.post('/execute', async (c) => {
     outputRef: result.content,
   })
 
-  return ok(c, {
-    runId: render.runId,
-    promptKey: render.promptKey,
-    content: result.content,
-    model: result.model,
-    usage: result.usage,
-  }, 201)
+  return ok(
+    c,
+    {
+      runId: render.runId,
+      promptKey: render.promptKey,
+      content: result.content,
+      model: result.model,
+      usage: result.usage,
+    },
+    201,
+  )
 })

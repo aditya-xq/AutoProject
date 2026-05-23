@@ -10,11 +10,7 @@ type AppContext = Context<{ Variables: AppVariables }>
  * The response body always includes `{ success: true, data, requestId }`
  * where `requestId` is read from context (set by a middleware).
  */
-export function ok(
-  c: AppContext,
-  data: unknown,
-  status: ContentfulStatusCode = 200,
-) {
+export function ok(c: AppContext, data: unknown, status: ContentfulStatusCode = 200) {
   return c.json({ success: true, data, requestId: c.get('requestId') }, status)
 }
 

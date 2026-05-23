@@ -4,7 +4,7 @@ import type { Context } from 'hono'
 
 function mockC(overrides: Record<string, unknown> = {}): Context {
   const req = {
-    header: (name: string) => (overrides.contentType as string) ?? 'application/json',
+    header: () => (overrides.contentType as string) ?? 'application/json',
     json: async () => {
       const body = overrides.body
       if (body instanceof Error) throw body
@@ -13,9 +13,12 @@ function mockC(overrides: Record<string, unknown> = {}): Context {
     },
   }
   return {
-    req: req as Context['req'],
+    req: req as unknown as Context['req'],
     json: (data: unknown, status?: number) =>
-      new Response(JSON.stringify(data), { status: status ?? 200, headers: { 'content-type': 'application/json' } }),
+      new Response(JSON.stringify(data), {
+        status: status ?? 200,
+        headers: { 'content-type': 'application/json' },
+      }),
     get: (key: string) => (key === 'requestId' ? (overrides.requestId ?? 'req-123') : undefined),
     set: () => {},
   } as unknown as Context & { set: (key: string, value: unknown) => void }
