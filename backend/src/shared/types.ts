@@ -1,18 +1,5 @@
 export type Json = Record<string, unknown>
 
-export type ApiSuccessResponse<T = unknown> = {
-  success: true
-  data: T
+export type AppVariables = {
   requestId: string
 }
-
-export type ApiErrorResponse = {
-  success: false
-  error: {
-    code: string
-    message: string
-  }
-  requestId: string
-}
-
-export type ApiResponse<T = unknown> = ApiSuccessResponse<T> | ApiErrorResponse

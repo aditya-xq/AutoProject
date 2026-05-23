@@ -1,8 +1,8 @@
 import type { Context } from 'hono'
 import type { ContentfulStatusCode } from 'hono/utils/http-status'
+import type { AppVariables } from './types'
 
-type Variables = { requestId: string }
-type AppContext = Context<{ Variables: Variables }>
+type AppContext = Context<{ Variables: AppVariables }>
 
 /**
  * Send a success JSON response.
