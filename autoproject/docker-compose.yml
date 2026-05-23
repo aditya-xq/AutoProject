@@ -1,13 +1,30 @@
 services:
   autoproject:
     container_name: autoproject_app
-    image: xqbuilds/autoproject:latest
-    pull_policy: always
+    image: autoproject:latest
+    pull_policy: build
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    init: true
     ports:
-      - "3000:3000"
+      - '3000:3000'
     env_file:
       - .env
     environment:
       NODE_ENV: production
-      DOCKER_ENV: true
+      DOCKER_ENV: 'true'
+      HOST: 0.0.0.0
+      PORT: '3000'
+      BACKEND_HOST: 127.0.0.1
+      BACKEND_PORT: '3001'
+      AUTOPROJECT_ROOT: /data
+      AUTOPROJECT_BACKEND_URL: http://127.0.0.1:3001
+    volumes:
+      - autoproject_data:/data
     restart: unless-stopped
+    stop_grace_period: 30s
+
+volumes:
+  autoproject_data:
+    name: autoproject_data

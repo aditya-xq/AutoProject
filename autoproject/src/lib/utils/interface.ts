@@ -1,52 +1,58 @@
-import type { PRDType, UserStoryType, AIInferenceType, ProjectManagementTool, PromptType } from "./types"
+import type {
+  PRDType,
+  UserStoryType,
+  AIInferenceType,
+  ProjectManagementTool,
+  PromptType,
+} from './types'
 
 export interface UserStory {
-    title: string
-    description: string
+  title: string
+  description: string
 }
 
 export interface ProjectDetails {
-    name: string
-    description: string
-    userStories: UserStory[]
-    teamIds?: string[]
+  name: string
+  description: string
+  userStories: UserStory[]
+  teamIds?: string[]
 }
 
 export interface SuggestionsObject {
-    suggestions: string[]
+  suggestions: string[]
 }
 
 export interface GeneratePrdResponse {
-    prd: string
-    projectDetails: {
-        name: string
-        description: string
-    }
+  prd: string
+  projectDetails: {
+    name: string
+    description: string
+  }
 }
 
 export interface GenerateRequest {
-    prd?: string;
-    requirements?: string;
-    settings: Settings
-    isExistingProject?: boolean
+  prd?: string
+  requirements?: string
+  settings: Settings
+  isExistingProject?: boolean
 }
 
 export interface Settings {
-    prdType: PRDType
-    userStoryType: UserStoryType
-    aiInferenceType: AIInferenceType
-    tool: ProjectManagementTool
-    aiModel: string
+  prdType: PRDType
+  userStoryType: UserStoryType
+  aiInferenceType: AIInferenceType
+  tool: ProjectManagementTool
+  aiModel: string
 }
 
 export interface AppState {
-    isLoading: boolean
-    loadingText: string
-    promptType: PromptType
-    requirements: string
-    prd: string
-    projectDetails: ProjectDetails
-    settings: Settings
-    projects: any[]
-    activeProject: any
+  isLoading: boolean
+  loadingText: string
+  promptType: PromptType
+  requirements: string
+  prd: string
+  projectDetails: ProjectDetails
+  settings: Settings
+  projects: any[]
+  activeProject: any
 }

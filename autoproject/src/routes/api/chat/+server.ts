@@ -18,39 +18,39 @@ export const POST = (async ({ request }) => {
   const groq = createGroq({
     apiKey: env.SECRET_GROQ_API_KEY,
   })
-  
+
   const gemini = createGoogleGenerativeAI({
     apiKey: env.SECRET_GEMINI_API_KEY,
   })
   try {
-    const { settings, prompt }: { settings: any, prompt: any} = await request.json()
+    const { settings, prompt }: { settings: any; prompt: any } = await request.json()
     if (!settings?.aiInferenceType || !settings?.aiModel || !prompt) {
       throw createGenerationError('Missing settings or prompt for chat inference.')
     }
     const modelId = normalizeModelForInference(settings.aiInferenceType, settings.aiModel)
     if (settings.aiInferenceType === 'LM Studio') {
-        // Check if the server is up and running
-        const response = await fetch(`${LM_STUDIO_SERVER}/v1/models`)
-        if (!response.ok) {
-          throw createGenerationError('LM Studio server is not running.')
-        }
-        const result = streamText({
+      // Check if the server is up and running
+      const response = await fetch(`${LM_STUDIO_SERVER}/v1/models`)
+      if (!response.ok) {
+        throw createGenerationError('LM Studio server is not running.')
+      }
+      const result = streamText({
         model: lmstudio(modelId),
-        prompt: prompt
+        prompt: prompt,
       })
       return result.toUIMessageStreamResponse()
     }
     if (settings.aiInferenceType === 'Groq') {
       const result = streamText({
         model: groq(modelId),
-        prompt: prompt
+        prompt: prompt,
       })
       return result.toUIMessageStreamResponse()
     }
     if (settings.aiInferenceType === 'Gemini') {
       const result = streamText({
         model: gemini(`models/${modelId}`),
-        prompt: prompt
+        prompt: prompt,
       })
       return result.toUIMessageStreamResponse()
     }

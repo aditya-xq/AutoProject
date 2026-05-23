@@ -1,31 +1,31 @@
-import { getDefaultModelForInference } from "./utils/config"
-import type { AppState } from "./utils/interface"
+import { getDefaultModelForInference } from './utils/config'
+import type { AppState } from './utils/interface'
 
 export const appState = $state<AppState>({
-	isLoading: false,
-    loadingText: 'PROCESSING',
-    promptType: 'prd',
-	requirements: '',
-    prd: '',
-    projectDetails: {
-        name: '',
-        description: '',
-        userStories: [],
-        teamIds: []
-    },
-    settings: {
-        tool: 'Linear',
-        prdType: 'Minimal', 
-        userStoryType: 'Minimal', 
-        aiInferenceType: 'Groq',
-        aiModel: getDefaultModelForInference('Groq'),
-    },
-    projects: [],
-    activeProject: {},
+  isLoading: false,
+  loadingText: 'PROCESSING',
+  promptType: 'prd',
+  requirements: '',
+  prd: '',
+  projectDetails: {
+    name: '',
+    description: '',
+    userStories: [],
+    teamIds: [],
+  },
+  settings: {
+    tool: 'Linear',
+    prdType: 'Minimal',
+    userStoryType: 'Minimal',
+    aiInferenceType: 'Groq',
+    aiModel: getDefaultModelForInference('Groq'),
+  },
+  projects: [],
+  activeProject: {},
 })
 
 export const resetState = () => {
-    appState.prd = ''
-    appState.projectDetails.userStories = []
-    appState.requirements = ''
+  appState.prd = ''
+  appState.projectDetails.userStories = []
+  appState.requirements = ''
 }
