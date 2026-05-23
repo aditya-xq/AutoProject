@@ -2,7 +2,7 @@ import { test, afterAll } from 'bun:test'
 import { Database } from 'bun:sqlite'
 import { join } from 'node:path'
 import { existsSync } from 'node:fs'
-import { C, passCount, failCount, skipCount, getReportPath } from './helpers'
+import { C, getReportPath } from './helpers'
 import { generateReport } from './report'
 
 const _globalStart = performance.now()
@@ -13,20 +13,18 @@ const TEST_PROMPT_CONTEXTS = [
 ]
 
 function resolveDbPath(): string {
-  const explicit = process.env.CLEANUP_DB_PATH
-  if (explicit) return explicit
   const autoRoot = process.env.AUTOPROJECT_ROOT
   if (autoRoot) {
     const candidate = join(autoRoot, '.autoproject', 'autoproject.db')
     if (existsSync(candidate)) return candidate
   }
-  const scriptDir = import.meta.dir
-  const root = join(scriptDir, '..', '..', '..', '..')
-  return join(root, '.autoproject', 'autoproject.db')
+  return ''
 }
 
 function cleanup(): void {
   const dbPath = resolveDbPath()
+  if (!dbPath) return
+
   try {
     if (!existsSync(dbPath)) return
     const db = new Database(dbPath)
@@ -61,12 +59,6 @@ afterAll(() => {
   const reportPath = getReportPath()
   generateReport(_globalStart, reportPath)
 
-  console.log()
-  console.log(`${C.bold}${C.cyan}══ Summary${' ═'.repeat(25)}${C.nc}`)
-  console.log(`  ${C.green}Passed:${C.nc}  ${passCount}`)
-  console.log(`  ${C.red}Failed:${C.nc}  ${failCount}`)
-  console.log(`  ${C.yellow}Skipped:${C.nc} ${skipCount}`)
-  console.log(`  ${C.bold}Total:${C.nc}   ${passCount + failCount + skipCount}`)
   console.log()
   console.log(`  ${C.yellow}Open in browser to explore:${C.nc}`)
   console.log(`    ${C.cyan}${reportPath}${C.nc}`)

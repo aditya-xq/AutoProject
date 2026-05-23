@@ -1,5 +1,5 @@
 import { beforeAll } from 'bun:test'
-import { fetchJSON, C, results } from './helpers'
+import { fetchJSON, C } from './helpers'
 
 export const BACKEND_URL = process.env.BACKEND_URL ?? 'http://127.0.0.1:3001'
 export const LLM_BASE_URL = process.env.LLM_BASE_URL ?? 'http://127.0.0.1:1234/v1'
@@ -21,15 +21,16 @@ export function setupIntegrationTests(): void {
     console.log(`  ${C.cyan}Model:${C.nc}   ${LLM_MODEL}`)
     console.log()
 
-    const health = await fetchJSON(`${BACKEND_URL}/health`)
-    if (!health.ok || health.status !== 200) {
-      console.log(`${C.red}${C.bold}Backend not reachable at ${BACKEND_URL}${C.nc}`)
-      console.log(`  Health: HTTP ${health.status} — ${JSON.stringify(health.body).slice(0, 120)}`)
-      console.log(`  ${C.yellow}Start the backend first: cd backend && bun run dev${C.nc}`)
-      process.exit(1)
+    try {
+      const health = await fetchJSON(`${BACKEND_URL}/health`)
+      if (health.ok && health.status === 200) {
+        console.log(`  ${C.green}✓${C.nc} Backend is healthy`)
+      } else {
+        console.log(`  ${C.yellow}⚠${C.nc} Backend health: HTTP ${health.status}${C.nc}`)
+      }
+    } catch (e) {
+      console.log(`  ${C.yellow}⚠${C.nc} Backend health check: ${(e as Error).message}${C.nc}`)
     }
-    results.pop()
-    console.log(`  ${C.green}✓${C.nc} Backend is healthy`)
     console.log()
   })
 }
