@@ -382,7 +382,7 @@ describe('LLMClient.resolveApiKey', () => {
     expect(capturedHeaders!.get('authorization')).toBe('Bearer sk-openai-env')
   })
 
-  test('uses ANTHROPIC_API_KEY env for anthropic baseUrl', async () => {
+  test('falls back to LLM_API_KEY for non-OpenAI baseUrl', async () => {
     process.env.ANTHROPIC_API_KEY = 'sk-ant-env'
     let capturedHeaders: Headers | undefined
     globalThis.fetch = ((_url: RequestInfo | URL, init?: RequestInit) => {
@@ -395,7 +395,7 @@ describe('LLMClient.resolveApiKey', () => {
       model: 'claude-3',
     })
     await client.chat({ messages: [{ role: 'user', content: 'Hi' }] })
-    expect(capturedHeaders!.get('authorization')).toBe('Bearer sk-ant-env')
+    expect(capturedHeaders!.get('authorization')).toBeNull()
   })
 
   test('falls back to LLM_API_KEY for unknown baseUrl', async () => {

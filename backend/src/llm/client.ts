@@ -88,7 +88,6 @@ export class LLMClient {
   private resolveApiKey(): string {
     const base = this.config.baseUrl.toLowerCase()
     if (base.includes('api.openai.com')) return process.env.OPENAI_API_KEY || ''
-    if (base.includes('anthropic')) return process.env.ANTHROPIC_API_KEY || ''
     return process.env.LLM_API_KEY || ''
   }
 }

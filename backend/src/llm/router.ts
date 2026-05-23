@@ -1,12 +1,11 @@
 import { Hono } from 'hono'
+import type { AppVariables } from '../shared/types'
 import { llmClient } from './client'
 import { autoProjectService } from '../workflow-engine/service'
 import { invalid } from '../shared/errors'
 import { ok, readBody } from '../shared/response'
 
-type Variables = { requestId: string }
-
-export const llmRouter = new Hono<{ Variables: Variables }>()
+export const llmRouter = new Hono<{ Variables: AppVariables }>()
 
 llmRouter.post('/chat', async (c) => {
   const body = await readBody(c)
@@ -24,8 +23,8 @@ llmRouter.post('/execute', async (c) => {
 
   if (!body.promptKey) throw invalid('promptKey is required')
 
-  const NO_STEPID_KEYS = ['step-generation']
-  if (!NO_STEPID_KEYS.includes(body.promptKey as string) && !body.stepId)
+  const NO_STEPID_KEYS = new Set(['step-generation'])
+  if (!NO_STEPID_KEYS.has(body.promptKey as string) && !body.stepId)
     throw invalid('stepId is required for this prompt key')
 
   const render = autoProjectService.renderPrompt(body.promptKey as string, {
