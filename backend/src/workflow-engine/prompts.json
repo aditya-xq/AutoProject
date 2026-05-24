@@ -1,0 +1,239 @@
+{
+  "version": 3,
+  "prompts": {
+    "step-generation": {
+      "version": 1,
+      "purpose": "Generate ordered incremental steps from user requirements and project context.",
+      "system": "You are a technical project planner. Your task is to decompose requirements into small, independently completable implementation steps.\n\n## Rules\n- Each step must be testable in isolation\n- Steps should build on prior completed steps\n- First step has no dependencies (depends_on: null)\n- Later steps should depend on the step number they build upon\n- Keep steps small enough to complete in 1-2 hours\n- Output ONLY valid JSON matching the schema - no explanation, no markdown, no code blocks\n\n## Output Schema\nReturn JSON with a 'steps' array containing objects with: step_number, title, objective, context, test_suite_intent, implementation_plan_intent, validation, depends_on.",
+      "output_schema": {
+        "type": "object",
+        "required": ["steps"],
+        "properties": {
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "step_number",
+                "title",
+                "objective",
+                "context",
+                "test_suite_intent",
+                "implementation_plan_intent",
+                "validation",
+                "depends_on"
+              ],
+              "properties": {
+                "step_number": {
+                  "type": "string",
+                  "description": "Sequential number like '1', '2', '3'"
+                },
+                "title": { "type": "string", "maxLength": 100 },
+                "objective": { "type": "string", "maxLength": 500 },
+                "context": { "type": "string", "maxLength": 1000 },
+                "test_suite_intent": { "type": "string", "maxLength": 500 },
+                "implementation_plan_intent": { "type": "string", "maxLength": 1000 },
+                "validation": { "type": "string", "maxLength": 200 },
+                "depends_on": {
+                  "type": ["string", "null"],
+                  "description": "Step number this depends on, or null for first step"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "test-scenarios": {
+      "version": 1,
+      "purpose": "Generate exhaustive, implementation-independent test scenarios for one autoproject step.",
+      "system": "You are an expert test strategist. Generate production-grade test scenarios for one implementation step.\n\n## Requirements\n- Treat step objective, context, and dependencies as the complete product contract\n- Do NOT design implementation - focus on behavior validation\n- Cover: happy paths, boundary values, negative paths, validation failures, security concerns, state transitions, concurrency, persistence, compatibility, rollback/retry, and regressions\n- Prefer fewer high-value scenarios over noisy duplicates\n- Call out assumptions and unknown requirements\n- If requirements are ambiguous, include clarifying questions\n\n## Output Requirements\n- Output ONLY valid JSON - no explanation, no markdown\n- Every scenario must have: title, category, priority, preconditions (array), steps (array), expected_result, automation_notes, coverage_tags (array)",
+      "output_schema": {
+        "type": "object",
+        "required": ["assumptions", "questions", "scenarios"],
+        "properties": {
+          "assumptions": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Explicit assumptions made while generating scenarios"
+          },
+          "questions": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Clarifying questions for ambiguous requirements"
+          },
+          "scenarios": {
+            "type": "array",
+            "minItems": 3,
+            "items": {
+              "type": "object",
+              "required": [
+                "title",
+                "category",
+                "priority",
+                "preconditions",
+                "steps",
+                "expected_result",
+                "automation_notes",
+                "coverage_tags"
+              ],
+              "properties": {
+                "title": { "type": "string", "maxLength": 150 },
+                "category": {
+                  "type": "string",
+                  "enum": [
+                    "functional",
+                    "integration",
+                    "security",
+                    "performance",
+                    "usability",
+                    "error",
+                    "edge"
+                  ]
+                },
+                "priority": {
+                  "type": "string",
+                  "enum": ["critical", "high", "medium", "low"]
+                },
+                "preconditions": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "minItems": 0
+                },
+                "steps": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "minItems": 1
+                },
+                "expected_result": { "type": "string", "maxLength": 500 },
+                "automation_notes": { "type": "string", "maxLength": 300 },
+                "coverage_tags": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "implementation-design": {
+      "version": 1,
+      "purpose": "Generate expert HLD and LLD for one autoproject step after test scenarios are known.",
+      "system": "You are a principal engineer. Produce production-ready implementation design for one incremental step.\n\n## High-Level Design (HLD) Requirements\n- Explain the overall approach and architecture\n- Define boundaries, data flow, and integration points\n- Address security, privacy, performance, observability\n- Document rollout/rollback strategy\n- List risks and alternatives considered\n\n## Low-Level Design (LLD) Requirements\n- Be actionable for an implementation agent\n- List specific files/modules to modify\n- Define functions, classes, interfaces, data schemas\n- Specify algorithms and implementation order\n- Map to test scenarios for validation\n- Include error handling and validation rules\n\n## Important\n- Keep design minimal for current step only\n- Do not invent unrelated features\n- Call out assumptions, risks, and open questions\n- Output ONLY valid JSON - no explanation, no markdown",
+      "output_schema": {
+        "type": "object",
+        "required": ["assumptions", "open_questions", "hld", "lld", "quality_plan"],
+        "properties": {
+          "assumptions": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "open_questions": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "hld": {
+            "type": "object",
+            "required": ["summary", "architecture", "data_flow", "integration_points", "risks"],
+            "properties": {
+              "summary": { "type": "string", "maxLength": 500 },
+              "architecture": {
+                "type": "array",
+                "items": { "type": "string" },
+                "minItems": 1
+              },
+              "data_flow": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "integration_points": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "security_privacy": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "performance": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "observability": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "rollout_rollback": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "risks": {
+                "type": "array",
+                "items": { "type": "string" },
+                "minItems": 1
+              }
+            }
+          },
+          "lld": {
+            "type": "object",
+            "required": [
+              "files",
+              "data_model",
+              "algorithms",
+              "implementation_order",
+              "scenario_mapping"
+            ],
+            "properties": {
+              "files": {
+                "type": "array",
+                "items": { "type": "string" },
+                "minItems": 1
+              },
+              "data_model": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "algorithms": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "error_handling": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "implementation_order": {
+                "type": "array",
+                "items": { "type": "string" },
+                "minItems": 1
+              },
+              "scenario_mapping": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          },
+          "quality_plan": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Quality gates and validation steps for this implementation"
+          }
+        }
+      }
+    },
+    "project-context-update": {
+      "version": 1,
+      "purpose": "Update PROJECT.md with concise project context after completing a step.",
+      "system": "You are a project documenter. Update PROJECT.md with current project state.\n\n## Requirements\n- Keep document concise but informative\n- Include: project name, mission, architecture overview\n- Document completed steps summary\n- Show current state and next steps\n- Do NOT include implementation details - save those in design artifacts\n\n## Output\n- Output ONLY valid JSON with 'updated_project_md' field\n- No explanation, no markdown wrapping",
+      "output_schema": {
+        "type": "object",
+        "required": ["updated_project_md"],
+        "properties": {
+          "updated_project_md": {
+            "type": "string",
+            "description": "The full updated PROJECT.md content"
+          }
+        }
+      }
+    }
+  }
+}

@@ -23,7 +23,7 @@ llmRouter.post('/execute', async (c) => {
 
   if (!body.promptKey) throw invalid('promptKey is required')
 
-  const NO_STEPID_KEYS = new Set(['step-generation'])
+  const NO_STEPID_KEYS = new Set(['step-generation', 'project-context-update'])
   if (!NO_STEPID_KEYS.has(body.promptKey as string) && !body.stepId)
     throw invalid('stepId is required for this prompt key')
 
