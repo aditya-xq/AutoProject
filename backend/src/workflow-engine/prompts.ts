@@ -80,6 +80,7 @@ export function renderPrompt(
   db: Database,
   promptKey: string,
   input: { stepId?: string; context?: string },
+  projectContextPath?: string,
 ): RenderResult {
   const promptFile = loadPrompts(promptsPath)
   const prompt = promptFile.prompts[promptKey]
@@ -88,9 +89,21 @@ export function renderPrompt(
   let inputContext: string
   let resolvedStepId: string | null = null
 
-  if (promptKey === 'step-generation' || promptKey === 'project-context-update') {
+  if (promptKey === 'step-generation') {
     inputContext = input.context || ''
     if (!inputContext.trim()) throw invalid(`context is required for ${promptKey} prompt`)
+  } else if (promptKey === 'project-context-update') {
+    let context = input.context || ''
+    if (projectContextPath && existsSync(projectContextPath)) {
+      const currentProjectMd = readFileSync(projectContextPath, 'utf-8')
+      context = JSON.stringify(
+        { current_project_md: currentProjectMd, step_context: context },
+        null,
+        2,
+      )
+    }
+    if (!context.trim()) throw invalid(`context is required for ${promptKey} prompt`)
+    inputContext = context
   } else {
     if (!input.stepId) throw invalid('stepId is required')
     const step = db.query('SELECT * FROM steps WHERE id = ?').get(input.stepId) as
