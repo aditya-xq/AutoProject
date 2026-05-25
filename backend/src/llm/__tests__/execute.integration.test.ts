@@ -1,10 +1,10 @@
-import { describe, test } from 'bun:test'
-import { setupIntegrationTests, BACKEND_URL } from './setup'
+import { test } from 'bun:test'
+import { setupIntegrationTests, BACKEND_URL, LIVE_SUITE } from './setup'
 import { testReq, testExecuteReq } from './helpers'
 
 setupIntegrationTests()
 
-describe('[Integration] Execute - Successful Execution', () => {
+LIVE_SUITE('[Integration] Execute - Successful Execution', () => {
   test('Execute step-generation prompt', async () => {
     await testExecuteReq(
       'Execute step-generation prompt',
@@ -33,7 +33,7 @@ describe('[Integration] Execute - Successful Execution', () => {
   })
 })
 
-describe('[Integration] Execute - Validation Errors', () => {
+LIVE_SUITE('[Integration] Execute - Validation Errors', () => {
   test('Rejects missing promptKey', async () => {
     await testReq(
       'Rejects missing promptKey',

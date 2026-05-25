@@ -1,10 +1,10 @@
-import { describe, test } from 'bun:test'
-import { setupIntegrationTests, BACKEND_URL } from './setup'
+import { test } from 'bun:test'
+import { setupIntegrationTests, BACKEND_URL, LIVE_SUITE } from './setup'
 import { testReq } from './helpers'
 
 setupIntegrationTests()
 
-describe('[Integration] Health & Routing', () => {
+LIVE_SUITE('[Integration] Health & Routing', () => {
   test('GET /health', async () => {
     await testReq('GET /health', 'GET', `${BACKEND_URL}/health`, undefined, 200)
   })

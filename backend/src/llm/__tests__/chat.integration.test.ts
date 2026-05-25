@@ -1,10 +1,10 @@
-import { describe, test } from 'bun:test'
-import { setupIntegrationTests, BACKEND_URL, LLM_MODEL } from './setup'
+import { test } from 'bun:test'
+import { setupIntegrationTests, BACKEND_URL, LLM_MODEL, LIVE_SUITE } from './setup'
 import { testReq, testRawReq } from './helpers'
 
 setupIntegrationTests()
 
-describe('[Integration] Chat - Successful Requests', () => {
+LIVE_SUITE('[Integration] Chat - Successful Requests', () => {
   test('Basic chat request', async () => {
     await testReq(
       'Basic chat request',
@@ -74,7 +74,7 @@ describe('[Integration] Chat - Successful Requests', () => {
   })
 })
 
-describe('[Integration] Chat - Validation Errors', () => {
+LIVE_SUITE('[Integration] Chat - Validation Errors', () => {
   test('Rejects empty messages array', async () => {
     await testReq(
       'Rejects empty messages array',
@@ -112,7 +112,7 @@ describe('[Integration] Chat - Validation Errors', () => {
   })
 })
 
-describe('[Integration] Chat - Message Shapes & Edge Cases', () => {
+LIVE_SUITE('[Integration] Chat - Message Shapes & Edge Cases', () => {
   test('Arbitrary fields passthrough', async () => {
     await testReq(
       'Arbitrary fields passthrough',
