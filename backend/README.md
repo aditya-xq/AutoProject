@@ -84,7 +84,7 @@ Steps and artifacts:
 - `quality_gates_status`
 - `worklog`
 
-Resources expose the same state under `autoproject://project/status`, `autoproject://project/context`, `autoproject://steps`, and step-specific templates.
+Resources expose state through 10 resource URIs: `autoproject://project/status`, `autoproject://project/context`, `autoproject://steps`, `autoproject://requirements`, `autoproject://prompts`, `autoproject://worklog`, plus step-specific templates (`/steps/{stepId}`, `/steps/{stepId}/scenarios`, `/steps/{stepId}/design`, `/steps/{stepId}/quality-gates`).
 
 All responses use:
 
