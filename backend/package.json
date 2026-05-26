@@ -1,0 +1,33 @@
+{
+  "name": "autoproject-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/index.ts",
+    "start": "bun src/index.ts",
+    "check": "tsc --noEmit",
+    "lint": "tsc --noEmit",
+    "build": "bun build src/index.ts --outdir dist --target bun",
+    "test": "bun test --timeout 600000 src/__tests__/app.test.ts src/mcp/__tests__/tools.test.ts src/mcp/__tests__/resources.test.ts src/mcp/__tests__/error-handling.test.ts src/mcp/__tests__/mcp.integration.test.ts src/llm/__tests__/client.test.ts src/shared/__tests__/response.test.ts src/shared/__tests__/mcp-helpers.test.ts src/workflow-engine/repos/__tests__/suite-repo.test.ts src/workflow-engine/repos/__tests__/step-repo.test.ts src/workflow-engine/repos/__tests__/requirement-repo.test.ts src/workflow-engine/repos/__tests__/project-context-repo.test.ts src/workflow-engine/repos/__tests__/worklog-repo.test.ts src/workflow-engine/repos/__tests__/design-repo.test.ts src/workflow-engine/repos/__tests__/scenario-repo.test.ts src/workflow-engine/__tests__/database.test.ts src/workflow-engine/__tests__/errors.test.ts src/workflow-engine/__tests__/gates.test.ts src/workflow-engine/__tests__/onboarding.test.ts src/workflow-engine/__tests__/paths.test.ts src/workflow-engine/__tests__/prompts.test.ts src/workflow-engine/__tests__/service.test.ts src/workflow-engine/__tests__/workflow.test.ts src/workflow-engine/__tests__/workflow.integration.test.ts src/workflow-engine/__tests__/workflow.live.integration.test.ts src/workflow-engine/__tests__/zzz-cleanup.integration.test.ts src/llm/__tests__/health.integration.test.ts src/llm/__tests__/chat.integration.test.ts src/llm/__tests__/execute.integration.test.ts src/llm/__tests__/zzz-cleanup.integration.test.ts",
+    "test:unit": "bun test --timeout 120000 src/__tests__/app.test.ts src/mcp/__tests__/tools.test.ts src/mcp/__tests__/resources.test.ts src/mcp/__tests__/error-handling.test.ts src/llm/__tests__/client.test.ts src/shared/__tests__/response.test.ts src/shared/__tests__/mcp-helpers.test.ts src/workflow-engine/repos/__tests__/suite-repo.test.ts src/workflow-engine/repos/__tests__/step-repo.test.ts src/workflow-engine/repos/__tests__/requirement-repo.test.ts src/workflow-engine/repos/__tests__/project-context-repo.test.ts src/workflow-engine/repos/__tests__/worklog-repo.test.ts src/workflow-engine/repos/__tests__/design-repo.test.ts src/workflow-engine/repos/__tests__/scenario-repo.test.ts src/workflow-engine/__tests__/database.test.ts src/workflow-engine/__tests__/errors.test.ts src/workflow-engine/__tests__/gates.test.ts src/workflow-engine/__tests__/onboarding.test.ts src/workflow-engine/__tests__/paths.test.ts src/workflow-engine/__tests__/prompts.test.ts src/workflow-engine/__tests__/service.test.ts src/workflow-engine/__tests__/workflow.test.ts",
+    "test:integration": "bun test --timeout 300000 src/mcp/__tests__/mcp.integration.test.ts src/workflow-engine/__tests__/workflow.integration.test.ts src/workflow-engine/__tests__/zzz-cleanup.integration.test.ts",
+    "test:mcp": "bun test --timeout 300000 src/mcp/__tests__/tools.test.ts src/mcp/__tests__/resources.test.ts src/mcp/__tests__/error-handling.test.ts src/mcp/__tests__/mcp.integration.test.ts",
+    "test:live:workflow": "bun test --timeout 600000 src/workflow-engine/__tests__/workflow.live.integration.test.ts src/workflow-engine/__tests__/zzz-cleanup.integration.test.ts",
+    "test:live:llm": "bun test --timeout 600000 src/llm/__tests__/health.integration.test.ts src/llm/__tests__/chat.integration.test.ts src/llm/__tests__/execute.integration.test.ts src/llm/__tests__/zzz-cleanup.integration.test.ts",
+    "test:live": "bun run test:live:workflow && bun run test:live:llm",
+    "mcp": "bun src/mcp/index.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "hono": "^4.12.19",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "prettier": "^3.8.3",
+    "typescript": "^6.0.3"
+  }
+}
