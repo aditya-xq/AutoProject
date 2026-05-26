@@ -105,8 +105,7 @@ export class AutoProjectService {
     const assets = this.ensureAgentAssets()
     this._db?.close()
     this._db = null
-    this.openDB()
-    const db = this._db
+    const db = this.openDB()
     db.run('PRAGMA foreign_keys = OFF')
     db.transaction(() => {
       db.run('DELETE FROM worklog')
