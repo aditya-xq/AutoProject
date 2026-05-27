@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "autoproject": {
+      "command": "bun",
+      "args": ["run", "--cwd", "backend", "mcp"],
+      "env": {
+        "AUTOPROJECT_ROOT": "."
+      }
+    }
+  }
+}
