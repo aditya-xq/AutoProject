@@ -70,10 +70,8 @@ LLM_BASE_URL=http://127.0.0.1:1234/v1
 LLM_MODEL=qwen/qwen3-1.7b
 ```
 
-Use the provided compose file in `autoproject/docker-compose.yml`:
-
 ```bash
-docker compose -f autoproject/docker-compose.yml up -d --build
+docker compose up -d --build
 ```
 
 Access the app at [http://localhost:3000](http://localhost:3000).
@@ -81,9 +79,9 @@ Access the app at [http://localhost:3000](http://localhost:3000).
 AutoProject stores SQLite state under `/data/.autoproject/autoproject.db`. The named volume keeps this data safe across restarts.
 
 ```bash
-docker compose -f autoproject/docker-compose.yml stop
-docker compose -f autoproject/docker-compose.yml down      # keep volume
-docker compose -f autoproject/docker-compose.yml down -v    # delete all data
+docker compose stop
+docker compose down      # keep volume
+docker compose down -v    # delete all data
 ```
 
 ---

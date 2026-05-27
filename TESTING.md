@@ -61,7 +61,7 @@ bun run build
 5. Validate Docker Compose without printing secrets:
 
 ```bash
-docker compose -f autoproject/docker-compose.yml config --quiet
+docker compose config --quiet
 ```
 
 Do not run `docker compose config` without `--quiet` in shared logs because it expands `.env` values.
