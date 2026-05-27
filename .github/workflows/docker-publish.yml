@@ -28,6 +28,22 @@ jobs:
         with:
           bun-version: "1.2"
 
+      - name: 💾 Cache backend dependencies
+        uses: actions/cache@v4
+        with:
+          path: backend/node_modules
+          key: bun-backend-${{ runner.os }}-${{ hashFiles('backend/bun.lockb') }}
+          restore-keys: |
+            bun-backend-${{ runner.os }}-
+
+      - name: 💾 Cache frontend dependencies
+        uses: actions/cache@v4
+        with:
+          path: autoproject/node_modules
+          key: bun-frontend-${{ runner.os }}-${{ hashFiles('autoproject/bun.lockb') }}
+          restore-keys: |
+            bun-frontend-${{ runner.os }}-
+
       - name: 🔍 Backend typecheck
         run: |
           cd backend
@@ -79,6 +95,25 @@ jobs:
       - name: 🏗️ Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: 🔨 Build amd64 (for vulnerability scan)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          load: true
+          tags: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: 🛡️ Trivy vulnerability scan
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          format: table
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: '1'
+
       - name: 🏗️ Build & Push (multi-arch)
         uses: docker/build-push-action@v6
         with:
@@ -87,20 +122,11 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
           provenance: true
           sbom: true
 
-      - name: 🏷️ Resolve primary image tag
-        id: primary-tag
+      - name: ✅ Verify multi-arch manifest
         run: |
-          PRIMARY=$(echo '${{ steps.meta.outputs.tags }}' | cut -d',' -f1 | tr -d ' ')
-          echo "tag=$PRIMARY" >> "$GITHUB_OUTPUT"
-
-      - name: 🛡️ Trivy Scan published image
-        uses: aquasecurity/trivy-action@0.33.1
-        with:
-          image-ref: ${{ steps.primary-tag.outputs.tag }}
-          format: table
-          severity: CRITICAL,HIGH
-          ignore-unfixed: true
-          exit-code: '1'
+          FIRST_TAG=$(echo '${{ steps.meta.outputs.tags }}' | cut -d',' -f1 | tr -d ' ')
+          docker buildx imagetools inspect "$FIRST_TAG"

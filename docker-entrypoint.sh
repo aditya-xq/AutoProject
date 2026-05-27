@@ -79,7 +79,7 @@ shutdown() {
 trap shutdown INT TERM
 
 # ------------------------------------------------------------------
-# Wait for backend to accept connections (up to ~90s)
+# Wait for backend to accept connections (up to 30s)
 # Prevents race where web server starts before backend is listening
 # ------------------------------------------------------------------
 echo "Waiting for backend..."
@@ -93,7 +93,7 @@ while [ $_waited -gt 0 ]; do
   _waited=$((_waited - 1))
 done
 if [ $_waited -eq 0 ]; then
-  echo >&2 "Warning: Backend did not become ready within 90 seconds."
+  echo >&2 "Warning: Backend did not become ready within 30 seconds."
   echo >&2 "Starting web server anyway."
 fi
 
