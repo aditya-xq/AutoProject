@@ -7,7 +7,7 @@
       "command": ["bun", "run", "--cwd", "backend", "mcp"],
       "enabled": true,
       "environment": {
-        "AUTOPROJECT_ROOT": "."
+        "AUTOPROJECT_ROOT": ".."
       }
     }
   }

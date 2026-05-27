@@ -2,9 +2,14 @@
   "mcpServers": {
     "autoproject": {
       "command": "bun",
-      "args": ["run", "--cwd", "backend", "mcp"],
+      "args": [
+        "run",
+        "--cwd",
+        "C:\\STUFF\\PROJECTS\\auto-project\\backend",
+        "mcp"
+      ],
       "env": {
-        "AUTOPROJECT_ROOT": "."
+        "AUTOPROJECT_ROOT": "C:\\STUFF\\PROJECTS\\auto-project"
       }
     }
   }
