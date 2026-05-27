@@ -15,6 +15,7 @@ concurrency:
 
 env:
   IMAGE_NAME: xqbuilds/autoproject
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   check:
@@ -113,6 +114,8 @@ jobs:
           severity: CRITICAL,HIGH
           ignore-unfixed: true
           exit-code: '1'
+        env:
+          TRIVY_DISABLE_VEX_NOTICE: true
 
       - name: 🏗️ Build & Push (multi-arch)
         uses: docker/build-push-action@v6

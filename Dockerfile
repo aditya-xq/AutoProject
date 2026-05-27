@@ -26,6 +26,7 @@ RUN bun run build
 FROM oven/bun:1.2-slim AS production
 
 RUN apt-get update \
+ && apt-get upgrade -y --no-install-recommends \
  && apt-get install -y --no-install-recommends adduser wget \
  && rm -rf /var/lib/apt/lists/*
 
